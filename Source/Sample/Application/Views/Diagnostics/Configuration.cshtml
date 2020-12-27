@@ -1,0 +1,22 @@
+﻿@model ConfigurationViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body pb-0">
+		<p>@Localizer.GetString("Information")</p>
+		@foreach(var provider in Model.ConfigurationProviders)
+		{
+			<h2 class="h5">@provider.Heading</h2>
+			@if(!string.IsNullOrEmpty(provider.Information))
+			{
+				<p class="mb-0">@provider.Information</p>
+			}
+			<div class="card card-body code-card mb-4">
+				<small>
+					<pre>@provider.Value</pre>
+				</small>
+			</div>
+		}
+	</div>
+</div>

@@ -1,0 +1,73 @@
+<cultures>
+	<culture name="sv">
+		<controllers>
+			<dataTransferController>
+				<errors>
+					<configurationBuildException>Import-konfigurationen kunde inte skapas från de uppladdade filerna.</configurationBuildException>
+					<exportException>Ett oväntat fel inträffade vid exporten.</exportException>
+					<importException>Ett oväntat fel inträffade vid importen.</importException>
+					<invalidContentType>Filen "{0}" är inte av typen "application/json".</invalidContentType>
+					<invalidJsonArrayFile>Filen "{0}" innehåller en json-array och stöds inte.</invalidJsonArrayFile>
+					<invalidJsonFile>Filen "{0}" är en ogiltig json-fil.</invalidJsonFile>
+				</errors>
+			</dataTransferController>
+		</controllers>
+		<models>
+			<views>
+				<dataTransfer>
+					<importForm>
+						<files>Fil/filer</files>
+						<files-Description>Fil/filer - beskrivning.</files-Description>
+						<files-required name="&quot;{0}&quot; is required.">Fältet "{0}" är obligatoriskt. Endast json-filer stöds.</files-required>
+						<deleteAllOthers>Ta bort all annan data</deleteAllOthers>
+						<deleteAllOthers-Description>Tar bort all annan data som inte finns med i filerna som importeras.</deleteAllOthers-Description>
+						<verifyOnly>Verifiera</verifyOnly>
+						<verifyOnly-Description>Verifiera endast vad resultatet av importen blir. Importen sparas inte till databasen.</verifyOnly-Description>
+					</importForm>
+					<exportForm>
+						<name-required name="&quot;{0}&quot; is required.">Minst en typ måste vara vald.</name-required>
+						<types>Typer</types>
+						<types-description>Välj de typer du vill exportera.</types-description>
+					</exportForm>
+				</dataTransfer>
+			</views>
+		</models>
+		<views>
+			<dataTransfer>
+				<export>
+					<heading>Exportera data</heading>
+					<information>Exportera data - information.</information>
+				</export>
+				<exportForm>
+					<submit>Exportera</submit>
+					<types>Typer</types>
+				</exportForm>
+				<importForm>
+					<submit>Importera</submit>
+				</importForm>
+				<heading>Data</heading>
+				<import>
+					<heading>Importera data</heading>
+					<information>Importera data - information.</information>
+					<relations>Relationer</relations>
+					<result>Resultat</result>
+					<result-After>Efter</result-After>
+					<result-Adds>Tillägg</result-Adds>
+					<result-Before>Före</result-Before>
+					<result-Deletes>Borttag</result-Deletes>
+					<result-SavedChanges>Totalt antal sparade poster</result-SavedChanges>
+					<result-Updates>Uppdateringar</result-Updates>
+				</import>
+				<index>
+					<heading>Nuvarande data</heading>
+					<information>Information om nuvarande data i databasen. Listan visar antal poster av respektive typ.</information>
+					<no-existing-data>
+						<heading>Tabeller saknas</heading>
+						<information>Det finns inte några tabeller i databasen.</information>
+					</no-existing-data>
+				</index>
+				<information>Information om data-överföring.</information>
+			</dataTransfer>
+		</views>
+	</culture>
+</cultures>

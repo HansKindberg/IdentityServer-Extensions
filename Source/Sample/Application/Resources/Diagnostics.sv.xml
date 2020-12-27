@@ -1,0 +1,63 @@
+<cultures>
+	<culture name="sv">
+		<controllers>
+			<diagnosticsController>
+				<missing>saknas</missing>
+			</diagnosticsController>
+		</controllers>
+		<views>
+			<diagnostics>
+				<authenticationscheme>
+					<heading>Registrerade autentiserings-scheman</heading>
+					<information>Information om registrerade autentiserings-scheman. Om du vill filtrera listan kan du lägga till namnet för autentiserings-schemat i slutet på url'en/adressen, t.ex. */Diagnostics/AuthenticationScheme/idsrv.</information>
+					<options>Inställningar</options>
+					<no-available-authentication-schemes>
+						<heading>Autentiserings-scheman saknas</heading>
+						<information>Det finns inte några autentiserings-scheman registrerade.</information>
+					</no-available-authentication-schemes>
+					<no-such-authentication-scheme>
+						<heading>Autentiserings-schema saknas</heading>
+						<information>Det finns inte något autentiserings-schema med namn "{0}" registrerat.</information>
+					</no-such-authentication-scheme>
+				</authenticationscheme>
+				<configuration>
+					<heading>Konfiguration</heading>
+					<information>Information om applikationens konfiguration.</information>
+				</configuration>
+				<dataProtection>
+					<applicationDiscriminator>Applikations-diskriminator</applicationDiscriminator>
+					<heading>Dataskydd</heading>
+					<information>Information om konfigurerat dataskydd.</information>
+					<xmlEncryptor>Xml-krypterare</xmlEncryptor>
+					<xmlRepository>Xml-förvaring</xmlRepository>
+				</dataProtection>
+				<heading>Diagnostik</heading>
+				<index>
+					<clientCertificate>Klient-certifikat</clientCertificate>
+					<connectionId>Anslutnings-id</connectionId>
+					<heading>Allmänt</heading>
+					<localIpAddress>Lokal ip-adress</localIpAddress>
+					<localPort>Lokal port</localPort>
+					<machineName>Maskin-namn</machineName>
+					<remoteIpAddress>Fjärr-ip-adress</remoteIpAddress>
+					<remotePort>Fjärr-port</remotePort>
+					<information>Allmän information.</information>
+				</index>
+				<information>Diverse information om inställningar för denna instans av identity-server.</information>
+				<options>
+					<heading>Inställningar</heading>
+					<information>Information om inställningar (options).</information>
+					<value>Innehåll</value>
+				</options>
+				<requestHeaders>
+					<heading>Request-headers</heading>
+					<information>Information om request-headers.</information>
+				</requestHeaders>
+				<responseHeaders>
+					<heading>Response-headers</heading>
+					<information>Information om response-headers.</information>
+				</responseHeaders>
+			</diagnostics>
+		</views>
+	</culture>
+</cultures>

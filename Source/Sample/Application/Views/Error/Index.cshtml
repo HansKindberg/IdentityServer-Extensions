@@ -1,0 +1,41 @@
+﻿@model ErrorViewModel
+<div class="card alert-danger">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			<svg class="size-1-point-6-rem m-0 p-0" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#alert-octagon" />
+			</svg>
+			@Localizer.GetString("Heading")
+		</h1>
+		<p>@Localizer.GetString("Information")</p>
+	</div>
+	<div class="card-body">
+		<ul class="list-group">
+			@if(Model.IdentityServerError == null)
+			{
+				<li class="list-group-item">@Localizer.GetString("type"): <strong>@Model.Exception.GetType().Name</strong></li>
+				<li class="list-group-item">@Localizer.GetString("activity-id"): <strong>@Model.ActivityId</strong></li>
+				<li class="list-group-item">@Localizer.GetString("trace-identifier"): <strong>@Model.TraceIdentifier</strong></li>
+				<li class="list-group-item">@Localizer.GetString("path"): <strong>@Model.Path</strong></li>
+				@if(Model.Detailed)
+				{
+					<li class="list-group-item">@Localizer.GetString("details"): <strong>@Model.Exception</strong></li>
+				}
+			}
+			else
+			{
+				<li class="list-group-item">@Model.IdentityServerError.Error</li>
+				@if(Model.Detailed)
+				{
+					<li class="list-group-item">@Model.IdentityServerError.ErrorDescription</li>
+					<li class="list-group-item">@Model.IdentityServerError.ClientId</li>
+					<li class="list-group-item">@Model.IdentityServerError.DisplayMode</li>
+					<li class="list-group-item">@Model.IdentityServerError.RedirectUri</li>
+					<li class="list-group-item">@Model.IdentityServerError.RequestId</li>
+					<li class="list-group-item">@Model.IdentityServerError.ResponseMode</li>
+					<li class="list-group-item">@Model.IdentityServerError.UiLocales</li>
+				}
+			}
+		</ul>
+	</div>
+</div>

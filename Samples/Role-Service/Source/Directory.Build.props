@@ -1,0 +1,9 @@
+<Project>
+	<PropertyGroup>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<!-- The following defaults to true for net5 projects. -->
+		<!--
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		-->
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,18 @@
+﻿@model DiagnosticsViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		<ul class="list-group">
+			<li class="list-group-item">@Localizer.GetString("ConnectionId"): <strong>@Model.ConnectionId</strong></li>
+			<li class="list-group-item">@Localizer.GetString("MachineName"): <strong>@Model.MachineName</strong></li>
+			<li class="list-group-item">@Localizer.GetString("LocalIpAddress"): <strong>@Model.LocalIpAddress</strong></li>
+			<li class="list-group-item">@Localizer.GetString("LocalPort"): <strong>@Model.LocalPort</strong></li>
+			<li class="list-group-item">@Localizer.GetString("RemoteIpAddress"): <strong>@Model.RemoteIpAddress</strong></li>
+			<li class="list-group-item">@Localizer.GetString("RemotePort"): <strong>@Model.RemotePort</strong></li>
+			<li class="list-group-item">@Localizer.GetString("ClientCertificate"): <strong>@(Model.ClientCertificate?.Subject ?? "null")</strong></li>
+		</ul>
+	</div>
+</div>

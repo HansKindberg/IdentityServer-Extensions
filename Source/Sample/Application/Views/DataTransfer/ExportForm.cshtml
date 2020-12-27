@@ -1,0 +1,23 @@
+﻿@model ExportForm
+<form asp-action="Export" asp-controller="DataTransfer" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]" class="border p-3">
+	<div class="form-group">
+		<h2 class="h5">@Localizer.GetString("Types")</h2>
+		<div class="form-check">
+			@foreach(var item in Model.TypeList)
+			{
+				<input @Html.Raw(item.Selected ? "checked=\"checked\"" : null) class="form-check-input" id="@item.Text-export-type" name="@nameof(Model.Types)" type="checkbox" value="@item.Value" />
+				<label class="form-check-label" for="@item.Text-export-type">@item.Text</label>
+				<br />
+			}
+		</div>
+		<small class="form-text text-muted">@ViewData.ModelMetadata.Properties[nameof(Model.Types)].Description</small>
+	</div>
+	<div class="text-right">
+		<button class="btn btn-primary" type="submit">
+			<svg class="size-1-point-4-rem" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#box-arrow-right" />
+			</svg>
+			@Localizer.GetString("Submit")
+		</button>
+	</div>
+</form>

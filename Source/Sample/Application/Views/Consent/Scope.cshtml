@@ -1,0 +1,32 @@
+﻿@model ScopeViewModel
+@if(Model != null)
+{
+	var inputName = (string) ViewData["Form-Input-Name"];
+	<li class="list-group-item form-check">
+		<input checked="@(Model.Checked || Model.Required)" disabled="@Model.Required" id="@inputName.ToLowerInvariant()-@Model.Name" name="@inputName" type="checkbox" value="@Model.Name" />
+		@if(Model.Required)
+		{
+			<input name="@inputName" type="hidden" value="@Model.Name" />
+		}
+		<label for="@inputName.ToLowerInvariant()-@Model.Name">
+			@Localizer.GetString(Model.Name + ".label")
+		</label>
+		@if(Model.Required)
+		{
+			<i>(@Localizer.GetString("required"))</i>
+		}
+		@if(Model.Emphasize)
+		{
+			<svg class="size-1-point-2-rem" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+			</svg>
+		}
+		@{ var description = Localizer.GetString(Model.Name + ".description"); }
+		@if(!description.ResourceNotFound)
+		{
+			<div>
+				<small>@description</small>
+			</div>
+		}
+	</li>
+}

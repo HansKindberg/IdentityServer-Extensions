@@ -1,0 +1,33 @@
+﻿@model SignedOutViewModel
+
+@section AdditionalMeta
+{
+	@if(Model.AutomaticRedirect && Model.RedirectUrl != null)
+	{
+		<meta content="@Model.SecondsBeforeRedirect;url=@Model.RedirectUrl" data-automatic-redirect="@Model.SecondsBeforeRedirect;@Model.RedirectUrl" http-equiv="refresh" />
+	}
+}
+
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			<svg class="size-1-point-4-rem m-0 p-0" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#check" />
+			</svg>
+			@Localizer.GetString("Heading")
+		</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Confirmation")</p>
+		@if(Model.RedirectUrl != null)
+		{
+			<p>
+				<a href="@Model.RedirectUrl">@Localizer.GetString("Redirect-text", Model.Client)</a>
+			</p>
+		}
+		@if(Model.IframeUrl != null)
+		{
+			<iframe class="d-none" src="@Model.IframeUrl"></iframe>
+		}
+	</div>
+</div>

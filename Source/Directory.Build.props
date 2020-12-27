@@ -1,0 +1,9 @@
+<Project>
+	<PropertyGroup>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<AssemblyOriginatorKeyFile>$(SolutionDir).Global\Signing\StrongName.Development.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>false</DelaySign>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<SignAssembly>true</SignAssembly>
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,13 @@
+{
+	"DataProtection": {
+		"Options": {
+			"KeyProtection": {
+				"Options": {
+					"ProtectToLocalMachine": true
+				},
+				"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.KeyProtection.DpapiOptions, HansKindberg.IdentityServer"
+			}
+		},
+		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.DefaultOptions, HansKindberg.IdentityServer"
+	}
+}

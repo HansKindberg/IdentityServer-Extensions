@@ -1,0 +1,32 @@
+﻿@model DataTransferViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		@if(Model.ExistingData.Any())
+		{
+			<ul>
+				@foreach(var (key, count) in Model.ExistingData)
+				{
+					<li>
+						@key: <strong>@count</strong>
+					</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<div class="alert alert-warning">
+				<h2 class="h5">
+					<svg class="size-1-point-6-rem" role="presentation">
+						<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+					</svg>
+					@Localizer.GetString("no-existing-data.heading")
+				</h2>
+				<p>@Localizer.GetString("no-existing-data.information")</p>
+			</div>
+		}
+	</div>
+</div>

@@ -1,0 +1,7 @@
+{
+	"IdentityServer": {
+		"ConfigurationStore": {
+			"DefaultSchema": "Test-schema"
+		}
+	}
+}

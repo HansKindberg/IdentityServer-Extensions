@@ -1,0 +1,27 @@
+﻿@model ImportForm
+<form asp-action="Import" asp-controller="DataTransfer" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]" class="border p-3" enctype="multipart/form-data">
+	<div class="form-group">
+		<label asp-for="Files"></label>
+		<input asp-for="Files" multiple="multiple" type="file" />
+		<small class="form-text text-muted">@ViewData.ModelMetadata.Properties[nameof(Model.Files)].Description</small>
+	</div>
+	<div class="form-check pl-0">
+		<input asp-for="DeleteAllOthers" />
+		<label asp-for="DeleteAllOthers"></label>
+		<small class="form-text text-muted mt-0">@ViewData.ModelMetadata.Properties[nameof(Model.DeleteAllOthers)].Description</small>
+	</div>
+	<div class="text-right mt-3">
+		<button class="btn btn-outline-success" name="@nameof(Model.VerifyOnly)" title="@ViewData.ModelMetadata.Properties[nameof(Model.VerifyOnly)].Description" type="submit" value="true">
+			<svg class="size-1-point-4-rem" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#list-check" />
+			</svg>
+			@ViewData.ModelMetadata.Properties[nameof(Model.VerifyOnly)].DisplayName
+		</button>
+		<button class="btn btn-primary" type="submit">
+			<svg class="size-1-point-4-rem" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#box-arrow-in-right" />
+			</svg>
+			@Localizer.GetString("Submit")
+		</button>
+	</div>
+</form>

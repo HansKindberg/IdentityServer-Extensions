@@ -1,0 +1,63 @@
+<cultures>
+	<culture name="en">
+		<controllers>
+			<diagnosticsController>
+				<missing>missing</missing>
+			</diagnosticsController>
+		</controllers>
+		<views>
+			<diagnostics>
+				<authenticationscheme>
+					<heading>Registered authentication-schemes</heading>
+					<information>Information about registered authentication-schemes. If you want to filter the list you can add the name of the authentication-scheme at the end of the url/address, eg. */Diagnostics/AuthenticationScheme/idsrv.</information>
+					<options>Options</options>
+					<no-available-authentication-schemes>
+						<heading>Authentication-schemes missing</heading>
+						<information>There are no authentication-schemes registered.</information>
+					</no-available-authentication-schemes>
+					<no-such-authentication-scheme>
+						<heading>Authentication-scheme missing</heading>
+						<information>There is no authentication-scheme named "{0}" registered.</information>
+					</no-such-authentication-scheme>
+				</authenticationscheme>
+				<configuration>
+					<heading>Configuration</heading>
+					<information>Information about the application configuration.</information>
+				</configuration>
+				<dataProtection>
+					<applicationDiscriminator>Application-discriminator</applicationDiscriminator>
+					<heading>Data protection</heading>
+					<information>Information about configured data protection.</information>
+					<xmlEncryptor>Xml-encryptor</xmlEncryptor>
+					<xmlRepository>Xml-repository</xmlRepository>
+				</dataProtection>
+				<heading>Diagnostics</heading>
+				<index>
+					<clientCertificate>Client-certificate</clientCertificate>
+					<connectionId>Connection-id</connectionId>
+					<heading>Common</heading>
+					<localIpAddress>Local ip-address</localIpAddress>
+					<localPort>Local port</localPort>
+					<machineName>Machine-name</machineName>
+					<remoteIpAddress>Remote ip-address</remoteIpAddress>
+					<remotePort>Remote port</remotePort>
+					<information>Common information.</information>
+				</index>
+				<information>Various information about settings for this instance of identity-server.</information>
+				<options>
+					<heading>Options</heading>
+					<information>Information about options.</information>
+					<value>Content</value>
+				</options>
+				<requestHeaders>
+					<heading>Request-headers</heading>
+					<information>Information about request-headers.</information>
+				</requestHeaders>
+				<responseHeaders>
+					<heading>Response-headers</heading>
+					<information>Information about response-headers.</information>
+				</responseHeaders>
+			</diagnostics>
+		</views>
+	</culture>
+</cultures>

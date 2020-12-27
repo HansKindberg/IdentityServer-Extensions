@@ -1,0 +1,15 @@
+<cultures>
+	<culture name="en">
+		<models>
+			<views>
+				<shared>
+					<parts>
+						<headerviewmodel>
+							<environment-name>Development-environment</environment-name>
+						</headerviewmodel>
+					</parts>
+				</shared>
+			</views>
+		</models>
+	</culture>
+</cultures>

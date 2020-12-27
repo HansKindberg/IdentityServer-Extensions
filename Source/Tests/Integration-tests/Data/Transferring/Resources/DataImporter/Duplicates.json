@@ -1,0 +1,116 @@
+{
+	"ApiResources": [
+		{
+			"DisplayName": "API-resource 1",
+			"Name": "api-resource"
+		},
+		{
+			"DisplayName": "API-resource 2",
+			"Name": "api-resource"
+		}
+	],
+	"ApiScopes": [
+		{
+			"DisplayName": "API-scope 1",
+			"Name": "api-scope"
+		},
+		{
+			"DisplayName": "API-scope 2",
+			"Name": "api-scope"
+		},
+		{
+			"DisplayName": "API-scope 3",
+			"Name": "api-scope"
+		}
+	],
+	"Clients": [
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client",
+			"ClientName": "Client 1",
+			"ClientSecrets": [ { "Value": "Secret" } ]
+		},
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client",
+			"ClientName": "Client 2",
+			"ClientSecrets": [ { "Value": "Secret" } ]
+		},
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client",
+			"ClientName": "Client 3",
+			"ClientSecrets": [ { "Value": "Secret" } ]
+		},
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client",
+			"ClientName": "Client 4",
+			"ClientSecrets": [ { "Value": "Secret" } ]
+		}
+	],
+	"IdentityResources": [
+		{
+			"DisplayName": "Identity-resource 1",
+			"Name": "identity-resource"
+		},
+		{
+			"DisplayName": "Identity-resource 2",
+			"Name": "identity-resource"
+		},
+		{
+			"DisplayName": "Identity-resource 3",
+			"Name": "identity-resource"
+		},
+		{
+			"DisplayName": "Identity-resource 4",
+			"Name": "identity-resource"
+		},
+		{
+			"DisplayName": "Identity-resource 5",
+			"Name": "identity-resource"
+		}
+	],
+	"Users": [
+		{
+			"Email": "user-1@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-2@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-3@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-4@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-5@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-6@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user"
+		},
+		{
+			"Email": "user-1-1@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user-1"
+		},
+		{
+			"Email": "user-1-1@example.com",
+			"Password": "P@ssword12",
+			"UserName": "user-2"
+		}
+	]
+}

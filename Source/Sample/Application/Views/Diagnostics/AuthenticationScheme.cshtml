@@ -1,0 +1,77 @@
+﻿@model AuthenticationSchemeViewModel
+<div class="card scheme-information">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		@if(!Model.AuthenticationSchemesMissing)
+		{
+			if(Model.Items.Any())
+			{
+				<ul class="authentication-schemes list-group">
+					@foreach(var (authenticationScheme, options) in Model.Items)
+					{
+						<li class="list-group-item">
+							<h2 class="h5">
+								<svg class="size-1-point-4-rem" role="presentation">
+									<use xlink:href="/Style/Icons/sprite.svg#@authenticationScheme.Icon" />
+								</svg>
+								<a asp-route-id="@authenticationScheme.Name">@authenticationScheme.Name</a>
+							</h2>
+							<ul>
+								<li>Display-name: <strong>@authenticationScheme.DisplayName</strong></li>
+								<li>Handler-type:<br /><strong>@authenticationScheme.HandlerType</strong></li>
+								<li>Icon: <strong>@authenticationScheme.Icon</strong></li>
+								<li>Index: <strong>@authenticationScheme.Index</strong></li>
+								<li>Interactive: <strong>@authenticationScheme.Interactive</strong></li>
+								<li>Kind: <strong>@authenticationScheme.Kind</strong></li>
+								<li>Name: <strong>@authenticationScheme.Name</strong></li>
+								@if(options != null)
+								{
+									var name = authenticationScheme.Name.Replace(".", "-dot-");
+									<li>
+										<button aria-controls="collapse-@name" aria-expanded="false" class="btn btn-primary btn-collapse" data-target="#collapse-@name" data-toggle="collapse" type="button">
+											@Localizer.GetString("Options")
+										</button>
+										<div class="collapse mt-2" id="collapse-@name">
+											<div class="card card-body code-card">
+												<small>
+													<pre>@options</pre>
+												</small>
+											</div>
+										</div>
+									</li>
+								}
+							</ul>
+						</li>
+					}
+				</ul>
+			}
+			else
+			{
+				<div class="alert alert-warning">
+					<h2 class="h5">
+						<svg class="size-1-point-6-rem" role="presentation">
+							<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+						</svg>
+						@Localizer.GetString("no-such-authentication-scheme.heading")
+					</h2>
+					<p>@Localizer.GetString("no-such-authentication-scheme.information", ViewContext.RouteData.Values[RouteKeys.Id])</p>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="alert alert-warning">
+				<h2 class="h5">
+					<svg class="size-1-point-6-rem" role="presentation">
+						<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+					</svg>
+					@Localizer.GetString("no-available-authentication-schemes.heading")
+				</h2>
+				<p>@Localizer.GetString("no-available-authentication-schemes.information")</p>
+			</div>
+		}
+	</div>
+</div>

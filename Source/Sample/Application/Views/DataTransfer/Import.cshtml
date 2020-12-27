@@ -1,0 +1,76 @@
+﻿@model ImportViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		@if(Model.Confirmation)
+		{
+			<div class="alert alert-success">
+				<h2>@Localizer.GetString("Confirmation")</h2>
+				<p>@Localizer.GetString("Confirmation-Information")</p>
+			</div>
+		}
+		<partial name="ValidationSummary" />
+		<partial model="@Model.Form" name="ImportForm" />
+		@if(Model.Result != null)
+		{
+			<h2 class="h5 mt-3">@Localizer.GetString("Result")</h2>
+			<p>@Localizer.GetString("Result-SavedChanges"): <strong>@Model.Result.SavedChanges</strong></p>
+			@foreach(var (type, item) in Model.Result.Items.OrderBy(item => item.Key.FriendlyName()))
+			{
+				var name = type.FriendlyName();
+				<h3 class="h6">@name</h3>
+				<ul>
+					<li>
+						@Localizer.GetString("Result-Before"): <strong>@item.Before</strong>
+					</li>
+					<li>
+						@Localizer.GetString("Result-Updates"): <strong>@item.Updates</strong>
+					</li>
+					<li>
+						@Localizer.GetString("Result-Adds"): <strong>@item.Adds</strong>
+					</li>
+					<li>
+						@Localizer.GetString("Result-Deletes"): <strong>@item.Deletes</strong>
+					</li>
+					<li>
+						@Localizer.GetString("Result-After"): <strong>@item.After</strong>
+					</li>
+					@if(item.Relations.Any())
+					{
+						<li>
+							<button aria-controls="collapse-@name" aria-expanded="false" class="btn btn-outline-secondary btn-collapse" data-target="#collapse-@name" data-toggle="collapse" type="button">
+								@Localizer.GetString("Relations")
+							</button>
+							<div class="collapse" id="collapse-@name">
+								@foreach(var (relationType, relationItem) in item.Relations.OrderBy(relationItem => relationItem.Key.FriendlyName()))
+								{
+									<h4 class="h6 mt-2">@relationType.FriendlyName()</h4>
+									<ul>
+										<li>
+											@Localizer.GetString("Result-Before"): <strong>@relationItem.Before</strong>
+										</li>
+										<li>
+											@Localizer.GetString("Result-Updates"): <strong>@relationItem.Updates</strong>
+										</li>
+										<li>
+											@Localizer.GetString("Result-Adds"): <strong>@relationItem.Adds</strong>
+										</li>
+										<li>
+											@Localizer.GetString("Result-Deletes"): <strong>@relationItem.Deletes</strong>
+										</li>
+										<li>
+											@Localizer.GetString("Result-After"): <strong>@relationItem.After</strong>
+										</li>
+									</ul>
+								}
+							</div>
+						</li>
+					}
+				</ul>
+			}
+		}
+	</div>
+</div>

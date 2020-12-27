@@ -1,0 +1,46 @@
+﻿@model SignInViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		@if(Model.FormsAuthenticationEnabled || Model.AuthenticationSchemes.Any())
+		{
+			<p>@Localizer.GetString("Information")</p>
+			<ul class="authentication-schemes list-group">
+				@if(Model.FormsAuthenticationEnabled)
+				{
+					<li class="list-group-item">
+						<partial name="ValidationSummary" />
+						<partial model="@Model.Form" name="SignInForm" view-data="@(new ViewDataDictionary(ViewData) {{ViewDataKeys.PersistenceEnabled, Model.FormsAuthentication.Persistent}})" />
+					</li>
+				}
+				@foreach(var authenticationScheme in Model.AuthenticationSchemes)
+				{
+					<li class="list-group-item">
+						<a asp-action="@authenticationScheme.Kind" asp-controller="Authenticate" asp-route-authenticationScheme="@authenticationScheme.Name" asp-route-returnUrl="@Model.Form.ReturnUrl" title="@Localizer.GetString(authenticationScheme.Name + ".information")">
+							<h2 class="h6">
+								<svg class="size-1-point-4-rem" role="presentation">
+									<use xlink:href="/Style/Icons/sprite.svg#@authenticationScheme.Icon" />
+								</svg>
+								<span class="font-weight-light">@Localizer.GetString("sign-in-with")</span> @Localizer.GetString(authenticationScheme.Name + ".heading")
+							</h2>
+						</a>
+					</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<div class="alert alert-warning">
+				<h1 class="h5">
+					<svg class="size-1-point-6-rem" role="presentation">
+						<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+					</svg>
+					@Localizer.GetString("no-available-authentication-alternatives.heading")
+				</h1>
+				<p>@Localizer.GetString("no-available-authentication-alternatives.information")</p>
+			</div>
+		}
+	</div>
+</div>

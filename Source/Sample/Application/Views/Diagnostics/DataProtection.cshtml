@@ -1,0 +1,14 @@
+﻿@model DataProtectionViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		<ul class="list-group">
+			<li class="list-group-item">@Localizer.GetString("ApplicationDiscriminator"): <strong>@(Model.ApplicationDiscriminator.Discriminator ?? "null")</strong></li>
+			<li class="list-group-item">@Localizer.GetString("XmlRepository"): <strong>@(Model.KeyManagementOptions.XmlRepository?.GetType().ToString() ?? "null")</strong></li>
+			<li class="list-group-item">@Localizer.GetString("XmlEncryptor"): <strong>@(Model.KeyManagementOptions.XmlEncryptor?.GetType().ToString() ?? "null")</strong></li>
+		</ul>
+	</div>
+</div>

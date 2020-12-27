@@ -1,0 +1,27 @@
+<cultures>
+	<culture name="en">
+		<activelogin>
+			<authentication>
+				<bankid>
+					<aspnetcore>
+						<bankidhandler>
+							<bankIdUserMessage_ShortName_RFA1>Start the BankID app.</bankIdUserMessage_ShortName_RFA1>
+							<bankIdUserMessage_ShortName_RFA13>Trying to start the BankID app.</bankIdUserMessage_ShortName_RFA13>
+							<bankIdUserMessage_ShortName_RFA14A>Searching for BankID, it may take a while… If a few seconds have passed and no BankID has been found, you probably do not have a BankID that can be used for the current identification / signature in this computer. If you have a BankID card, insert it into the card reader. If you do not have a BankID, you can pick one up at your internet bank. If you have a BankID on another device, you can start your BankID app there.</bankIdUserMessage_ShortName_RFA14A>
+							<bankIdUserMessage_ShortName_RFA1QR>Launch the BankID app and scan the QR code.</bankIdUserMessage_ShortName_RFA1QR>
+							<bankIdUserMessage_ShortName_RFA15A>Searching for BankID, it may take a while… If a few seconds have passed and no BankID has been found, you probably do not have a BankID that can be used for the current identification / signature in this computer. If you have a BankID card, insert it into the card reader. If you do not have a BankID, you can pick one up at your internet bank.</bankIdUserMessage_ShortName_RFA15A>
+							<bankIdUserMessage_ShortName_RFA22>Unknown error. Try again.</bankIdUserMessage_ShortName_RFA22>
+							<bankIdUserMessage_ShortName_RFA4>An identification or signature for this personal identity-number has already begun. Try again.</bankIdUserMessage_ShortName_RFA4>
+							<bankIdUserMessage_ShortName_RFA9>Enter your security code in the BankID app and select Identify or Sign.</bankIdUserMessage_ShortName_RFA9>
+							<cancel_Button>Cancel</cancel_Button>
+							<personalIdentityNumber_Label>Personal identity-number</personalIdentityNumber_Label>
+							<signIn_Button>Sign in</signIn_Button>
+							<signin_Header>BankID</signin_Header>
+							<signIn_SwedishPersonalIdentityNumber_Placeholder>YYMMDD-XXXX</signIn_SwedishPersonalIdentityNumber_Placeholder>
+						</bankidhandler>
+					</aspnetcore>
+				</bankid>
+			</authentication>
+		</activelogin>
+	</culture>
+</cultures>

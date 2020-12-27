@@ -1,0 +1,20 @@
+{
+	"ConnectionStrings": {
+		"Data-Protection": "Data Source=|DataDirectory|Data-Protection.db"
+	},
+	"DataProtection": {
+		"Options": {
+			"KeyProtection": {
+				"Options": {
+					"ProtectToLocalMachine": true
+				},
+				"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.KeyProtection.DpapiOptions, HansKindberg.IdentityServer"
+			},
+			"Migrate": true
+		},
+		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.SqliteOptions, HansKindberg.IdentityServer"
+	},
+	"FeatureManagement": {
+		"DataDirectory": true
+	}
+}

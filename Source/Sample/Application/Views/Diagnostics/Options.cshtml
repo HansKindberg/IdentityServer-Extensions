@@ -1,0 +1,24 @@
+﻿@model OptionsViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		@foreach(var (type, value) in Model.Options)
+		{
+			var identifier = (type.FullName ?? string.Empty).ToLowerInvariant().Replace(".", "-");
+			<h2 class="h5">@type.Name</h2>
+			<button aria-controls="collapse-@identifier" aria-expanded="false" class="btn btn-primary btn-collapse" data-target="#collapse-@identifier" data-toggle="collapse" type="button">
+				@Localizer.GetString("Value")
+			</button>
+			<div class="collapse mt-2" id="collapse-@identifier">
+				<div class="card card-body code-card">
+					<small>
+						<pre>@value</pre>
+					</small>
+				</div>
+			</div>
+		}
+	</div>
+</div>

@@ -1,0 +1,10 @@
+{
+	"IdentityServer": {
+		"OperationalStore": {
+			"DefaultSchema": "Test-schema",
+			"EnableTokenCleanup": true,
+			"TokenCleanupBatchSize": 1234,
+			"TokenCleanupInterval": 5678
+		}
+	}
+}

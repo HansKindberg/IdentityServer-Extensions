@@ -1,0 +1,22 @@
+﻿@model RedirectViewModel
+
+@section AdditionalMeta
+{
+	<meta content="@Model.SecondsBeforeRedirect;url=@Model.RedirectUrl" data-automatic-redirect="@Model.SecondsBeforeRedirect;@Model.RedirectUrl" http-equiv="refresh" />
+}
+
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			<svg class="size-1-point-4-rem m-0 p-0" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#info" />
+			</svg>
+			@Localizer.GetString("Heading")
+		</h1>
+	</div>
+	<div class="card-body">
+		<p>
+			@Localizer.GetString("Information") <a href="@Model.RedirectUrl">@Model.RedirectUrl</a>
+		</p>
+	</div>
+</div>

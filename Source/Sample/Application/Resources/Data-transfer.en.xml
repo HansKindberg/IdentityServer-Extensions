@@ -1,0 +1,73 @@
+<cultures>
+	<culture name="en">
+		<controllers>
+			<dataTransferController>
+				<errors>
+					<configurationBuildException>The import configuration could not be created from the uploaded files.</configurationBuildException>
+					<exportException>An unexpected error occurred while exporting.</exportException>
+					<importException>An unexpected error occurred while importing.</importException>
+					<invalidContentType>The file "{0}" is not of type "application / json".</invalidContentType>
+					<invalidJsonArrayFile>The file "{0}" contains a json-array and is not supported.</invalidJsonArrayFile>
+					<invalidJsonFile>The file "{0}" is an invalid json-file.</invalidJsonFile>
+				</errors>
+			</dataTransferController>
+		</controllers>
+		<models>
+			<views>
+				<dataTransfer>
+					<importForm>
+						<files>File/files</files>
+						<files-Description>File/files - description.</files-Description>
+						<files-required name="&quot;{0}&quot; is required.">The field "{0}" is required. Only json-files are supported.</files-required>
+						<deleteAllOthers>Delete all other data</deleteAllOthers>
+						<deleteAllOthers-Description>Deletes all other data that is not included in the imported files.</deleteAllOthers-Description>
+						<verifyOnly>Verify</verifyOnly>
+						<verifyOnly-Description>Verify only what the result of the import will be. The import is not saved to the database.</verifyOnly-Description>
+					</importForm>
+					<exportForm>
+						<name-required name="&quot;{0}&quot; is required.">At least one type must be selected.</name-required>
+						<types>Types</types>
+						<types-description>Select the types you want to export.</types-description>
+					</exportForm>
+				</dataTransfer>
+			</views>
+		</models>
+		<views>
+			<dataTransfer>
+				<export>
+					<heading>Export data</heading>
+					<information>Export data - information.</information>
+				</export>
+				<exportForm>
+					<submit>Export</submit>
+					<types>Types</types>
+				</exportForm>
+				<importForm>
+					<submit>Import</submit>
+				</importForm>
+				<heading>Data</heading>
+				<import>
+					<heading>Import data</heading>
+					<information>Import data - information.</information>
+					<relations>Relations</relations>
+					<result>Result</result>
+					<result-After>After</result-After>
+					<result-Adds>Adds</result-Adds>
+					<result-Before>Before</result-Before>
+					<result-Deletes>Deletes</result-Deletes>
+					<result-SavedChanges>Total number of saved entries</result-SavedChanges>
+					<result-Updates>Updates</result-Updates>
+				</import>
+				<index>
+					<heading>Current data</heading>
+					<information>Information about the current data in the database. The list shows the number of entries of each type.</information>
+					<no-existing-data>
+						<heading>Tables missing</heading>
+						<information>There are no tables in the database.</information>
+					</no-existing-data>
+				</index>
+				<information>Information about data-transferring.</information>
+			</dataTransfer>
+		</views>
+	</culture>
+</cultures>

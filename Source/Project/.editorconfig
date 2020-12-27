@@ -1,0 +1,23 @@
+[*.cs]
+# Suppress
+dotnet_diagnostic.CA1056.severity = none
+dotnet_diagnostic.CA1303.severity = none
+dotnet_diagnostic.CA2007.severity = none
+
+[/Data/Migrations/**.cs]
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.IDE0050.severity = none
+
+[/DataProtection/Data/Migrations/**.cs]
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.IDE0050.severity = none
+
+[/Identity/Data/*.cs]
+dotnet_diagnostic.CA1501.severity = none
+
+[/Identity/Data/Migrations/**.cs]
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.IDE0050.severity = none
+
+[/Stores/UserIdentifierMap.cs]
+dotnet_diagnostic.CA1724.severity = none

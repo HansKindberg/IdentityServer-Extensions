@@ -1,0 +1,65 @@
+﻿@if(Context.Request.Query[QueryStringKeys.Debug].IsTrue())
+{
+	<button class="btn btn-primary" data-target="#debug-information-modal" data-toggle="modal" type="button">
+		@Localizer.GetString("Heading")
+	</button>
+	<div aria-hidden="true" aria-labelledby="debug-information-modal-label" class="modal fade" id="debug-information-modal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="h5 modal-title" id="debug-information-modal-label">@Localizer.GetString("Heading")</h1>
+					<button aria-label="@Localizer.GetString("Close")" class="close" data-dismiss="modal" type="button">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="card alert-info">
+						<div class="card-body">
+							@{ var url = Context.Request.Query.GetValueAsAbsoluteUrl(QueryStringKeys.ReturnUrl); }
+							@if(url != null && !string.IsNullOrEmpty(url.Query))
+							{
+								var query = QueryHelpers.ParseQuery(url.Query);
+								if(query.Any())
+								{
+									<h2 class="h6">@Localizer.GetString("QueryString-For-ReturnUrl")</h2>
+									<ul class="list-group">
+										@foreach(var (key, value) in query.OrderBy(entry => entry.Key))
+										{
+											<li class="list-group-item">@key: <strong>@string.Join(", ", value.ToArray())</strong></li>
+										}
+									</ul>
+									<br />
+								}
+							}
+							<h2 class="h6">@Localizer.GetString("QueryString")</h2>
+							<ul class="list-group">
+								@foreach(var (key, value) in Context.Request.Query.OrderBy(entry => entry.Key))
+								{
+									<li class="list-group-item">@key : <strong>@string.Join(", ", value.ToArray())</strong></li>
+								}
+							</ul>
+							<h2 class="h6 mt-3">@Localizer.GetString("RequestHeaders")</h2>
+							<ul class="list-group">
+								@foreach(var (key, value) in Context.Request.Headers.OrderBy(entry => entry.Key))
+								{
+									<li class="list-group-item">@key : <strong>@string.Join(", ", value.ToArray())</strong></li>
+								}
+							</ul>
+							<h2 class="h6 mt-3">@Localizer.GetString("ResponseHeaders")</h2>
+							<ul class="list-group">
+								@foreach(var (key, value) in Context.Response.Headers.OrderBy(entry => entry.Key))
+								{
+									<li class="list-group-item">@key : <strong>@string.Join(", ", value.ToArray())</strong></li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" data-dismiss="modal" type="button">@Localizer.GetString("Close")</button>
+					<a class="btn btn-secondary" href="@Url.RemoveQuery(QueryStringKeys.Debug)">@Localizer.GetString("Remove")</a>
+				</div>
+			</div>
+		</div>
+	</div>
+}

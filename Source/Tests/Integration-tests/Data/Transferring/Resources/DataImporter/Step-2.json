@@ -1,0 +1,109 @@
+{
+	"ApiResources": [
+		{
+			"DisplayName": "Resource 1",
+			"Name": "resource-1",
+			"Scopes": [
+				"resource-1.scope-1",
+				"shared.scope"
+			]
+		},
+		{
+			"DisplayName": "Resource 2",
+			"Name": "resource-2",
+			"Scopes": [
+				"resource-2.scope-1",
+				"shared.scope"
+			],
+			"UserClaims": [
+				"email",
+				"name"
+			]
+		}
+	],
+	"ApiScopes": [
+		{
+			"Name": "IdentityServerApi"
+		},
+		{
+			"Name": "resource-1.scope-1"
+		},
+		{
+			"Name": "resource-2.scope-1"
+		},
+		{
+			"Name": "scope-3"
+		},
+		{
+			"Name": "shared.scope"
+		},
+		{
+			"Description": "A transaction",
+			"DisplayName": "Transaction",
+			"Name": "transaction"
+		}
+	],
+	"Clients": [
+		{
+			"AllowedGrantTypes": [ "client_credentials" ],
+			"AllowedScopes": [ "resource-1.scope-1", "resource-1.scope-2" ],
+			"Claims": [
+				{
+					"type": "c-1",
+					"value": "c-1-value"
+				},
+				{
+					"type": "c-2",
+					"value": "c-2-value"
+				}
+			],
+			"ClientId": "machine_client",
+			"ClientSecrets": [ { "Value": "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=" } ],
+			"Properties": { "foo": "bar" }
+		},
+		{
+			"AllowedCorsOrigins": [ "http://localhost", "http://example.com", "https://example.com" ],
+			"AllowedGrantTypes": [ "authorization_code", "client_credentials" ],
+			"AllowedScopes": [ "openid", "profile", "resource-1.scope-1", "resource-1.scope-2" ],
+			"ClientId": "interactive_client",
+			"ClientSecrets": [ { "Value": "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=" } ],
+			"RedirectUris": [ "http://example.com/" ]
+		}
+	],
+	"IdentityResources": [
+		{
+			"DisplayName": "Resource 1",
+			"Name": "resource-1",
+			"Properties": { "foo": "bar" }
+		},
+		{
+			"DisplayName": "Resource 2",
+			"Name": "resource-2",
+			"Properties": {
+				"foo-1": "bar-1",
+				"foo-2": "bar-2",
+				"foo-3": "bar-3"
+			},
+			"UserClaims": [
+				"email",
+				"name"
+			]
+		}
+	],
+	"Users": [
+		{
+			"Email": "user-1@example.com",
+			"Password": "P@assword12",
+			"UserName": "User-1"
+		},
+		{
+			"Email": "user-2@example.com",
+			"Password": "P@assword12",
+			"UserName": "User-2"
+		},
+		{
+			"Password": "P@assword12",
+			"UserName": "User-1"
+		}
+	]
+}

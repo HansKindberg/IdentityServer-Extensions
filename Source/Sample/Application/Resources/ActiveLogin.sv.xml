@@ -1,0 +1,27 @@
+<cultures>
+	<culture name="sv">
+		<activelogin>
+			<authentication>
+				<bankid>
+					<aspnetcore>
+						<bankidhandler>
+							<bankIdUserMessage_ShortName_RFA1>Starta BankID-appen.</bankIdUserMessage_ShortName_RFA1>
+							<bankIdUserMessage_ShortName_RFA13>Försöker starta BankID-appen.</bankIdUserMessage_ShortName_RFA13>
+							<bankIdUserMessage_ShortName_RFA14A>Söker efter BankID, det kan ta en liten stund… Om det har gått några sekunder och inget BankID har hittats har du sannolikt inget BankID som går att använda för den aktuella identifieringen/underskriften i den här datorn. Om du har ett BankID-kort, sätt in det i kortläsaren. Om du inte har något BankID kan du hämta ett hos din internetbank. Om du har ett BankID på en annan enhet kan du starta din BankID-app där.</bankIdUserMessage_ShortName_RFA14A>
+							<bankIdUserMessage_ShortName_RFA1QR>Starta BankID-appen och scanna QR-koden.</bankIdUserMessage_ShortName_RFA1QR>
+							<bankIdUserMessage_ShortName_RFA15A>Söker efter BankID, det kan ta en liten stund… Om det har gått några sekunder och inget BankID har hittats har du sannolikt inget BankID som går att använda för den aktuella identifieringen/underskriften i den här datorn. Om du har ett BankID-kort, sätt in det i kortläsaren. Om du inte har något BankID kan du hämta ett hos din internetbank.</bankIdUserMessage_ShortName_RFA15A>
+							<bankIdUserMessage_ShortName_RFA22>Okänt fel. Försök igen.</bankIdUserMessage_ShortName_RFA22>
+							<bankIdUserMessage_ShortName_RFA4>En identifiering eller underskrift för det här personnumret är redan påbörjad. Försök igen.</bankIdUserMessage_ShortName_RFA4>
+							<bankIdUserMessage_ShortName_RFA9>Skriv in din säkerhetskod i BankID-appen och välj Legitimera eller Skriv under.</bankIdUserMessage_ShortName_RFA9>
+							<cancel_Button>Avbryt</cancel_Button>
+							<personalIdentityNumber_Label>Personnummer</personalIdentityNumber_Label>
+							<signIn_Button>Logga in</signIn_Button>
+							<signin_Header>BankID</signin_Header>
+							<signIn_SwedishPersonalIdentityNumber_Placeholder>ÅÅMMDD-XXXX</signIn_SwedishPersonalIdentityNumber_Placeholder>
+						</bankidhandler>
+					</aspnetcore>
+				</bankid>
+			</authentication>
+		</activelogin>
+	</culture>
+</cultures>

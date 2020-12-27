@@ -1,0 +1,11 @@
+﻿@model ExportViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		<partial name="ValidationSummary" />
+		<partial model="@Model.Form" name="ExportForm" />
+	</div>
+</div>

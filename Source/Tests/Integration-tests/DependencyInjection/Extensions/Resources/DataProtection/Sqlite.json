@@ -1,0 +1,14 @@
+{
+	"ConnectionStrings": {
+		"Data-Protection": "Data Source=|DataDirectory|Data-Protection.db"
+	},
+	"DataProtection": {
+		"Options": {
+			"Migrate": true
+		},
+		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.SqliteOptions, HansKindberg.IdentityServer"
+	},
+	"FeatureManagement": {
+		"DataDirectory": true
+	}
+}

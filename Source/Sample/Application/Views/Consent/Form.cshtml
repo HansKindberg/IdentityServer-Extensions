@@ -1,0 +1,72 @@
+﻿@model ConsentForm
+@{
+	var persistenceEnabled = ViewData[ViewDataKeys.PersistenceEnabled] as bool? ?? false;
+}
+@if(Model != null)
+{
+	<form asp-action="Index" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]">
+		@if(Model.IdentityResources.Any())
+		{
+			<div class="card mb-4">
+				<div class="card-header">
+					<span class="h5">
+						<svg class="size-2-rem" role="presentation">
+							<use xlink:href="/Style/Icons/sprite.svg#person" />
+						</svg>
+						@Localizer.GetString("personal-information")
+					</span>
+				</div>
+				<ul class="list-group">
+					@foreach(var identityResource in Model.IdentityResources.OrderBy(identityResource => !identityResource.Required))
+					{
+						<partial model="@identityResource" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{"Form-Input-Name", nameof(Model.ConsentedIdentityResources)}})" />
+					}
+				</ul>
+			</div>
+		}
+		@if(Model.ApiScopes.Any())
+		{
+			<div class="card mb-4">
+				<div class="card-header">
+					<span class="h5">
+						<svg class="size-2-rem" role="presentation">
+							<use xlink:href="/Style/Icons/sprite.svg#laptop" />
+						</svg>
+						@Localizer.GetString("application-access")
+					</span>
+				</div>
+				<ul class="list-group">
+					@foreach(var apiScope in Model.ApiScopes)
+					{
+						<partial model="@apiScope" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{"Form-Input-Name", nameof(Model.ConsentedApiScopes)}})" />
+					}
+				</ul>
+			</div>
+		}
+		<div class="mb-4">
+			<label asp-for="Description">
+				<svg class="size-1-point-2-rem" role="presentation">
+					<use xlink:href="/Style/Icons/sprite.svg#phone" />
+				</svg>
+				@ViewData.ModelMetadata.Properties[nameof(Model.Description)].DisplayName
+			</label>
+			<input autofocus="autofocus" asp-for="Description" class="form-control" />
+		</div>
+		@if(persistenceEnabled)
+		{
+			<div class="mb-4 form-check">
+				<input asp-for="Persistent" class="form-check-input" />
+				<label asp-for="Persistent" class="form-check-label"></label>
+			</div>
+		}
+		<div>
+			<button autofocus="autofocus" class="btn btn-primary" name="@nameof(Model.Accept)" type="submit" value="true">@Localizer.GetString("accept")</button>
+			<button class="btn btn-secondary" name="@nameof(Model.Accept)" type="submit" value="false">@Localizer.GetString("reject")</button>
+		</div>
+		<input name="@nameof(Model.ReturnUrl)" type="hidden" value="@Model.ReturnUrl" />
+		@foreach(var (key, value) in Model.Dictionary)
+		{
+			<input name="@($"{nameof(Model.Dictionary)}.{key}")" type="hidden" value="@value" />
+		}
+	</form>
+}

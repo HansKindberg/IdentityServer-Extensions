@@ -1,0 +1,25 @@
+{
+	"ConnectionStrings": {
+		"Data-Protection": "Data Source=|DataDirectory|Data-Protection.db"
+	},
+	"DataProtection": {
+		"Options": {
+			"KeyProtection": {
+				"Options": {
+					"CertificateResolver": {
+						"Options": {
+							"Password": "password",
+							"Path": "Test-data/Development-Key-Protection-Certificate.pfx"
+						},
+						"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+					}
+				},
+				"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.KeyProtection.CertificateOptions, HansKindberg.IdentityServer"
+			}
+		},
+		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.SqliteOptions, HansKindberg.IdentityServer"
+	},
+	"FeatureManagement": {
+		"DataDirectory": true
+	}
+}

@@ -1,0 +1,346 @@
+<cultures>
+	<culture name="en">
+		<common>
+			<cancel>Cancel</cancel>
+			<certificate>Certificate</certificate>
+			<close>Close</close>
+			<culture>Culture</culture>
+			<error>Error</error>
+			<information>Information</information>
+			<localization>Localization</localization>
+			<remove>Remove</remove>
+			<site-name>Identity-server</site-name>
+			<ui-culture>UI-culture</ui-culture>
+			<your-identity>Your identity</your-identity>
+		</common>
+		<controllers>
+			<accountController>
+				<errors>
+					<invalid-username-or-password>Invalid user-name or password.</invalid-username-or-password>
+				</errors>
+			</accountController>
+			<consentController>
+				<errors>
+					<invalid-identity-resource>"{0}" is an invalid permission.</invalid-identity-resource>
+					<invalid-api-scope>"{0}" is an invalid permission.</invalid-api-scope>
+					<not-allowed>"{0}" is not allowed.</not-allowed>
+					<required>"{0}" is required.</required>
+				</errors>
+				<api lookup="views.consent.scope.api.label" />
+				<email lookup="views.consent.scope.email.label" />
+				<null-api-scope></null-api-scope>
+				<null-identity-resource></null-identity-resource>
+				<offline_access lookup="views.consent.scope.offline_access.label" />
+				<openid lookup="views.consent.scope.openid.label" />
+				<persistent lookup="models.views.consent.consentForm.persistent.name" />
+				<profile lookup="views.consent.scope.profile.label" />
+				<role-service lookup="views.consent.scope.role-service.label" />
+			</consentController>
+			<deviceController>
+				<errors>
+					<invalid-usercode>"{0}" is an invalid user-code.</invalid-usercode>
+				</errors>
+			</deviceController>
+		</controllers>
+		<models>
+			<views>
+				<account>
+					<signInForm>
+						<password>
+							<name>Password</name>
+							<prompt>Enter your password</prompt>
+						</password>
+						<required name="&quot;{0}&quot; is required.">{0} is required.</required>
+						<persistent>
+							<name>Remember my signin</name>
+						</persistent>
+						<userName>
+							<name>User-name</name>
+							<prompt>Enter your user-name</prompt>
+						</userName>
+					</signInForm>
+				</account>
+				<consent>
+					<consentForm>
+						<description>
+							<name>Description</name>
+							<prompt>Optional description of your device</prompt>
+						</description>
+						<persistent>
+							<name>Remember my choice</name>
+						</persistent>
+					</consentForm>
+				</consent>
+				<device>
+					<deviceForm>
+						<required name="&quot;{0}&quot; is required.">{0} is required.</required>
+						<userCode>
+							<name>User-code</name>
+							<prompt>Enter your user-code</prompt>
+						</userCode>
+					</deviceForm>
+				</device>
+				<shared>
+					<parts>
+						<headerviewmodel>
+							<a-cookie name="a cookie">a cookie</a-cookie>
+							<clear name="- Clear -"> - Clear - </clear>
+							<clear-the-selected-culture name="Clear the selected culture.">Clear the selected culture.</clear-the-selected-culture>
+							<debug>
+								<heading>Debug</heading>
+								<information>Show the current page with debug-information.</information>
+							</debug>
+							<select-a-culture name="Select a culture.">Select a culture.</select-a-culture>
+							<select-culture-0 name="Select culture {0}.">Select culture {0}.</select-culture-0>
+							<the-current-culture-is-determined-by-0 name="The current culture is determined by {0}.">The current culture is determined by {0}.</the-current-culture-is-determined-by-0>
+							<the-default-settings name="the default settings">the default settings</the-default-settings>
+							<the-query-string name="the query-string">the query-string</the-query-string>
+							<the-request-header name="the request-header (browser-settings)">the browser settings</the-request-header>
+						</headerviewmodel>
+					</parts>
+				</shared>
+			</views>
+		</models>
+		<views>
+			<account>
+				<accessdenied>
+					<heading>Access denied</heading>
+					<information>You do not have access to the resource you try to reach.</information>
+				</accessdenied>
+				<index>
+					<claims>Claims</claims>
+					<heading lookup="common.your-identity" />
+					<issuer>Issuer</issuer>
+					<original-issuer>Original issuer</original-issuer>
+					<user-name>User-name</user-name>
+					<value>Value</value>
+				</index>
+				<signin>
+					<Azure-AD>
+						<heading>Azure AD</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Azure-AD>
+					<bankid-otherdevice>
+						<heading>Mobile Bank-ID</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</bankid-otherdevice>
+					<bankid-samedevice>
+						<heading>Bank-ID</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</bankid-samedevice>
+					<Certificate-By-Issuer-Test>
+						<heading>Test-certificate (issuer)</heading>
+						<information>A test-certificate validated by issuer.</information>
+					</Certificate-By-Issuer-Test>
+					<Certificate-By-Subject-Test>
+						<heading>Test-certificate (name)</heading>
+						<information>A test-certificate validated by name (subject).</information>
+					</Certificate-By-Subject-Test>
+					<Certificate-By-Thumbprint-Test>
+						<heading>Test-certificate (thumbprint)</heading>
+						<information>A test-certificate validated by thumbprint.</information>
+					</Certificate-By-Thumbprint-Test>
+					<Google>
+						<heading>Google</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Google>
+					<grandid-bankid-choosedevice>
+						<heading>Grand-ID (choose)</heading>
+						<information>Choose mobile or on this device.</information>
+					</grandid-bankid-choosedevice>
+					<grandid-bankid-otherdevice>
+						<heading>Grand-ID / mobile bank-id</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</grandid-bankid-otherdevice>
+					<grandid-bankid-samedevice>
+						<heading>Grand-ID / this device</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</grandid-bankid-samedevice>
+					<heading>Sign in</heading>
+					<IdentityServer-Demo>
+						<heading>IdentityServer demo</heading>
+						<information>https://demo.identityserver.io/</information>
+					</IdentityServer-Demo>
+					<information>Select one of the following signin methods.</information>
+					<Microsoft>
+						<heading>Microsoft</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Microsoft>
+					<no-available-authentication-alternatives>
+						<heading>Invalid request</heading>
+						<information>There are no valid signin methods for this client.</information>
+					</no-available-authentication-alternatives>
+					<SITHS-Certificate>
+						<heading>SITHS-certificate</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</SITHS-Certificate>
+					<Windows>
+						<heading>Windows</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Windows>
+					<sign-in-with>Sign in with</sign-in-with>
+				</signin>
+				<signInForm>
+					<cancel lookup="common.cancel" />
+					<hint>Tip! In this development-environment, you can sign in with the following combinations: Administrator/P@ssword12, Alice/P@ssword12 or Bob/P@ssword12</hint>
+					<submit>Sign in</submit>
+				</signInForm>
+				<signedout>
+					<confirmation>You are now signed out.</confirmation>
+					<heading>Signed out</heading>
+					<redirect-text>Click here to return to the application "{0}".</redirect-text>
+				</signedout>
+				<signout>
+					<heading>Sign out</heading>
+					<question>Do you want to sign out?</question>
+				</signout>
+				<signoutform>
+					<accept>Yes</accept>
+				</signoutform>
+			</account>
+			<consent>
+				<form>
+					<accept>Accept</accept>
+					<application-access>Application access</application-access>
+					<personal-information>Personal information</personal-information>
+					<reject>Reject</reject>
+				</form>
+				<index>
+					<description>Uncheck the permissions you do not wish to grant.</description>
+					<heading>Request for permission</heading>
+					<permission-request>is requesting your permission</permission-request>
+					<userCode>Please confirm that the authorization request quotes the code</userCode>
+				</index>
+				<scope>
+					<api>
+						<label>API</label>
+					</api>
+					<email>
+						<description></description>
+						<label>Your email address</label>
+					</email>
+					<offline_access>
+						<description>Access to your applications and resources even when you are offline.</description>
+						<label>Offline access</label>
+					</offline_access>
+					<openid>
+						<label>Your user-id</label>
+					</openid>
+					<profile>
+						<description>Information about your user-profile (username, given name, surname etc.)</description>
+						<label>User-profile</label>
+					</profile>
+					<required>required</required>
+					<resource1>
+						<scope1>
+							<description>An example.</description>
+							<label>Scope 1 (resource 1)</label>
+						</scope1>
+					</resource1>
+					<resource2>
+						<scope1>
+							<label>Scope 1 (resource 2)</label>
+						</scope1>
+					</resource2>
+					<role-service>
+						<description>Access to the role-service that gives you permission groups in windows.</description>
+						<label>Role-service</label>
+					</role-service>
+				</scope>
+			</consent>
+			<device>
+				<confirmation>
+					<heading>Confirmation</heading>
+					<information>You have successfully authorized the device.</information>
+				</confirmation>
+				<form>
+					<submit>Submit</submit>
+				</form>
+				<index>
+					<heading>User-code</heading>
+					<information>Please enter the user-code displayed on your device.</information>
+				</index>
+			</device>
+			<error>
+				<index>
+					<activity-id>Activity-id</activity-id>
+					<details>Details</details>
+					<heading lookup="common.error" />
+					<information>An error has occurred.</information>
+					<path>Path</path>
+					<trace-identifier>Trace</trace-identifier>
+					<type>Type</type>
+				</index>
+			</error>
+			<grants>
+				<index>
+					<api lookup="views.consent.scope.api.label" />
+					<apiScopes>Application access</apiScopes>
+					<client-logo-alternative-text>Image showing client-logo.</client-logo-alternative-text>
+					<created>Created</created>
+					<description>Description</description>
+					<email lookup="views.consent.scope.email.label" />
+					<expiration>Expires</expiration>
+					<heading>Access to client-applications</heading>
+					<identityResources>Personal information</identityResources>
+					<information>
+						List of the client applications you have granted access to and the resources they have access to.
+					</information>
+					<no-grants>
+						<heading>No granted access</heading>
+						<information>You have no client applications with granted access.</information>
+					</no-grants>
+					<offline_access lookup="views.consent.scope.offline_access.label" />
+					<openid lookup="views.consent.scope.openid.label" />
+					<profile lookup="views.consent.scope.profile.label" />
+					<revoke>Revoke</revoke>
+					<role-service lookup="views.consent.scope.role-service.label" />
+				</index>
+			</grants>
+			<home>
+				<index>
+					<body>
+						<![CDATA[
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a magna sed sem tristique varius. Ut dictum augue vestibulum rutrum malesuada. Sed malesuada vestibulum sagittis. In vehicula pellentesque interdum. Duis finibus porttitor aliquet. Donec maximus eleifend rhoncus. Morbi vel nisi et nunc bibendum imperdiet in eget nibh. Ut imperdiet enim eu ante imperdiet cursus at nec est. Nunc vel efficitur urna. Ut fermentum turpis ligula, vel consectetur diam rhoncus at. Duis sed justo quam. Integer tellus ligula, lobortis id risus id, hendrerit maximus lorem.</p>
+							<p><a href="https://identityserver4.readthedocs.io/en/latest/">More information</a></p>
+							<p>Nullam auctor leo ipsum, vitae aliquam massa feugiat sit amet. Mauris et magna augue. Nunc at magna non nibh molestie tempor. Integer tempus viverra lorem, et volutpat urna pellentesque nec. Vivamus consequat dui nec dolor vulputate fringilla. Suspendisse euismod enim in nisl elementum, sit amet efficitur justo porttitor. Nunc tristique nunc in magna elementum ultrices. Duis ut pellentesque orci. Vestibulum lacinia facilisis commodo. Ut laoreet semper risus fermentum interdum. Donec eget quam commodo, tempor ex sed, scelerisque mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer vitae nisi quis odio ullamcorper porta tincidunt id diam. Etiam non risus magna.</p>
+							<p>Proin sit amet quam massa. Nullam a ipsum et sapien fringilla mattis ac sit amet eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas eu ante et turpis auctor imperdiet eu vel tortor. Ut vel luctus elit. Suspendisse arcu dolor, varius sed risus a, hendrerit facilisis sapien. Morbi id eros sit amet dui varius viverra. Cras in dolor odio. Aenean tempor, dui vel elementum elementum, sapien leo rutrum ante, sit amet porttitor dui velit at quam. Nulla tristique ullamcorper felis non ultrices. In ornare ipsum in gravida suscipit. Morbi ultricies, est a sollicitudin aliquam, ex mi tristique diam, quis fringilla lectus erat at nunc. Etiam bibendum at nisi id lacinia. Fusce interdum quis lacus at pellentesque. Cras et dictum urna, euismod feugiat ante.</p>
+						]]>
+					</body>
+					<heading lookup="common.site-name" />
+				</index>
+			</home>
+			<shared>
+				<_layout>
+					<title lookup="common.site-name" />
+				</_layout>
+				<parts>
+					<debugInformation>
+						<close lookup="common.close" />
+						<heading>Debug-information</heading>
+						<queryString>Query-string</queryString>
+						<queryString-For-ReturnUrl>Query-string for return-url</queryString-For-ReturnUrl>
+						<remove lookup="common.remove" />
+						<requestHeaders>Request-headers</requestHeaders>
+						<responseHeaders>Response-headers</responseHeaders>
+					</debugInformation>
+					<header>
+						<delete-culture-cookie name="Delete culture-cookie.">Clear culture-cookie.</delete-culture-cookie>
+						<save-culture-cookie name="Save culture-cookie.">Save culture-cookie.</save-culture-cookie>
+						<sign-out>Sign out</sign-out>
+						<toggle-navigation>Select culture</toggle-navigation>
+						<your-identity lookup="common.your-identity" />
+					</header>
+				</parts>
+				<redirect>
+					<heading>Redirect</heading>
+					<information>You will now be redirected to the application. When done, you can close this tab. If you are not redirected, click on the link:</information>
+				</redirect>
+				<validationSummary>
+					<heading>Input-error</heading>
+					<information>The form is not filled in correctly.</information>
+				</validationSummary>
+			</shared>
+		</views>
+	</culture>
+</cultures>

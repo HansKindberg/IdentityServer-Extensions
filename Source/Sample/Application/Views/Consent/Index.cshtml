@@ -1,0 +1,27 @@
+﻿@model ConsentViewModel
+<h1 class="h4">
+	<svg class="size-1-point-4-rem" role="presentation">
+		<use xlink:href="/Style/Icons/sprite.svg#info" />
+	</svg>
+	@Localizer.GetString("Heading")
+</h1>
+<hr />
+<p>
+	<strong>
+		@if(!string.IsNullOrEmpty(Model.Client.ClientUri))
+		{
+			<a href="@Model.Client.ClientUri">@Model.Client.ClientName</a>
+		}
+		else
+		{
+			@Model.Client.ClientName
+		}
+	</strong>@Localizer.GetString("permission-request").
+</p>
+@foreach(var (key, value) in Model.Form.Dictionary)
+{
+	<p>@Localizer.GetString(key): <strong>@value</strong></p>
+}
+<p>@Localizer.GetString("description")</p>
+<partial name="ValidationSummary" />
+<partial model="@Model.Form" name="~/Views/Consent/Form.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{ViewDataKeys.PersistenceEnabled, Model.PersistenceEnabled}})" />

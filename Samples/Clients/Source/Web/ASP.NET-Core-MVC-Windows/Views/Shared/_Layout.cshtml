@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@ViewData["Title"] - Application</title>
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="~/css/site.css" />
+	</head>
+	<body>
+		<header>
+			<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+				<div class="container">
+					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Application</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+					        aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a asp-action="Index" asp-controller="Home" class="nav-link text-dark">Home</a>
+							</li>
+							<li class="nav-item">
+								<a asp-action="Privacy" asp-controller="Home" class="nav-link text-dark">Privacy</a>
+							</li>
+							@if(User?.Identity != null && User.Identity.IsAuthenticated)
+							{
+								<li class="nav-item">
+									<a asp-action="Roles" asp-controller="Home" class="nav-link text-dark">Roles</a>
+								</li>
+							}
+						</ul>
+						<ul class="navbar-nav ml-auto">
+							@if(User?.Identity != null && User.Identity.IsAuthenticated)
+							{
+								<li class="nav-item dropdown active">
+									<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="identity-dropdown">
+										@User.Identity.Name
+									</a>
+									<div aria-labelledby="identity-dropdown" class="dropdown-menu">
+										<a asp-action="Index" asp-controller="Account" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="dropdown-item">Your account</a>
+										<a asp-action="SignOut" asp-controller="Account" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="dropdown-item">Sign out</a>
+									</div>
+								</li>
+							}
+							else
+							{
+								<li class="nav-item active">
+									<a asp-action="SignIn" asp-controller="Account" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="nav-link">Sign in</a>
+								</li>
+							}
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<div class="container">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+		<footer class="border-top footer text-muted">
+			<div class="container">
+				&copy; 2020 - Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+			</div>
+		</footer>
+		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+		@await RenderSectionAsync("Scripts", required: false)
+	</body>
+</html>

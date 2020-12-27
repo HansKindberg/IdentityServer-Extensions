@@ -1,0 +1,54 @@
+﻿@inject LayoutViewModel LayoutModel
+<!DOCTYPE html>
+<html lang="@LayoutModel.UiCulture">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex,nofollow" />
+		@if(IsSectionDefined("AdditionalMeta"))
+		{
+			@RenderSection("AdditionalMeta")
+		}
+		@if(IsSectionDefined("Title"))
+		{
+			@RenderSection("Title")
+		}
+		else
+		{
+			<title>@Localizer.GetString("Title")</title>
+		}
+		@if(IsSectionDefined("Style"))
+		{
+			@RenderSection("Style")
+		}
+		else
+		{
+			<link href="~/Style/Site.min.css" rel="stylesheet" />
+		}
+		@if(IsSectionDefined("AdditionalStyle"))
+		{
+			@RenderSection("AdditionalStyle")
+		}
+	</head>
+	<body>
+		<partial model="@LayoutModel.Header" name="~/Views/Shared/Parts/Header.cshtml" />
+		<main class="container-md mb-4" role="main">
+			<feature name="@nameof(Feature.Debug)">
+				<partial name="~/Views/Shared/Parts/DebugInformation.cshtml" />
+			</feature>
+			@RenderBody()
+		</main>
+		@if(IsSectionDefined("Scripts"))
+		{
+			@RenderSection("Scripts")
+		}
+		else
+		{
+			<script src="~/Scripts/Site.min.js"></script>
+		}
+		@if(IsSectionDefined("AdditionalScripts"))
+		{
+			@RenderSection("AdditionalScripts")
+		}
+	</body>
+</html>

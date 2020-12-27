@@ -1,0 +1,29 @@
+﻿@model IHeaderDictionary
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@ViewData["Heading"]</h1>
+	</div>
+	<div class="card-body">
+		<p>@ViewData["Information"]</p>
+		@if(Model != null && Model.Any())
+		{
+			<ul class="list-group">
+				@foreach(var (key, values) in Model.OrderBy(item => item.Key))
+				{
+					<li class="list-group-item">
+						<strong>@key</strong>
+						@if(values.Any())
+						{
+							<ul>
+								@foreach(var value in values)
+								{
+									<li>@value</li>
+								}
+							</ul>
+						}
+					</li>
+				}
+			</ul>
+		}
+	</div>
+</div>

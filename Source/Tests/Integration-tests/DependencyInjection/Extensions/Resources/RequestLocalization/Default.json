@@ -1,0 +1,23 @@
+{
+	"RequestLocalization": {
+		"DefaultRequestCulture": {
+			"Culture": "sv-SE",
+			"UiCulture": "sv"
+		},
+		"FallbackToParentCultures": true,
+		"FallbackToParentUiCultures": true,
+		"RequestCultureProviders": [
+			"HansKindberg.IdentityServer.Web.Localization.OpenIdConnectRequestCultureProvider, HansKindberg.IdentityServer",
+			"Microsoft.AspNetCore.Localization.CookieRequestCultureProvider, Microsoft.AspNetCore.Localization",
+			"Microsoft.AspNetCore.Localization.AcceptLanguageHeaderRequestCultureProvider, Microsoft.AspNetCore.Localization"
+		],
+		"SupportedCultures": [
+			"en-001",
+			"sv-SE"
+		],
+		"SupportedUiCultures": [
+			"en",
+			"sv"
+		]
+	}
+}

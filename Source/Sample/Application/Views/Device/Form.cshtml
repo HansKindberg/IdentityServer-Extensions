@@ -1,0 +1,12 @@
+﻿@model DeviceForm
+<form asp-action="UserCode" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]">
+	<div class="form-group">
+		<label asp-for="UserCode"></label>
+		<input asp-for="UserCode" autofocus="autofocus" class="form-control" />
+	</div>
+	<div class="text-right">
+		<button class="btn btn-primary" type="submit">
+			@Localizer.GetString("Submit")
+		</button>
+	</div>
+</form>

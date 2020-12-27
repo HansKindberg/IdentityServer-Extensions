@@ -1,0 +1,344 @@
+<cultures>
+	<culture name="sv">
+		<common>
+			<cancel>Avbryt</cancel>
+			<certificate>Certificate</certificate>
+			<close>Stäng</close>
+			<culture>Språk</culture>
+			<error>Fel</error>
+			<information>Information</information>
+			<localization>Localization</localization>
+			<remove>Ta bort</remove>
+			<site-name>Identitets-server</site-name>
+			<ui-culture>UI-culture</ui-culture>
+			<your-identity>Din identitet</your-identity>
+		</common>
+		<controllers>
+			<accountController>
+				<errors>
+					<invalid-username-or-password>Ogiltigt användarnamn eller lösenord.</invalid-username-or-password>
+				</errors>
+			</accountController>
+			<consentController>
+				<errors>
+					<invalid-identity-resource>"{0}" är en ogiltig behörighet.</invalid-identity-resource>
+					<invalid-api-scope>"{0}" är en ogiltig behörighet.</invalid-api-scope>
+					<not-allowed>"{0}" är inte tillåtet.</not-allowed>
+					<required>"{0}" är obligatoriskt.</required>
+				</errors>
+				<api lookup="views.consent.scope.api.label" />
+				<email lookup="views.consent.scope.email.label" />
+				<null-api-scope></null-api-scope>
+				<null-identity-resource></null-identity-resource>
+				<offline_access lookup="views.consent.scope.offline_access.label" />
+				<openid lookup="views.consent.scope.openid.label" />
+				<persistent lookup="models.views.consent.consentForm.persistent.name" />
+				<profile lookup="views.consent.scope.profile.label" />
+				<role-service lookup="views.consent.scope.role-service.label" />
+			</consentController>
+			<deviceController>
+				<errors>
+					<invalid-usercode>"{0}" är en ogiltig användar-kod.</invalid-usercode>
+				</errors>
+			</deviceController>
+		</controllers>
+		<models>
+			<views>
+				<account>
+					<signInForm>
+						<password>
+							<name>Lösenord</name>
+							<prompt>Ange ditt lösenord</prompt>
+						</password>
+						<required name="&quot;{0}&quot; is required.">{0} är obligatoriskt.</required>
+						<persistent>
+							<name>Kom ihåg min inloggning</name>
+						</persistent>
+						<userName>
+							<name>Användarnamn</name>
+							<prompt>Ange ditt användarnamn</prompt>
+						</userName>
+					</signInForm>
+				</account>
+				<consent>
+					<consentForm>
+						<description>
+							<name>Beskrivning</name>
+							<prompt>Frivillig beskrivning av din enhet</prompt>
+						</description>
+						<persistent>
+							<name>Kom ihåg mitt val</name>
+						</persistent>
+					</consentForm>
+				</consent>
+				<device>
+					<deviceForm>
+						<required name="&quot;{0}&quot; is required.">{0} är obligatorisk.</required>
+						<userCode>
+							<name>Användar-kod</name>
+							<prompt>Ange din användar-kod</prompt>
+						</userCode>
+					</deviceForm>
+				</device>
+				<shared>
+					<parts>
+						<headerviewmodel>
+							<a-cookie name="a cookie">en kaka</a-cookie>
+							<clear name="- Clear -"> - Rensa - </clear>
+							<clear-the-selected-culture name="Clear the selected culture.">Rensa det valda språket.</clear-the-selected-culture>
+							<debug>
+								<heading>Debug</heading>
+								<information>Visa nuvarande sida med debug-information.</information>
+							</debug>
+							<select-a-culture name="Select a culture.">Välj ett språk.</select-a-culture>
+							<select-culture-0 name="Select culture {0}.">Välj språk {0}.</select-culture-0>
+							<the-current-culture-is-determined-by-0 name="The current culture is determined by {0}.">Det nuvarande språket är bestämt genom {0}.</the-current-culture-is-determined-by-0>
+							<the-default-settings name="the default settings">standard-inställningarna</the-default-settings>
+							<the-query-string name="the query-string">en parameter i webbläsarens adress-fält</the-query-string>
+							<the-request-header name="the request-header (browser-settings)">webbläsar-inställningarna</the-request-header>
+						</headerviewmodel>
+					</parts>
+				</shared>
+			</views>
+		</models>
+		<views>
+			<account>
+				<accessdenied>
+					<heading>Behörighet saknas</heading>
+					<information>Du saknar behörighet till den resurs du försöker nå.</information>
+				</accessdenied>
+				<index>
+					<claims>Egenskaper</claims>
+					<heading lookup="common.your-identity" />
+					<issuer>Utfärdare</issuer>
+					<original-issuer>Ursprunglig utfärdare</original-issuer>
+					<user-name>Användar-namn</user-name>
+					<value>Värde</value>
+				</index>
+				<signin>
+					<Azure-AD>
+						<heading>Azure AD</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Azure-AD>
+					<bankid-otherdevice>
+						<heading>Mobilt Bank-ID</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</bankid-otherdevice>
+					<bankid-samedevice>
+						<heading>Bank-ID</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</bankid-samedevice>
+					<Certificate-By-Issuer-Test>
+						<heading>Test-certifikat (utfärdare)</heading>
+						<information>Ett test-certifikat som valideras per utfärdare.</information>
+					</Certificate-By-Issuer-Test>
+					<Certificate-By-Subject-Test>
+						<heading>Test-certifikat (namn)</heading>
+						<information>Ett test-certifikat som valideras per namn (subject).</information>
+					</Certificate-By-Subject-Test>
+					<Certificate-By-Thumbprint-Test>
+						<heading>Test-certifikat (tumavtryck)</heading>
+						<information>Ett test-certifikat som valideras per tumavtryck.</information>
+					</Certificate-By-Thumbprint-Test>
+					<Google>
+						<heading>Google</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Google>
+					<grandid-bankid-choosedevice>
+						<heading>Grand-ID (välj)</heading>
+						<information>Välj mobilt eller på denna enhet.</information>
+					</grandid-bankid-choosedevice>
+					<grandid-bankid-otherdevice>
+						<heading>Grand-ID / mobild bank-id</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</grandid-bankid-otherdevice>
+					<grandid-bankid-samedevice>
+						<heading>Grand-ID / denna enhet</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</grandid-bankid-samedevice>
+					<heading>Logga in</heading>
+					<IdentityServer-Demo>
+						<heading>IdentityServer demo</heading>
+						<information>https://demo.identityserver.io/</information>
+					</IdentityServer-Demo>
+					<information>Välj något av följande inloggnings-sätt.</information>
+					<Microsoft>
+						<heading>Microsoft</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Microsoft>
+					<no-available-authentication-alternatives>
+						<heading>Ogiltig begäran</heading>
+						<information>Det finns inte några giltiga inloggnings-sätt för denna klient.</information>
+					</no-available-authentication-alternatives>
+					<SITHS-Certificate>
+						<heading>SITHS-certifikat</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</SITHS-Certificate>
+					<Windows>
+						<heading>Windows-inloggning</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</Windows>
+					<sign-in-with>Logga in med</sign-in-with>
+				</signin>
+				<signInForm>
+					<cancel lookup="common.cancel" />
+					<hint>Tips! I denna utvecklings-miljö kan du logga in med följande kombinationer: Administrator/P@ssword12, Alice/P@ssword12 or Bob/P@ssword12</hint>
+					<submit>Logga in</submit>
+				</signInForm>
+				<signedout>
+					<confirmation>Du är nu utloggad.</confirmation>
+					<heading>Utloggad</heading>
+					<redirect-text>Klicka här för att återgå till applikationen "{0}".</redirect-text>
+				</signedout>
+				<signout>
+					<heading>Logga ut</heading>
+					<question>Vill du logga ut?</question>
+				</signout>
+				<signoutform>
+					<accept>Ja</accept>
+				</signoutform>
+			</account>
+			<consent>
+				<form>
+					<accept>Acceptera</accept>
+					<application-access>Applikationsåtkomst</application-access>
+					<personal-information>Personlig information</personal-information>
+					<reject>Avvisa</reject>
+				</form>
+				<index>
+					<description>Avmarkera behörigheterna du inte vill bevilja.</description>
+					<heading>Begäran av tillstånd</heading>
+					<permission-request>begär ditt tillstånd</permission-request>
+					<userCode>Var vänlig bekräfta att detta medgivande gäller följande användar-kod</userCode>
+				</index>
+				<scope>
+					<api>
+						<label>API</label>
+					</api>
+					<email>
+						<description></description>
+						<label>Din e-post adress</label>
+					</email>
+					<offline_access>
+						<description>Åtkomst till dina applikationer och resurser även när du är offline.</description>
+						<label>Offline-åtkomst</label>
+					</offline_access>
+					<openid>
+						<label>Ditt användar-id</label>
+					</openid>
+					<profile>
+						<description>Information om din användar-profil (användarnamn, förnamn, efternamn osv.)</description>
+						<label>Användar-profil</label>
+					</profile>
+					<required>obligatorisk</required>
+					<resource1>
+						<scope1>
+							<description>Ett exempel.</description>
+							<label>Åtkomst 1 (resurs 1)</label>
+						</scope1>
+					</resource1>
+					<resource2>
+						<scope1>
+							<label>Åtkomst 1 (resurs 2)</label>
+						</scope1>
+					</resource2>
+					<role-service>
+						<description>Åtkomst till roll-tjänsten som ger dig behörighetsgrupper i windows.</description>
+						<label>Roll-tjänst</label>
+					</role-service>
+				</scope>
+			</consent>
+			<device>
+				<confirmation>
+					<heading>Bekräftelse</heading>
+					<information>Du har nu autentiserat enheten.</information>
+				</confirmation>
+				<form>
+					<submit>Skicka</submit>
+				</form>
+				<index>
+					<heading>Användar-kod</heading>
+					<information>Var vänlig och fyll i den användar-kod som visas på din enhet.</information>
+				</index>
+			</device>
+			<error>
+				<index>
+					<activity-id>Aktivitets-id</activity-id>
+					<details>Detaljer</details>
+					<heading lookup="common.error" />
+					<information>Ett fel har inträffat.</information>
+					<path>Sökväg</path>
+					<trace-identifier>Spårning</trace-identifier>
+					<type>Typ</type>
+				</index>
+			</error>
+			<grants>
+				<index>
+					<api lookup="views.consent.scope.api.label" />
+					<apiScopes>Applikationsåtkomst</apiScopes>
+					<client-logo-alternative-text>Bild som visar klient-logo.</client-logo-alternative-text>
+					<created>Skapad</created>
+					<description>Beskrivning</description>
+					<email lookup="views.consent.scope.email.label" />
+					<expiration>Utgår</expiration>
+					<heading>Rättigheter för klient-applikationer</heading>
+					<identityResources>Personlig information</identityResources>
+					<information>Lista med de klient-applikationer du har gett rättigheter till och resurserna de har tillgång till.</information>
+					<no-grants>
+						<heading>Inga tilldelade rättigheter</heading>
+						<information>Du har inga klient-applikationer med tilldelade rättigheter.</information>
+					</no-grants>
+					<offline_access lookup="views.consent.scope.offline_access.label" />
+					<openid lookup="views.consent.scope.openid.label" />
+					<profile lookup="views.consent.scope.profile.label" />
+					<revoke>Ta bort</revoke>
+					<role-service lookup="views.consent.scope.role-service.label" />
+				</index>
+			</grants>
+			<home>
+				<index>
+					<body>
+						<![CDATA[
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a magna sed sem tristique varius. Ut dictum augue vestibulum rutrum malesuada. Sed malesuada vestibulum sagittis. In vehicula pellentesque interdum. Duis finibus porttitor aliquet. Donec maximus eleifend rhoncus. Morbi vel nisi et nunc bibendum imperdiet in eget nibh. Ut imperdiet enim eu ante imperdiet cursus at nec est. Nunc vel efficitur urna. Ut fermentum turpis ligula, vel consectetur diam rhoncus at. Duis sed justo quam. Integer tellus ligula, lobortis id risus id, hendrerit maximus lorem.</p>
+							<p><a href="https://identityserver4.readthedocs.io/en/latest/">Mer information</a></p>
+							<p>Nullam auctor leo ipsum, vitae aliquam massa feugiat sit amet. Mauris et magna augue. Nunc at magna non nibh molestie tempor. Integer tempus viverra lorem, et volutpat urna pellentesque nec. Vivamus consequat dui nec dolor vulputate fringilla. Suspendisse euismod enim in nisl elementum, sit amet efficitur justo porttitor. Nunc tristique nunc in magna elementum ultrices. Duis ut pellentesque orci. Vestibulum lacinia facilisis commodo. Ut laoreet semper risus fermentum interdum. Donec eget quam commodo, tempor ex sed, scelerisque mauris. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer vitae nisi quis odio ullamcorper porta tincidunt id diam. Etiam non risus magna.</p>
+							<p>Proin sit amet quam massa. Nullam a ipsum et sapien fringilla mattis ac sit amet eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Maecenas eu ante et turpis auctor imperdiet eu vel tortor. Ut vel luctus elit. Suspendisse arcu dolor, varius sed risus a, hendrerit facilisis sapien. Morbi id eros sit amet dui varius viverra. Cras in dolor odio. Aenean tempor, dui vel elementum elementum, sapien leo rutrum ante, sit amet porttitor dui velit at quam. Nulla tristique ullamcorper felis non ultrices. In ornare ipsum in gravida suscipit. Morbi ultricies, est a sollicitudin aliquam, ex mi tristique diam, quis fringilla lectus erat at nunc. Etiam bibendum at nisi id lacinia. Fusce interdum quis lacus at pellentesque. Cras et dictum urna, euismod feugiat ante.</p>
+						]]>
+					</body>
+					<heading lookup="common.site-name" />
+				</index>
+			</home>
+			<shared>
+				<_layout>
+					<title lookup="common.site-name" />
+				</_layout>
+				<parts>
+					<debugInformation>
+						<close lookup="common.close" />
+						<heading>Debug-information</heading>
+						<queryString>Query-string</queryString>
+						<queryString-For-ReturnUrl>Query-string for return-url</queryString-For-ReturnUrl>
+						<remove lookup="common.remove" />
+						<requestHeaders>Request-headers</requestHeaders>
+						<responseHeaders>Response-headers</responseHeaders>
+					</debugInformation>
+					<header>
+						<delete-culture-cookie name="Delete culture-cookie.">Rensa språk-cookie.</delete-culture-cookie>
+						<save-culture-cookie name="Save culture-cookie.">Spara språk-cookie.</save-culture-cookie>
+						<sign-out>Logga ut</sign-out>
+						<toggle-navigation>Välj språk</toggle-navigation>
+						<your-identity lookup="common.your-identity" />
+					</header>
+				</parts>
+				<redirect>
+					<heading>Omdirigering</heading>
+					<information>Du blir nu omdirigerad till applikationen. När det är klart kan du stänga den här fliken. Om du inte skulle bli omdirigerad, klicka på länken:</information>
+				</redirect>
+				<validationSummary>
+					<heading>Inmatnings-fel</heading>
+					<information>Formuläret är inte ifyllt korrekt.</information>
+				</validationSummary>
+			</shared>
+		</views>
+	</culture>
+</cultures>

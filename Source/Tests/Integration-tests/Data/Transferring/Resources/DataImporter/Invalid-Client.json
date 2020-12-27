@@ -1,0 +1,16 @@
+{
+	"Clients": [
+		{
+			"ClientId": "client-1"
+		},
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client-2"
+		},
+		{
+			"AllowedGrantTypes": [ "grant-type" ],
+			"ClientId": "client-3",
+			"ClientSecrets": [ { "Value": "Secret" } ]
+		}
+	]
+}

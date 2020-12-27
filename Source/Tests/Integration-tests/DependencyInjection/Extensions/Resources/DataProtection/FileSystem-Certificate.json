@@ -1,0 +1,20 @@
+{
+	"DataProtection": {
+		"Options": {
+			"KeyProtection": {
+				"Options": {
+					"CertificateResolver": {
+						"Options": {
+							"Password": "password",
+							"Path": "Test-data/Development-Key-Protection-Certificate.pfx"
+						},
+						"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+					}
+				},
+				"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.KeyProtection.CertificateOptions, HansKindberg.IdentityServer"
+			},
+			"Path": "Test-data/Data-protection"
+		},
+		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.FileSystemOptions, HansKindberg.IdentityServer"
+	}
+}

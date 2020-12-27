@@ -1,0 +1,120 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Global", ".Global", "{CC403B1F-AAC6-4448-AF7C-D47255188352}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Certificates", "Certificates", "{9AE68775-532D-4CA5-B98C-8CC30B10F321}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-email-and-UPN.pfx = ..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-email-and-UPN.pfx
+		..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-email.pfx = ..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-email.pfx
+		..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-UPN.pfx = ..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate-with-UPN.pfx
+		..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate.pfx = ..\..\..\.Global\Certificates\Test-IdentityServer-client-certificate.pfx
+		..\..\..\.Global\Certificates\Test-IdentityServer-invalid-client-certificate.pfx = ..\..\..\.Global\Certificates\Test-IdentityServer-invalid-client-certificate.pfx
+		..\..\..\.Global\Certificates\Test-IdentityServer-Root-CA.cer = ..\..\..\.Global\Certificates\Test-IdentityServer-Root-CA.cer
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{C9DDBF6D-9F9B-4812-9974-E6293E8D6AF2}"
+	ProjectSection(SolutionItems) = preProject
+		..\ReadMe.md = ..\ReadMe.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{73C0B9F7-FF97-4727-A30A-A579903B559E}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\.Global\Scripts\Create-test-certificates.ps1 = ..\..\..\.Global\Scripts\Create-test-certificates.ps1
+		..\..\..\.Global\Scripts\Import-test-certificates.ps1 = ..\..\..\.Global\Scripts\Import-test-certificates.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{B808D906-DAC5-49A2-93DF-96B25E376D59}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\..\..\.gitignore = ..\..\..\.gitignore
+		..\..\..\NuGet.config = ..\..\..\NuGet.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{F36B3F22-94BE-4B16-8D8F-3359587E6D58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CertificateApi", "CertificateApi", "{E6D2B7D3-CB30-46D6-B85E-CCECA17D63F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ResourceApi", "ResourceApi", "{F72EA5AF-3326-4B3B-B727-1922A891A598}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{EE1D1545-43FC-4ACA-982D-1C9519F76A0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Device", "Device", "{3D039B79-3C79-4B18-8D3F-E621320FE6BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mutual-TLS", "Mutual-TLS", "{6962F1EA-A90B-4EDC-A465-32293B7ABF45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{383EA206-A0DE-439B-8757-40F612570AE3}"
+	ProjectSection(SolutionItems) = preProject
+		Web\.editorconfig = Web\.editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASP.NET-Core-MVC-Windows", "ASP.NET-Core-MVC-Windows", "{BABD7DF7-C861-4AB9-8D48-133F28D290BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Web\ASP.NET-Core-MVC-Windows\Application.csproj", "{F92BCA26-B89A-41E5-8877-AC2B09822466}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Api\CertificateApi\Application.csproj", "{F5401B14-00CD-42F5-A337-93015B59D038}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Api\ResourceApi\Application.csproj", "{4332B996-8F8C-497D-9587-9123954D9574}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Console\Device\Application.csproj", "{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Console\Mutual-TLS\Application.csproj", "{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper", "Helper\Helper.csproj", "{7B2CCB9C-C604-453B-9C91-952534109B65}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F92BCA26-B89A-41E5-8877-AC2B09822466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F92BCA26-B89A-41E5-8877-AC2B09822466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F92BCA26-B89A-41E5-8877-AC2B09822466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F92BCA26-B89A-41E5-8877-AC2B09822466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5401B14-00CD-42F5-A337-93015B59D038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5401B14-00CD-42F5-A337-93015B59D038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5401B14-00CD-42F5-A337-93015B59D038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5401B14-00CD-42F5-A337-93015B59D038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4332B996-8F8C-497D-9587-9123954D9574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4332B996-8F8C-497D-9587-9123954D9574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4332B996-8F8C-497D-9587-9123954D9574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4332B996-8F8C-497D-9587-9123954D9574}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B2CCB9C-C604-453B-9C91-952534109B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B2CCB9C-C604-453B-9C91-952534109B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B2CCB9C-C604-453B-9C91-952534109B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B2CCB9C-C604-453B-9C91-952534109B65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9AE68775-532D-4CA5-B98C-8CC30B10F321} = {CC403B1F-AAC6-4448-AF7C-D47255188352}
+		{C9DDBF6D-9F9B-4812-9974-E6293E8D6AF2} = {CC403B1F-AAC6-4448-AF7C-D47255188352}
+		{73C0B9F7-FF97-4727-A30A-A579903B559E} = {CC403B1F-AAC6-4448-AF7C-D47255188352}
+		{B808D906-DAC5-49A2-93DF-96B25E376D59} = {CC403B1F-AAC6-4448-AF7C-D47255188352}
+		{E6D2B7D3-CB30-46D6-B85E-CCECA17D63F5} = {F36B3F22-94BE-4B16-8D8F-3359587E6D58}
+		{F72EA5AF-3326-4B3B-B727-1922A891A598} = {F36B3F22-94BE-4B16-8D8F-3359587E6D58}
+		{3D039B79-3C79-4B18-8D3F-E621320FE6BE} = {EE1D1545-43FC-4ACA-982D-1C9519F76A0A}
+		{6962F1EA-A90B-4EDC-A465-32293B7ABF45} = {EE1D1545-43FC-4ACA-982D-1C9519F76A0A}
+		{BABD7DF7-C861-4AB9-8D48-133F28D290BC} = {383EA206-A0DE-439B-8757-40F612570AE3}
+		{F92BCA26-B89A-41E5-8877-AC2B09822466} = {BABD7DF7-C861-4AB9-8D48-133F28D290BC}
+		{F5401B14-00CD-42F5-A337-93015B59D038} = {E6D2B7D3-CB30-46D6-B85E-CCECA17D63F5}
+		{4332B996-8F8C-497D-9587-9123954D9574} = {F72EA5AF-3326-4B3B-B727-1922A891A598}
+		{BCE10D32-4840-46B1-9EA2-AA1F5EED3C2B} = {3D039B79-3C79-4B18-8D3F-E621320FE6BE}
+		{8D6FBBDE-0DD9-4D86-A359-683D8E80FFEA} = {6962F1EA-A90B-4EDC-A465-32293B7ABF45}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {424FE297-8BF0-42A0-9E83-986DB0C79256}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,79 @@
+﻿@model GrantsViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body pb-0">
+		<p>@Localizer.GetString("Information")</p>
+		@if(Model.Grants.Any())
+		{
+			foreach(var grant in Model.Grants)
+			{
+				<div class="card">
+					<div class="card-header">
+						<h2 class="h5">@(grant.Client.ClientName ?? grant.Client.ClientId)</h2>
+						@if(grant.Client.LogoUri != null)
+						{
+							<img alt="@Localizer.GetString("client-logo-alternative-text")" src="@grant.Client.LogoUri" />
+						}
+						<div class="text-right">
+							<form asp-action="Revoke" class="d-inline">
+								<input name="@nameof(grant.Client.ClientId)" type="hidden" value="@grant.Client.ClientId">
+								<button class="btn btn-danger" type="submit">@Localizer.GetString("Revoke")</button>
+							</form>
+						</div>
+					</div>
+					<div class="card-body">
+						@if(grant.Description != null)
+						{
+							<div>
+								@Localizer.GetString("Description"): <strong>@grant.Description</strong>
+							</div>
+						}
+						<div>
+							@Localizer.GetString("Created"): <strong>@grant.Created.ToString("yyyy-MM-dd")</strong>
+						</div>
+						@if(grant.Expiration != null)
+						{
+							<div>
+								@Localizer.GetString("Expiration"): <strong>@grant.Expiration.Value.ToString("yyyy-MM-dd")</strong>
+							</div>
+						}
+						@if(grant.IdentityResources.Any())
+						{
+							<h3 class="h6 mt-2">@Localizer.GetString("IdentityResources")</h3>
+							<ul class="m-0">
+								@foreach(var identityResource in grant.IdentityResources)
+								{
+									<li>@Localizer.GetString(identityResource.Name)</li>
+								}
+							</ul>
+						}
+						@if(grant.ApiScopes.Any())
+						{
+							<h3 class="h6 mt-2">@Localizer.GetString("ApiScopes")</h3>
+							<ul class="m-0">
+								@foreach(var apiScope in grant.ApiScopes)
+								{
+									<li>@Localizer.GetString(apiScope.Name)</li>
+								}
+							</ul>
+						}
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="alert alert-warning">
+				<h2 class="h5">
+					<svg class="size-1-point-6-rem" role="presentation">
+						<use xlink:href="/Style/Icons/sprite.svg#alert-circle" />
+					</svg>
+					@Localizer.GetString("no-grants.heading")
+				</h2>
+				<p>@Localizer.GetString("no-grants.information")</p>
+			</div>
+		}
+	</div>
+</div>

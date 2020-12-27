@@ -1,0 +1,7 @@
+﻿@if(!ViewContext.ModelState.IsValid)
+{
+	<div asp-validation-summary="All" class="alert alert-danger pb-1">
+		<h2 class="h5">@Localizer.GetString("Heading")</h2>
+		<p>@Localizer.GetString("Information")</p>
+	</div>
+}
