@@ -14,6 +14,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using RegionOrebroLan.Web.Authentication.Extensions;
 
 namespace Application.Controllers
@@ -46,6 +47,7 @@ namespace Application.Controllers
 		protected internal virtual JsonSerializerSettings JsonSerializerSettings => _jsonSerializerSettings ??= new JsonSerializerSettings
 		{
 			ContractResolver = new ContractResolver(),
+			Converters = {new StringEnumConverter()},
 			Formatting = Formatting.Indented,
 			NullValueHandling = NullValueHandling.Ignore,
 			PreserveReferencesHandling = PreserveReferencesHandling.None,
