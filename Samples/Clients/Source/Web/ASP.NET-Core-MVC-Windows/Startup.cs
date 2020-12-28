@@ -1,10 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Application.Models.Configuration;
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -80,37 +77,23 @@ namespace Application
 
 					options.ClaimActions.MapAllExcept("aud", "c_hash", "exp", "iat", "iss", "nbf", "nonce");
 
-					const string codeVerifierKey = "code_verifier";
+					var uiLocales = this.Configuration.GetSection($"{OpenIdConnectScheme}:{nameof(OpenIdConnectParameterNames.UiLocales)}").Value;
 
-					options.Events.OnAuthorizationCodeReceived = context =>
+					if(uiLocales == null)
+						return;
+
+					options.Events.OnRedirectToIdentityProvider = async context =>
 					{
-						if(context.TokenEndpointRequest?.GrantType == OpenIdConnectGrantTypes.AuthorizationCode && context.Properties.Items.TryGetValue(codeVerifierKey, out var codeVerifier))
-							context.TokenEndpointRequest.Parameters[codeVerifierKey] = codeVerifier;
+						context.ProtocolMessage.UiLocales = uiLocales;
 
-						return Task.CompletedTask;
+						await Task.CompletedTask;
 					};
 
-					options.Events.OnRedirectToIdentityProvider = context =>
+					options.Events.OnRedirectToIdentityProviderForSignOut = async context =>
 					{
-						// ReSharper disable InvertIf
-						if(context.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
-						{
-							var codeVerifier = CryptoRandom.CreateUniqueId(32);
-							context.Properties.Items[codeVerifierKey] = codeVerifier;
+						context.ProtocolMessage.UiLocales = uiLocales;
 
-							string codeChallenge;
-							using(var sha256 = SHA256.Create())
-							{
-								var challengeBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(codeVerifier));
-								codeChallenge = Base64Url.Encode(challengeBytes);
-							}
-
-							context.ProtocolMessage.Parameters["code_challenge"] = codeChallenge;
-							context.ProtocolMessage.Parameters["code_challenge_method"] = "S256";
-						}
-						// ReSharper restore InvertIf
-
-						return Task.CompletedTask;
+						await Task.CompletedTask;
 					};
 				});
 
