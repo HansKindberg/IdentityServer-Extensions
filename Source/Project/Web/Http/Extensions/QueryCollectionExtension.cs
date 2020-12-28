@@ -27,7 +27,7 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 			{
 				if(!queryCollection.TryGetValue(key, out var values) || !values.Any())
 				{
-					var url = queryCollection.GetValueAsAbsoluteUrl("ReturnUrl");
+					var url = queryCollection.GetValueAsAbsoluteUrl(QueryStringKeys.ReturnUrl);
 
 					if(url != null)
 					{
