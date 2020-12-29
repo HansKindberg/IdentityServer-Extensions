@@ -284,6 +284,7 @@
 					<heading>Rättigheter för klient-applikationer</heading>
 					<identityResources>Personlig information</identityResources>
 					<information>Lista med de klient-applikationer du har gett rättigheter till och resurserna de har tillgång till.</information>
+					<label>Rättigheter</label>
 					<no-grants>
 						<heading>Inga tilldelade rättigheter</heading>
 						<information>Du har inga klient-applikationer med tilldelade rättigheter.</information>

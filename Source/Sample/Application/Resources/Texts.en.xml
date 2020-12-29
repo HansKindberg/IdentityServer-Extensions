@@ -286,6 +286,7 @@
 					<information>
 						List of the client applications you have granted access to and the resources they have access to.
 					</information>
+					<label>Access</label>
 					<no-grants>
 						<heading>No granted access</heading>
 						<information>You have no client applications with granted access.</information>

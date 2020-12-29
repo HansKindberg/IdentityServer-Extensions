@@ -13,6 +13,7 @@ using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
 using HansKindberg.IdentityServer.Web.Routing;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Localization;
@@ -89,6 +90,9 @@ namespace Application.Models.Views.Shared.Parts
 				if(this._navigation == null)
 				{
 					var navigation = new NavigationNode(null);
+
+					if(this.HttpContext.User.IsAuthenticated())
+						this.AddGrantsNavigationNode(navigation);
 
 					if(this.Facade.FeatureManager.IsEnabled(Feature.Home))
 						navigation.Url = this.GetUrl();
@@ -180,7 +184,6 @@ namespace Application.Models.Views.Shared.Parts
 
 		#region Methods
 
-		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
 		protected internal virtual void AddDebugNavigationNode(NavigationNode navigation)
 		{
 			if(navigation == null)
@@ -194,6 +197,23 @@ namespace Application.Models.Views.Shared.Parts
 				Text = this.Localizer.GetString("Debug/Heading"),
 				Tooltip = this.Localizer.GetString("Debug/Information"),
 				Url = this.CreateRelativeUrl(this.HttpContext.Request.Path, this.CreateQueryBuilder(query).ToString())
+			});
+		}
+
+		protected internal virtual void AddGrantsNavigationNode(NavigationNode navigation)
+		{
+			if(navigation == null)
+				throw new ArgumentNullException(nameof(navigation));
+
+			const string name = "Grants";
+			var localizationPath = $":Views.{name}.{nameof(GrantsController.Index)}.";
+
+			navigation.Children.Add(new NavigationNode(navigation)
+			{
+				Active = this.StringEquals(this.HttpContext.GetRouteValue(RouteKeys.Controller) as string, name),
+				Text = this.Localizer.GetString($"{localizationPath}Label"),
+				Tooltip = this.Localizer.GetString($"{localizationPath}Information"),
+				Url = this.GetUrl(null, name)
 			});
 		}
 
