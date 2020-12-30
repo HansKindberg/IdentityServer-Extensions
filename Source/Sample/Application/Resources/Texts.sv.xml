@@ -120,14 +120,14 @@
 						<heading>Azure AD</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</Azure-AD>
-					<bankid-otherdevice>
+					<BankIdOtherDevice>
 						<heading>Mobilt Bank-ID</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</bankid-otherdevice>
-					<bankid-samedevice>
+					</BankIdOtherDevice>
+					<BankIdSameDevice>
 						<heading>Bank-ID</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</bankid-samedevice>
+					</BankIdSameDevice>
 					<Certificate-By-Issuer-Test>
 						<heading>Test-certifikat (utfärdare)</heading>
 						<information>Ett test-certifikat som valideras per utfärdare.</information>
@@ -144,23 +144,23 @@
 						<heading>Google</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</Google>
-					<grandid-bankid-choosedevice>
+					<GrandIdBankIdChooseDevice>
 						<heading>Grand-ID (välj)</heading>
 						<information>Välj mobilt eller på denna enhet.</information>
-					</grandid-bankid-choosedevice>
-					<grandid-bankid-otherdevice>
+					</GrandIdBankIdChooseDevice>
+					<GrandIdBankIdOtherDevice>
 						<heading>Grand-ID / mobild bank-id</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</grandid-bankid-otherdevice>
-					<grandid-bankid-samedevice>
+					</GrandIdBankIdOtherDevice>
+					<GrandIdBankIdSameDevice>
 						<heading>Grand-ID / denna enhet</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</grandid-bankid-samedevice>
+					</GrandIdBankIdSameDevice>
 					<heading>Logga in</heading>
-					<IdentityServer-Demo>
+					<IdentityServerDemo>
 						<heading>IdentityServer demo</heading>
 						<information>https://demo.identityserver.io/</information>
-					</IdentityServer-Demo>
+					</IdentityServerDemo>
 					<information>Välj något av följande inloggnings-sätt.</information>
 					<Microsoft>
 						<heading>Microsoft</heading>
@@ -170,10 +170,10 @@
 						<heading>Ogiltig begäran</heading>
 						<information>Det finns inte några giltiga inloggnings-sätt för denna klient.</information>
 					</no-available-authentication-alternatives>
-					<SITHS-Certificate>
+					<SithsCertificate>
 						<heading>SITHS-certifikat</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</SITHS-Certificate>
+					</SithsCertificate>
 					<Windows>
 						<heading>Windows-inloggning</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>

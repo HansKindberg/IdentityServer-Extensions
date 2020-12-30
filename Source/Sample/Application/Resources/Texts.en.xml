@@ -120,14 +120,14 @@
 						<heading>Azure AD</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</Azure-AD>
-					<bankid-otherdevice>
+					<BankIdOtherDevice>
 						<heading>Mobile Bank-ID</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</bankid-otherdevice>
-					<bankid-samedevice>
+					</BankIdOtherDevice>
+					<BankIdSameDevice>
 						<heading>Bank-ID</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</bankid-samedevice>
+					</BankIdSameDevice>
 					<Certificate-By-Issuer-Test>
 						<heading>Test-certificate (issuer)</heading>
 						<information>A test-certificate validated by issuer.</information>
@@ -144,23 +144,23 @@
 						<heading>Google</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</Google>
-					<grandid-bankid-choosedevice>
+					<GrandIdBankIdChooseDevice>
 						<heading>Grand-ID (choose)</heading>
 						<information>Choose mobile or on this device.</information>
-					</grandid-bankid-choosedevice>
-					<grandid-bankid-otherdevice>
+					</GrandIdBankIdChooseDevice>
+					<GrandIdBankIdOtherDevice>
 						<heading>Grand-ID / mobile bank-id</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</grandid-bankid-otherdevice>
-					<grandid-bankid-samedevice>
+					</GrandIdBankIdOtherDevice>
+					<GrandIdBankIdSameDevice>
 						<heading>Grand-ID / this device</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</grandid-bankid-samedevice>
+					</GrandIdBankIdSameDevice>
 					<heading>Sign in</heading>
-					<IdentityServer-Demo>
+					<IdentityServerDemo>
 						<heading>IdentityServer demo</heading>
 						<information>https://demo.identityserver.io/</information>
-					</IdentityServer-Demo>
+					</IdentityServerDemo>
 					<information>Select one of the following signin methods.</information>
 					<Microsoft>
 						<heading>Microsoft</heading>
@@ -170,10 +170,10 @@
 						<heading>Invalid request</heading>
 						<information>There are no valid signin methods for this client.</information>
 					</no-available-authentication-alternatives>
-					<SITHS-Certificate>
+					<SithsCertificate>
 						<heading>SITHS-certificate</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
-					</SITHS-Certificate>
+					</SithsCertificate>
 					<Windows>
 						<heading>Windows</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
