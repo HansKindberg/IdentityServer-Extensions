@@ -13,7 +13,7 @@ namespace HansKindberg.IdentityServer.DataProtection.Configuration
 	{
 		#region Properties
 
-		public virtual string ConnectionStringName { get; set; } = "Data-Protection";
+		public virtual string ConnectionStringName { get; set; } = "DataProtection";
 
 		/// <summary>
 		/// If the database-migrations should be used.
