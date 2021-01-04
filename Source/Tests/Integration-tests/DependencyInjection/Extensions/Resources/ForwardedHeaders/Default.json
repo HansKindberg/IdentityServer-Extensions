@@ -1,0 +1,28 @@
+{
+	"FeatureManagement": {
+		"ForwardedHeaders": true
+	},
+	"ForwardedHeaders": {
+		"AllowedHosts": [ "A", "B", "C" ],
+		"ForwardedHeaders": "XForwardedFor, XForwardedProto",
+		"KnownNetworks": [
+			{
+				"Prefix": "::ffff:10.0.0.0",
+				"PrefixLength": 104
+			},
+			{
+				"Prefix": "::ffff:192.168.0.0",
+				"PrefixLength": 112
+			},
+			{
+				"Prefix": "::ffff:172.16.0.0",
+				"PrefixLength": 108
+			}
+		],
+		"KnownProxies": [
+			"::ffff:10.0.0.0",
+			"::ffff:192.168.0.0",
+			"::ffff:172.16.0.0"
+		]
+	}
+}

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -169,6 +170,51 @@ namespace IntegrationTests.DependencyInjection.Extensions
 				var keyManagementOptions = serviceProvider.GetRequiredService<IOptions<KeyManagementOptions>>().Value;
 				Assert.AreEqual(expectedXmlEncryptorType, keyManagementOptions.XmlEncryptor?.GetType(), failMessage);
 				Assert.AreEqual(expectedXmlRepositoryType, keyManagementOptions.XmlRepository?.GetType(), failMessage);
+			}
+		}
+
+		[TestMethod]
+		public async Task AddForwardedHeaders_Test()
+		{
+			await Task.CompletedTask;
+
+			var jsonFileRelativePath = $"DependencyInjection/Extensions/Resources/ForwardedHeaders/Empty.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var forwardedHeaders = context.ServiceProvider.GetRequiredService<IOptions<ForwardedHeadersOptions>>().Value;
+
+				Assert.IsFalse(forwardedHeaders.AllowedHosts.Any());
+				Assert.AreEqual(ForwardedHeaders.None, forwardedHeaders.ForwardedHeaders);
+				Assert.IsFalse(forwardedHeaders.KnownNetworks.Any());
+				Assert.IsFalse(forwardedHeaders.KnownProxies.Any());
+			}
+
+			jsonFileRelativePath = $"DependencyInjection/Extensions/Resources/ForwardedHeaders/Default.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var forwardedHeaders = context.ServiceProvider.GetRequiredService<IOptions<ForwardedHeadersOptions>>().Value;
+
+				Assert.AreEqual(3, forwardedHeaders.AllowedHosts.Count);
+				Assert.AreEqual("A", forwardedHeaders.AllowedHosts[0]);
+				Assert.AreEqual("B", forwardedHeaders.AllowedHosts[1]);
+				Assert.AreEqual("C", forwardedHeaders.AllowedHosts[2]);
+
+				Assert.AreEqual(ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto, forwardedHeaders.ForwardedHeaders);
+
+				Assert.AreEqual(3, forwardedHeaders.KnownNetworks.Count);
+				Assert.AreEqual("::ffff:10.0.0.0", forwardedHeaders.KnownNetworks[0].Prefix.ToString());
+				Assert.AreEqual(104, forwardedHeaders.KnownNetworks[0].PrefixLength);
+				Assert.AreEqual("::ffff:192.168.0.0", forwardedHeaders.KnownNetworks[1].Prefix.ToString());
+				Assert.AreEqual(112, forwardedHeaders.KnownNetworks[1].PrefixLength);
+				Assert.AreEqual("::ffff:172.16.0.0", forwardedHeaders.KnownNetworks[2].Prefix.ToString());
+				Assert.AreEqual(108, forwardedHeaders.KnownNetworks[2].PrefixLength);
+
+				Assert.AreEqual(3, forwardedHeaders.KnownProxies.Count);
+				Assert.AreEqual("::ffff:10.0.0.0", forwardedHeaders.KnownProxies[0].ToString());
+				Assert.AreEqual("::ffff:192.168.0.0", forwardedHeaders.KnownProxies[1].ToString());
+				Assert.AreEqual("::ffff:172.16.0.0", forwardedHeaders.KnownProxies[2].ToString());
 			}
 		}
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using HansKindberg.IdentityServer.Configuration;
@@ -19,6 +20,7 @@ using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Logging.Configuration;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
+using HansKindberg.IdentityServer.Web.Configuration;
 using HansKindberg.IdentityServer.Web.Mvc.Filters;
 using HansKindberg.IdentityServer.Web.Mvc.Filters.Configuration;
 using IdentityServer4;
@@ -167,7 +169,30 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfiguration == null)
 				throw new ArgumentNullException(nameof(serviceConfiguration));
 
-			return services.Configure<ForwardedHeadersOptions>(serviceConfiguration.Configuration.GetSection(ConfigurationKeys.ForwardedHeadersPath));
+			return services.Configure<ForwardedHeadersOptions>(options =>
+			{
+				options.AllowedHosts.Clear();
+				options.KnownNetworks.Clear();
+				options.KnownProxies.Clear();
+
+				var forwardedHeadersSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.ForwardedHeadersPath);
+
+				forwardedHeadersSection?.Bind(options);
+
+				var extendedOptions = new ExtendedForwardedHeadersOptions();
+
+				forwardedHeadersSection?.Bind(extendedOptions);
+
+				foreach(var knownNetwork in extendedOptions.KnownNetworks)
+				{
+					options.KnownNetworks.Add(new IPNetwork(IPAddress.Parse(knownNetwork.Prefix), knownNetwork.PrefixLength));
+				}
+
+				foreach(var proxy in extendedOptions.KnownProxies)
+				{
+					options.KnownProxies.Add(IPAddress.Parse(proxy));
+				}
+			});
 		}
 
 		public static IServiceCollection AddIdentity(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
