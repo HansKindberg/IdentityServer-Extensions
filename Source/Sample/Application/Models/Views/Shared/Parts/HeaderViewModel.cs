@@ -10,6 +10,7 @@ using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Localization.Extensions;
 using HansKindberg.IdentityServer.Navigation;
 using HansKindberg.IdentityServer.Web;
+using HansKindberg.IdentityServer.Web.Extensions;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
 using HansKindberg.IdentityServer.Web.Routing;
@@ -91,7 +92,7 @@ namespace Application.Models.Views.Shared.Parts
 				{
 					var navigation = new NavigationNode(null);
 
-					if(this.HttpContext.User.IsAuthenticated())
+					if(this.HttpContext.User.IsAuthenticated() && !this.HttpContext.SignedOut())
 						this.AddGrantsNavigationNode(navigation);
 
 					if(this.Facade.FeatureManager.IsEnabled(Feature.Home))
