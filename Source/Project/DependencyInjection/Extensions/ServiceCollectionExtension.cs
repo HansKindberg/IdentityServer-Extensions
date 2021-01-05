@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Configuration.Extensions;
 using HansKindberg.IdentityServer.Data;
@@ -57,24 +55,11 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfiguration == null)
 				throw new ArgumentNullException(nameof(serviceConfiguration));
 
-			var defaultCertificateHeader = new CertificateForwardingOptions().CertificateHeader;
 			var configurationSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.CertificateForwardingPath);
 
 			return services.AddCertificateForwarding(options =>
 			{
 				configurationSection.Bind(options);
-
-				if(!string.Equals(options.CertificateHeader, defaultCertificateHeader, StringComparison.Ordinal))
-				{
-					options.HeaderConverter = value =>
-					{
-						if(string.IsNullOrWhiteSpace(value))
-							return null;
-
-						var bytes = Encoding.UTF8.GetBytes(Uri.UnescapeDataString(value));
-						return new X509Certificate2(bytes);
-					};
-				}
 			});
 		}
 
