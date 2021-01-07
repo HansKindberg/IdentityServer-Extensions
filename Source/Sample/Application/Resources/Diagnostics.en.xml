@@ -31,6 +31,10 @@
 					<xmlEncryptor>Xml-encryptor</xmlEncryptor>
 					<xmlRepository>Xml-repository</xmlRepository>
 				</dataProtection>
+				<environmentVariables>
+					<heading>Environment variables</heading>
+					<information>Information about environment variables.</information>
+				</environmentVariables>
 				<heading>Diagnostics</heading>
 				<index>
 					<clientCertificate>Client-certificate</clientCertificate>

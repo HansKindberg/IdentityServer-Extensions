@@ -31,6 +31,10 @@
 					<xmlEncryptor>Xml-krypterare</xmlEncryptor>
 					<xmlRepository>Xml-förvaring</xmlRepository>
 				</dataProtection>
+				<environmentVariables>
+					<heading>Miljövariabler</heading>
+					<information>Information om miljövariabler.</information>
+				</environmentVariables>
 				<heading>Diagnostik</heading>
 				<index>
 					<clientCertificate>Klient-certifikat</clientCertificate>

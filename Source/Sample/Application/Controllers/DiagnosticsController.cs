@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Models.Views.Diagnostics;
@@ -128,6 +129,20 @@ namespace Application.Controllers
 				ApplicationDiscriminator = this.ApplicationDiscriminator,
 				KeyManagementOptions = this.KeyManagementOptions.Value
 			};
+
+			return await Task.FromResult(this.View(model));
+		}
+
+		public virtual async Task<IActionResult> EnvironmentVariables()
+		{
+			var model = new EnvironmentVariablesViewModel();
+
+			// ReSharper disable All
+			foreach(var environmentVariable in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().Where(environmentVariable => environmentVariable.Key != null))
+			{
+				model.Items.Add(environmentVariable.Key.ToString(), environmentVariable.Value?.ToString());
+			}
+			// ReSharper restore All
 
 			return await Task.FromResult(this.View(model));
 		}
