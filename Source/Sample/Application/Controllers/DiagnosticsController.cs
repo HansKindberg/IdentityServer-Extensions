@@ -104,15 +104,7 @@ namespace Application.Controllers
 					}
 					else
 					{
-						foreach(var child in provider.GetChildKeys(Enumerable.Empty<string>(), null))
-						{
-							providerModel.Value += child;
-
-							if(provider.TryGet(child, out var value))
-								providerModel.Value += " = " + value;
-
-							providerModel.Value += Environment.NewLine;
-						}
+						providerModel.Value = await this.GetConfigurationProviderValueAsync(null, provider);
 					}
 
 					model.ConfigurationProviders.Add(providerModel);
@@ -145,6 +137,29 @@ namespace Application.Controllers
 			// ReSharper restore All
 
 			return await Task.FromResult(this.View(model));
+		}
+
+		protected internal virtual async Task<string> GetConfigurationProviderValueAsync(string parentPath, IConfigurationProvider provider)
+		{
+			if(provider == null)
+				throw new ArgumentNullException(nameof(provider));
+
+			var value = string.Empty;
+
+			foreach(var key in provider.GetChildKeys(Enumerable.Empty<string>(), parentPath))
+			{
+				var path = parentPath != null ? $"{parentPath}:{key}" : key;
+
+				if(provider.TryGet(path, out var itemValue))
+					value += $"{path} = {itemValue}";
+				else
+					value += await this.GetConfigurationProviderValueAsync(path, provider);
+
+				if(parentPath == null)
+					value += Environment.NewLine;
+			}
+
+			return value;
 		}
 
 		public virtual async Task<IActionResult> Index()
