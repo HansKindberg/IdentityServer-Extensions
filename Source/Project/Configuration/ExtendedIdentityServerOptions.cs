@@ -32,6 +32,12 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();
 		public virtual ConsentOptions Consent { get; set; } = new ConsentOptions();
+
+		/// <summary>
+		/// Like MutualTlsOptions.DomainName but used for interactive client authentication.
+		/// </summary>
+		public virtual string InteractiveMutualTlsDomain { get; set; }
+
 		public virtual OperationalStoreOptions OperationalStore { get; set; } = new OperationalStoreOptions();
 		public virtual RedirectionOptions Redirection { get; set; } = new RedirectionOptions();
 

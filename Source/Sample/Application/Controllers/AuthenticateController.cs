@@ -162,7 +162,7 @@ namespace Application.Controllers
 
 		protected internal virtual async Task<string> GetCertificateAuthenticationHostAsync()
 		{
-			var domainNameForCertificateAuthentication = this.Facade.IdentityServer.Value.MutualTls.DomainName;
+			var domainNameForCertificateAuthentication = this.Facade.IdentityServer.Value.InteractiveMutualTlsDomain;
 
 			if(string.IsNullOrEmpty(domainNameForCertificateAuthentication))
 				return this.HttpContext.Request.Host.Value;
