@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using RegionOrebroLan.Configuration.Extensions;
 using RegionOrebroLan.Web.Authentication.Extensions;
 
 namespace Application.Controllers
@@ -104,7 +105,9 @@ namespace Application.Controllers
 					}
 					else
 					{
-						providerModel.Value = await this.GetConfigurationProviderValueAsync(null, provider);
+						var data = provider.ToDictionary();
+
+						providerModel.Value = string.Join(Environment.NewLine, data.Select(entry => $"{entry.Key} = {entry.Value}"));
 					}
 
 					model.ConfigurationProviders.Add(providerModel);
@@ -137,29 +140,6 @@ namespace Application.Controllers
 			// ReSharper restore All
 
 			return await Task.FromResult(this.View(model));
-		}
-
-		protected internal virtual async Task<string> GetConfigurationProviderValueAsync(string parentPath, IConfigurationProvider provider)
-		{
-			if(provider == null)
-				throw new ArgumentNullException(nameof(provider));
-
-			var value = string.Empty;
-
-			foreach(var key in provider.GetChildKeys(Enumerable.Empty<string>(), parentPath))
-			{
-				var path = parentPath != null ? $"{parentPath}:{key}" : key;
-
-				if(provider.TryGet(path, out var itemValue))
-					value += $"{path} = {itemValue}";
-				else
-					value += await this.GetConfigurationProviderValueAsync(path, provider);
-
-				if(parentPath == null)
-					value += Environment.NewLine;
-			}
-
-			return value;
 		}
 
 		public virtual async Task<IActionResult> Index()
