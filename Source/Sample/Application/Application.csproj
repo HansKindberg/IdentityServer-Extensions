@@ -11,7 +11,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.10" Condition="'$(Configuration)' == 'Debug'" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.3-alpha" />
+		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.5-alpha" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Project\Project.csproj" />

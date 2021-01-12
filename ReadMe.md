@@ -17,7 +17,7 @@ IdentityServer:
 ## 1 Features
 
 - [Feature.cs](/Source/Project/FeatureManagement/Feature.cs)
-- [Example](/Source/Sample/Application/AppSettings.json#L353)
+- [Example](/Source/Sample/Application/appsettings.development.json#L353)
 
 ## 2 Configuration
 
@@ -26,7 +26,7 @@ See above.
 
 ### 2.2 Globalization
 
-- [Example](/Source/Sample/Application/AppSettings.json#L473)
+- [Example](/Source/Sample/Application/appsettings.development.json#L473)
 
 ### 2.3 Localization
 
@@ -37,8 +37,8 @@ See above.
 
 #### 2.4.1 Example
 
-- [Authentication](/Source/Sample/Application/AppSettings.json#L64)
-- [Scheme-registrations](/Source/Sample/Application/AppSettings.json#L103)
+- [Authentication](/Source/Sample/Application/appsettings.development.json#L64)
+- [Scheme-registrations](/Source/Sample/Application/appsettings.development.json#L103)
 
 Solution behind it:
 
