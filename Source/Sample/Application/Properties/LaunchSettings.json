@@ -23,9 +23,18 @@
 			},
 			"launchBrowser": true
 		},
+		"IIS Express (disabled)": {
+			"commandName": "IISExpress",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Disabled",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
 		"IIS Express (environment-variables)": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
+				"Enabled": "true", 
 				"ASPNETCORE_ENVIRONMENT": "Environment-variables",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
 				"ApiResources__0__Description": "The api-resource to get roles for authorization.",

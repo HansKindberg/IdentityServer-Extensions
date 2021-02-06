@@ -10,6 +10,7 @@ using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Logging.Configuration;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,18 @@ namespace HansKindberg.IdentityServer.Builder
 		{
 			if(applicationBuilder == null)
 				throw new ArgumentNullException(nameof(applicationBuilder));
+
+			var options = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<Configuration.Options>>().Value;
+
+			if(!options.Enabled)
+			{
+				applicationBuilder.Run(async context =>
+				{
+					await context.Response.WriteAsync("The application is not enabled. Configure it and enable it.");
+				});
+
+				return applicationBuilder;
+			}
 
 			var exceptionHandling = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExceptionHandlingOptions>>().Value;
 			if(exceptionHandling.DeveloperExceptionPage)

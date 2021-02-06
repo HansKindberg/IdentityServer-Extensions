@@ -37,9 +37,10 @@ namespace Application
 
 		public virtual void ConfigureServices(IServiceCollection services)
 		{
-			services.Configure(this.Configuration, this.HostEnvironment);
-
-			services.AddScoped<LayoutViewModel>();
+			services.Configure(this.Configuration, this.HostEnvironment, () =>
+			{
+				services.AddScoped<LayoutViewModel>();
+			});
 		}
 
 		#endregion

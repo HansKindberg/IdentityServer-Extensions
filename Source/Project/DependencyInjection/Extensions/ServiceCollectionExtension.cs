@@ -374,7 +374,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				options.SameSite = SameSiteMode.Unspecified;
 		}
 
-		public static IServiceCollection Configure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+		public static IServiceCollection Configure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment, Action success = null)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
@@ -384,6 +384,17 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			if(hostEnvironment == null)
 				throw new ArgumentNullException(nameof(hostEnvironment));
+
+			services.Configure<Options>(configuration);
+			var rootOptions = new Options();
+			configuration.Bind(rootOptions);
+
+			if(!rootOptions.Enabled)
+			{
+				services.AddControllersWithViews();
+
+				return services;
+			}
 
 			var serviceConfiguration = new ServiceConfiguration(configuration, hostEnvironment);
 
@@ -434,6 +445,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 				options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
 			});
+
+			success?.Invoke();
 
 			return services;
 		}
