@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.DependencyInjection.Extensions;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Logging.Debug;
 
 namespace IntegrationTests.Helpers
 {
+	[SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
 	public class Context : IDisposable
 	{
 		#region Fields

@@ -40,6 +40,8 @@
 		<PackageReference Include="morelinq" Version="3.3.2" />
 		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.0-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
+		<PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
 	</ItemGroup>
 	<Target Name="HandleAssemblyOriginatorKeyFile" BeforeTargets="BeforeBuild" Condition="$(SignAssembly) AND !Exists('$(AssemblyOriginatorKeyFile)')">
 		<PropertyGroup>
