@@ -1,6 +1,7 @@
 using System;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.Web.Authorization;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
@@ -18,9 +19,10 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptions<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptions<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptions<RequestLocalizationOptions> requestLocalization)
+		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptions<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptions<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptions<RequestLocalizationOptions> requestLocalization)
 		{
 			this.AuthenticationSchemeLoader = authenticationSchemeLoader ?? throw new ArgumentNullException(nameof(authenticationSchemeLoader));
+			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
 			this.ClientStore = clientStore ?? throw new ArgumentNullException(nameof(clientStore));
 			this.DecorationLoader = decorationLoader ?? throw new ArgumentNullException(nameof(decorationLoader));
 			this.Events = events ?? throw new ArgumentNullException(nameof(events));
@@ -40,6 +42,7 @@ namespace HansKindberg.IdentityServer
 		#region Properties
 
 		public virtual IAuthenticationSchemeLoader AuthenticationSchemeLoader { get; }
+		public virtual IAuthorizationResolver AuthorizationResolver { get; }
 		public virtual IClientStore ClientStore { get; }
 		public virtual IDecorationLoader DecorationLoader { get; }
 		public virtual IEventService Events { get; }

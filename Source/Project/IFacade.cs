@@ -1,5 +1,6 @@
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.Web.Authorization;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ namespace HansKindberg.IdentityServer
 		#region Properties
 
 		IAuthenticationSchemeLoader AuthenticationSchemeLoader { get; }
+		IAuthorizationResolver AuthorizationResolver { get; }
 		IClientStore ClientStore { get; }
 		IDecorationLoader DecorationLoader { get; }
 		IEventService Events { get; }

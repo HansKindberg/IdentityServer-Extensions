@@ -8,6 +8,7 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Logging.Configuration;
+using HansKindberg.Web.Authorization.Builder.Extentsions;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -106,7 +107,7 @@ namespace HansKindberg.IdentityServer.Builder
 				.UseRequestLocalization()
 				.ResolveWindowsAuthentication()
 				.UseIdentityServer()
-				.UseAuthorization();
+				.UseExtendedAuthorization();
 
 			if(featureManager.IsEnabled(Feature.DataSeeding))
 				applicationBuilder.UseDataSeeding();

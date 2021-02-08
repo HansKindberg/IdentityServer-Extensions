@@ -10,6 +10,7 @@ using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Localization.Extensions;
 using HansKindberg.IdentityServer.Navigation;
 using HansKindberg.IdentityServer.Web;
+using HansKindberg.IdentityServer.Web.Authorization;
 using HansKindberg.IdentityServer.Web.Extensions;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
@@ -98,14 +99,17 @@ namespace Application.Models.Views.Shared.Parts
 					if(this.Facade.FeatureManager.IsEnabled(Feature.Home))
 						navigation.Url = this.GetUrl();
 
-					if(this.Facade.FeatureManager.IsEnabled(Feature.DataTransfer))
-						this.AddNavigationNode(new[] {nameof(DataTransferController.Index), nameof(DataTransferController.Export), nameof(DataTransferController.Import)}, nameof(Feature.DataTransfer), navigation);
+					if(this.Facade.AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, this.HttpContext.User).Result)
+					{
+						if(this.Facade.FeatureManager.IsEnabled(Feature.DataTransfer))
+							this.AddNavigationNode(new[] {nameof(DataTransferController.Index), nameof(DataTransferController.Export), nameof(DataTransferController.Import)}, nameof(Feature.DataTransfer), navigation);
 
-					if(this.Facade.FeatureManager.IsEnabled(Feature.Diagnostics))
-						this.AddNavigationNode(new[] {nameof(DiagnosticsController.Index), nameof(DiagnosticsController.AuthenticationScheme), nameof(DiagnosticsController.Configuration), nameof(DiagnosticsController.DataProtection), nameof(DiagnosticsController.EnvironmentVariables), nameof(DiagnosticsController.Options), nameof(DiagnosticsController.RequestHeaders), nameof(DiagnosticsController.ResponseHeaders)}, nameof(Feature.Diagnostics), navigation);
+						if(this.Facade.FeatureManager.IsEnabled(Feature.Diagnostics))
+							this.AddNavigationNode(new[] {nameof(DiagnosticsController.Index), nameof(DiagnosticsController.AuthenticationScheme), nameof(DiagnosticsController.Configuration), nameof(DiagnosticsController.DataProtection), nameof(DiagnosticsController.EnvironmentVariables), nameof(DiagnosticsController.Options), nameof(DiagnosticsController.RequestHeaders), nameof(DiagnosticsController.ResponseHeaders)}, nameof(Feature.Diagnostics), navigation);
 
-					if(this.Facade.FeatureManager.IsEnabled(Feature.Debug))
-						this.AddDebugNavigationNode(navigation);
+						if(this.Facade.FeatureManager.IsEnabled(Feature.Debug))
+							this.AddDebugNavigationNode(navigation);
+					}
 
 					this._navigation = navigation;
 				}

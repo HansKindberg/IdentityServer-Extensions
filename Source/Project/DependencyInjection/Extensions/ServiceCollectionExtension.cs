@@ -12,7 +12,6 @@ using HansKindberg.IdentityServer.DataProtection.Configuration;
 using HansKindberg.IdentityServer.Development;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
-using HansKindberg.IdentityServer.FeatureManagement.Filters;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Logging.Configuration;
@@ -21,6 +20,7 @@ using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
 using HansKindberg.IdentityServer.Web.Configuration;
 using HansKindberg.IdentityServer.Web.Mvc.Filters;
 using HansKindberg.IdentityServer.Web.Mvc.Filters.Configuration;
+using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.EntityFramework.Interfaces;
@@ -401,6 +401,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.Configure<ExceptionHandlingOptions>(configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
 			services.Configure<SecurityHeaderOptions>(configuration.GetSection(ConfigurationKeys.SecurityHeadersPath));
 
+			services.AddExtendedAuthorization(configuration);
+
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.DataDirectory))
 				services.AddDataDirectory(serviceConfiguration);
 
@@ -413,8 +415,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.Development))
 				services.AddDevelopment(serviceConfiguration);
 
-			services.AddFeatureManagement()
-				.AddFeatureFilter<UserFilter>();
+			services.AddFeatureManagement();
 
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.ForwardedHeaders))
 				services.AddForwardedHeaders(serviceConfiguration);

@@ -2,7 +2,6 @@ using System;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data.Configuration;
 using HansKindberg.IdentityServer.Development.Configuration;
-using HansKindberg.IdentityServer.FeatureManagement.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,8 +27,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 
 			var services = new ServiceCollection();
 
-			services.AddFeatureManagement()
-				.AddFeatureFilter<UserFilter>();
+			services.AddFeatureManagement();
 			services.AddHttpContextAccessor();
 			services.AddSingleton(AppDomain.CurrentDomain);
 			services.AddSingleton(configuration);

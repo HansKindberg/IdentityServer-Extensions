@@ -13,8 +13,10 @@ using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Json.Serialization;
+using HansKindberg.IdentityServer.Web.Authorization;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +30,7 @@ using RegionOrebroLan.Logging.Extensions;
 
 namespace Application.Controllers
 {
+	[Authorize(Permissions.Administrator)]
 	[FeatureGate(Feature.DataTransfer)]
 	public class DataTransferController : SiteController
 	{

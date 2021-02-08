@@ -7,6 +7,8 @@ using HansKindberg.IdentityServer;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.Json.Serialization;
+using HansKindberg.IdentityServer.Web.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection.Infrastructure;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,7 @@ using RegionOrebroLan.Web.Authentication.Extensions;
 
 namespace Application.Controllers
 {
+	[Authorize(Permissions.Administrator)]
 	[FeatureGate(Feature.Diagnostics)]
 	public class DiagnosticsController : SiteController
 	{
