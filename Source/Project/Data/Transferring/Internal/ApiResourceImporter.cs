@@ -25,7 +25,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 		protected internal override DbSet<ApiResourceEntity> Entities => this.DatabaseContext.ApiResources;
 		protected internal override Func<ApiResourceEntity, string> EntityIdentifierSelector => entity => entity.Name;
-		protected internal override string ModelIdentifierName => "Name";
+		protected internal override string ModelIdentifierName => nameof(ApiResourceModel.Name);
 		protected internal override Func<ApiResourceModel, string> ModelIdentifierSelector => model => model.Name;
 		protected internal override Func<ApiResourceModel, ApiResourceEntity> ModelToEntityFunction => model => model.ToEntity();
 

@@ -30,7 +30,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 		protected internal virtual IClientConfigurationValidator ClientValidator { get; }
 		protected internal override DbSet<ClientEntity> Entities => this.DatabaseContext.Clients;
 		protected internal override Func<ClientEntity, string> EntityIdentifierSelector => entity => entity.ClientId;
-		protected internal override string ModelIdentifierName => "ClientId";
+		protected internal override string ModelIdentifierName => nameof(ClientModel.ClientId);
 		protected internal override Func<ClientModel, string> ModelIdentifierSelector => model => model.ClientId;
 		protected internal override Func<ClientModel, ClientEntity> ModelToEntityFunction => model => model.ToEntity();
 
