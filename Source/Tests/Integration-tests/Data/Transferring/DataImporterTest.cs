@@ -279,7 +279,7 @@ namespace IntegrationTests.Data.Transferring
 						var result = await dataImporter.ImportAsync(configuration, options);
 
 						Assert.AreEqual(1, result.Errors.Count);
-						Assert.AreEqual("User name 'User-1' is already taken.", result.Errors[0]);
+						Assert.AreEqual("Username 'User-1' is already taken.", result.Errors[0]);
 						Assert.AreEqual(0, result.SavedChanges);
 					}
 				}

@@ -27,22 +27,22 @@
 		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.0-alpha" />
 		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.1" />
 		<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="3.1.10" />
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="3.1.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="5.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="5.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="3.1.5" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.2.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
 		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.0-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
 		<PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-		<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="5.0.0" />
 	</ItemGroup>
 	<Target Name="HandleAssemblyOriginatorKeyFile" BeforeTargets="BeforeBuild" Condition="$(SignAssembly) AND !Exists('$(AssemblyOriginatorKeyFile)')">
 		<PropertyGroup>
