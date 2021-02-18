@@ -34,7 +34,6 @@ namespace HansKindberg.IdentityServer.Hosting
 
 			try
 			{
-				//Log.Information($"Starting host for \"{applicationName}\" at {DateTime.Now:o} ...");
 				Console.WriteLine($"Starting host for \"{applicationName}\" at {DateTime.Now:o} ...");
 
 				var hostBuilder = CreateHostBuilder<TStartup>(arguments);
