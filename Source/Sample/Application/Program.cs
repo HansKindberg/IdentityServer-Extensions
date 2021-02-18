@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using RegionOrebroLan.Configuration.EnvironmentVariables;
+using HansKindberg.IdentityServer.Hosting;
 
 namespace Application
 {
@@ -8,25 +6,9 @@ namespace Application
 	{
 		#region Methods
 
-		public static IHostBuilder CreateHostBuilder(string[] args)
+		public static int Main(string[] args)
 		{
-			return Host.CreateDefaultBuilder(args)
-				.ConfigureAppConfiguration(configurationBuilder =>
-				{
-					for(var i = 0; i < configurationBuilder.Sources.Count; i++)
-					{
-						if(!(configurationBuilder.Sources[i] is Microsoft.Extensions.Configuration.EnvironmentVariables.EnvironmentVariablesConfigurationSource))
-							continue;
-
-						configurationBuilder.Sources[i] = new EnvironmentVariablesConfigurationSource();
-					}
-				})
-				.ConfigureWebHostDefaults(webHostBuilder => webHostBuilder.UseStartup<Startup>());
-		}
-
-		public static void Main(string[] args)
-		{
-			CreateHostBuilder(args).Build().Run();
+			return Host.Run<Startup>("Hans Kindberg - IdentityServer sample application", args);
 		}
 
 		#endregion
