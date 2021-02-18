@@ -92,12 +92,14 @@ namespace IntegrationTests.Data.Transferring.Internal
 				new UserModel
 				{
 					Email = "alice@example.com",
+					Id = "f6762ef5-d224-437a-9a67-459a9331266c",
 					Password = "P@ssword12",
 					UserName = "alice"
 				},
 				new UserModel
 				{
 					Email = "bob@example.com",
+					Id = "efbe866d-d6ba-49cd-875a-36c52aa2339d",
 					Password = "P@ssword12",
 					UserName = "bob"
 				}
@@ -108,7 +110,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			{
 				var identityImporter = await this.CreateIdentityImporterAsync(context.ServiceProvider);
 
-				var userImporter = (UserImporter)identityImporter.Importers.First();
+				var userImporter = identityImporter.Importers.OfType<UserImporter>().First();
 
 				var result = new DataImportResult();
 
@@ -128,9 +130,10 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 				foreach(var user in users)
 				{
-					var userEntity = await identityFacade.UserManager.FindByNameAsync(user.UserName);
+					var userEntity = await identityFacade.UserManager.FindByIdAsync(user.Id);
 
 					Assert.AreEqual(user.Email, userEntity.Email);
+					Assert.AreEqual(user.Id, userEntity.Id);
 					Assert.AreEqual(user.UserName, userEntity.UserName);
 					Assert.IsTrue(await identityFacade.UserManager.CheckPasswordAsync(userEntity, user.Password));
 				}
@@ -141,7 +144,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			{
 				var identityImporter = await this.CreateIdentityImporterAsync(context.ServiceProvider);
 
-				var userImporter = (UserImporter)identityImporter.Importers.First();
+				var userImporter = identityImporter.Importers.OfType<UserImporter>().First();
 
 				var result = new DataImportResult();
 
@@ -162,9 +165,10 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 				foreach(var user in users)
 				{
-					var userEntity = await identityFacade.UserManager.FindByNameAsync(user.UserName);
+					var userEntity = await identityFacade.UserManager.FindByIdAsync(user.Id);
 
 					Assert.AreEqual(user.Email, userEntity.Email);
+					Assert.AreEqual(user.Id, userEntity.Id);
 					Assert.AreEqual(user.UserName, userEntity.UserName);
 					Assert.IsTrue(await identityFacade.UserManager.CheckPasswordAsync(userEntity, user.Password));
 				}
@@ -181,7 +185,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			{
 				var identityImporter = await this.CreateIdentityImporterAsync(context.ServiceProvider);
 
-				var userImporter = (UserImporter)identityImporter.Importers.First();
+				var userImporter = identityImporter.Importers.OfType<UserImporter>().First();
 
 				var result = new DataImportResult();
 
@@ -201,9 +205,10 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 				foreach(var user in users)
 				{
-					var userEntity = await identityFacade.UserManager.FindByNameAsync(user.UserName);
+					var userEntity = await identityFacade.UserManager.FindByIdAsync(user.Id);
 
 					Assert.AreEqual(user.Email, userEntity.Email);
+					Assert.AreEqual(user.Id, userEntity.Id);
 					Assert.AreEqual(user.UserName, userEntity.UserName);
 					Assert.IsTrue(await identityFacade.UserManager.CheckPasswordAsync(userEntity, user.Password));
 				}
@@ -221,7 +226,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			{
 				var identityImporter = await this.CreateIdentityImporterAsync(context.ServiceProvider);
 
-				var userImporter = (UserImporter)identityImporter.Importers.First();
+				var userImporter = identityImporter.Importers.OfType<UserImporter>().First();
 
 				var result = new DataImportResult();
 
@@ -241,9 +246,10 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 				foreach(var user in users)
 				{
-					var userEntity = await identityFacade.UserManager.FindByNameAsync(user.UserName);
+					var userEntity = await identityFacade.UserManager.FindByIdAsync(user.Id);
 
 					Assert.AreEqual(user.Email, userEntity.Email);
+					Assert.AreEqual(user.Id, userEntity.Id);
 					Assert.AreEqual(user.UserName, userEntity.UserName);
 					Assert.IsTrue(await identityFacade.UserManager.CheckPasswordAsync(userEntity, user.Password));
 				}
@@ -257,8 +263,9 @@ namespace IntegrationTests.Data.Transferring.Internal
 				unSavedUsers.Add(new UserModel
 				{
 					Email = $"unsaved-{user.Email}",
+					Id = user.Id,
 					Password = $"unsaved-{user.Password}",
-					UserName = user.UserName
+					UserName = $"unsaved-{user.UserName}"
 				});
 			}
 			// ReSharper restore ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -268,7 +275,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			{
 				var identityImporter = await this.CreateIdentityImporterAsync(context.ServiceProvider);
 
-				var userImporter = (UserImporter)identityImporter.Importers.First();
+				var userImporter = identityImporter.Importers.OfType<UserImporter>().First();
 
 				var result = new DataImportResult();
 
@@ -287,9 +294,10 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 				foreach(var user in users)
 				{
-					var userEntity = await identityFacade.UserManager.FindByNameAsync(user.UserName);
+					var userEntity = await identityFacade.UserManager.FindByIdAsync(user.Id);
 
 					Assert.AreEqual(user.Email, userEntity.Email);
+					Assert.AreEqual(user.Id, userEntity.Id);
 					Assert.AreEqual(user.UserName, userEntity.UserName);
 					Assert.IsTrue(await identityFacade.UserManager.CheckPasswordAsync(userEntity, user.Password));
 				}

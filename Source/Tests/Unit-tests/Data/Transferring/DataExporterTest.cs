@@ -24,7 +24,7 @@ namespace UnitTests.Data.Transferring
 		public async Task ExportableTypes_Test()
 		{
 			var dataExporter = await this.CreateDataExporterAsync();
-			Assert.AreEqual(5, dataExporter.ExportableTypes.Count());
+			Assert.AreEqual(6, dataExporter.ExportableTypes.Count());
 		}
 
 		#endregion

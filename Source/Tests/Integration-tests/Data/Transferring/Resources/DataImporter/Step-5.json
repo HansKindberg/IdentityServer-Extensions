@@ -1,0 +1,44 @@
+{
+	"Clients": [
+		{
+			"AllowedGrantTypes": [ "client_credentials" ],
+			"AllowedScopes": [ "openid", "profile" ],
+			"Claims": [
+				{
+					"type": "c-1",
+					"value": "c-1-value"
+				},
+				{
+					"type": "c-2",
+					"value": "c-2-value"
+				},
+				{
+					"type": "c-3",
+					"value": "c-3-value"
+				},
+				{
+					"type": "c-4",
+					"value": "c-4-value"
+				}
+			],
+			"ClientId": "machine_client",
+			"ClientSecrets": [ { "Value": "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=" } ],
+			"Properties": { "foo": "bar" }
+		}
+	],
+	"UserLogins": [
+		{
+			"Id": "5c84a109-c438-43fd-ad94-5bb118341671",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-1"
+		}
+	],
+	"Users": [
+		{
+			"Email": "user-1-changed@example.com",
+			"Id": "ead39cc5-62de-4fff-963b-d952d96c4bdf",
+			"Password": "P@assword12-Changed",
+			"UserName": "User-1"
+		}
+	]
+}

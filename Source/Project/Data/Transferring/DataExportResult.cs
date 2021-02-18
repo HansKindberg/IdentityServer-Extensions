@@ -30,6 +30,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 		[System.Text.Json.Serialization.JsonIgnore]
 		public virtual IDictionary<Type, IEnumerable<object>> Instances { get; } = new Dictionary<Type, IEnumerable<object>>();
 
+		public virtual IEnumerable<UserLogin> UserLogins => this.Instances.TryGetValue(typeof(UserLogin), out var userLogins) ? userLogins.OfType<UserLogin>() : Enumerable.Empty<UserLogin>();
 		public virtual IEnumerable<User> Users => this.Instances.TryGetValue(typeof(User), out var users) ? users.OfType<User>() : Enumerable.Empty<User>();
 
 		#endregion
@@ -40,7 +41,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 		{
 			return new JsonSerializerSettings
 			{
-				ContractResolver = contractResolver ?? new DataExportContractResolver(),
+				ContractResolver = contractResolver ?? this.DefaultJsonContractResolver,
 				Formatting = formatting ?? Formatting.Indented,
 				NullValueHandling = nullValueHandling ?? NullValueHandling.Ignore
 			};

@@ -90,18 +90,33 @@
 			]
 		}
 	],
+	"UserLogins": [
+		{
+			"Id": "0e36b94b-63f1-489f-a83c-e74d2c7edc88",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-1"
+		},
+		{
+			"Id": "5c84a109-c438-43fd-ad94-5bb118341671",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-2"
+		}
+	],
 	"Users": [
 		{
 			"Email": "user-1@example.com",
+			"Id": "ead39cc5-62de-4fff-963b-d952d96c4bdf",
 			"Password": "P@assword12",
 			"UserName": "User-1"
 		},
 		{
 			"Email": "user-2@example.com",
+			"Id": "b01340af-a250-4231-8f07-9fcd593f54ea",
 			"Password": "P@assword12",
 			"UserName": "User-2"
 		},
 		{
+			"Id": "72105655-b92f-47bc-bc3f-e4a926eab584",
 			"Password": "P@assword12",
 			"UserName": "User-1"
 		}

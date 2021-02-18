@@ -71,44 +71,103 @@
 			"Name": "identity-resource"
 		}
 	],
+	"UserLogins": [
+		{
+			"Id": "0034f4b5-7089-4318-96d9-231cffbff582",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-1"
+		},
+		{
+			"Id": "50552d6e-f309-4c9e-8776-eaf7f443fdc4",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-2"
+		},
+		{
+			"Id": "50552d6e-f309-4c9e-8776-eaf7f443fdc4",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-3"
+		},
+		{
+			"Id": "30694a60-498b-4ee4-90b2-539adc01a732",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-4"
+		},
+		{
+			"Id": "1bb24e33-ed68-4f86-89b7-fd3709ee374d",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-4"
+		},
+		{
+			" - note": "same id as a user below",
+			"Id": "c9562390-ef8e-478e-b907-cab4169f9148",
+			"Provider": "Provider-1",
+			"UserIdentifier": "User-identifier-5"
+		}
+	],
 	"Users": [
 		{
+			"Email": "user-with-duplicate-id@example.com",
+			"Id": "c9562390-ef8e-478e-b907-cab4169f9148",
+			"Password": "P@ssword12",
+			"UserName": "user-with-duplicate-id-1"
+		},
+		{
+			"Email": "user-with-duplicate-id@example.com",
+			"Id": "c9562390-ef8e-478e-b907-cab4169f9148",
+			"Password": "P@ssword12",
+			"UserName": "user-with-duplicate-id-2"
+		},
+		{
+			"Email": "user-with-duplicate-id@example.com",
+			"Id": "c9562390-ef8e-478e-b907-cab4169f9148",
+			"Password": "P@ssword12",
+			"UserName": "user-with-duplicate-id-3"
+		},
+		{
 			"Email": "user-1@example.com",
+			"Id": "6b258a7d-9c54-48b0-b7ab-2251965450bf",
 			"Password": "P@ssword12",
 			"UserName": "user"
 		},
 		{
 			"Email": "user-2@example.com",
+			"Id": "6459002f-caf7-4aae-b9cd-5b3e1aefde7f",
 			"Password": "P@ssword12",
-			"UserName": "user"
+			"UserName": "User"
 		},
 		{
 			"Email": "user-3@example.com",
+			"Id": "7672489e-4643-4dc0-9233-71bafe53f61e",
 			"Password": "P@ssword12",
 			"UserName": "user"
 		},
 		{
 			"Email": "user-4@example.com",
+			"Id": "b1f5acdb-e730-4130-89ab-044dcf6f503c",
 			"Password": "P@ssword12",
-			"UserName": "user"
+			"UserName": "USER"
 		},
 		{
 			"Email": "user-5@example.com",
+			"Id": "b5a6aa56-be3b-4030-b7ba-8601130851dd",
 			"Password": "P@ssword12",
 			"UserName": "user"
 		},
 		{
 			"Email": "user-6@example.com",
+			"Id": "4601725d-256b-4865-bc74-26b7ebff3de0",
 			"Password": "P@ssword12",
 			"UserName": "user"
 		},
 		{
 			"Email": "user-1-1@example.com",
+			"Id": "bb57a723-d0b8-42d6-99d7-30653a8a246d",
 			"Password": "P@ssword12",
 			"UserName": "user-1"
 		},
 		{
 			"Email": "user-1-1@example.com",
+			"Id": "4c8636b0-b93d-4d5c-a2c1-d370d2441f32",
 			"Password": "P@ssword12",
 			"UserName": "user-2"
 		}

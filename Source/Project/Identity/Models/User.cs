@@ -5,6 +5,7 @@ namespace HansKindberg.IdentityServer.Identity.Models
 		#region Properties
 
 		public virtual string Email { get; set; }
+		public virtual string Id { get; set; }
 		public virtual string Password { get; set; }
 		public virtual string UserName { get; set; }
 

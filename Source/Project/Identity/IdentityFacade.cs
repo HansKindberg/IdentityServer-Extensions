@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RegionOrebroLan.Security.Claims;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
+using UserLoginEntity = Microsoft.AspNetCore.Identity.IdentityUserLogin<string>;
+using UserLoginModel = HansKindberg.IdentityServer.Identity.Models.UserLogin;
 using UserModel = HansKindberg.IdentityServer.Identity.Models.User;
 
 namespace HansKindberg.IdentityServer.Identity
 {
+	// ReSharper disable All
+	/// <inheritdoc />
 	public class IdentityFacade : IIdentityFacade
 	{
 		#region Constructors
@@ -47,13 +53,11 @@ namespace HansKindberg.IdentityServer.Identity
 			if(firstClaims.Count != secondClaims.Count)
 				return false;
 
-			// ReSharper disable LoopCanBeConvertedToQuery
 			foreach(var firstClaim in firstClaims)
 			{
 				if(!secondClaims.Any(secondClaim => string.Equals(firstClaim.Type, secondClaim.Type, StringComparison.OrdinalIgnoreCase) && string.Equals(firstClaim.Value, secondClaim.Value, StringComparison.Ordinal)))
 					return false;
 			}
-			// ReSharper restore LoopCanBeConvertedToQuery
 
 			return true;
 		}
@@ -74,22 +78,49 @@ namespace HansKindberg.IdentityServer.Identity
 			return await this.UserManager.DeleteAsync(user);
 		}
 
+		protected internal virtual async Task<UserEntity> EnsureLoginUserAsync(UserLoginModel userLogin)
+		{
+			if(userLogin == null)
+				throw new ArgumentNullException(nameof(userLogin));
+
+			UserEntity loginUser = null;
+
+			if(userLogin.Id != null)
+				loginUser = await this.DatabaseContext.Users.FindAsync(userLogin.Id);
+
+			if(loginUser == null)
+			{
+				loginUser = new UserEntity {Id = userLogin.Id ?? Guid.NewGuid().ToString(), UserName = Guid.NewGuid().ToString()};
+				loginUser.NormalizedUserName = loginUser.UserName.ToUpperInvariant();
+				await this.DatabaseContext.Users.AddAsync(loginUser);
+			}
+			else
+			{
+				if(loginUser.PasswordHash != null)
+					throw new InvalidOperationException($"The user with id {loginUser.Id.ToStringRepresentation()} already exists with a password and can not be associated with a login.");
+
+				loginUser.SecurityStamp = Guid.NewGuid().ToString();
+			}
+
+			return loginUser;
+		}
+
 		public virtual async Task<UserEntity> GetUserAsync(string userName)
 		{
 			return await this.UserManager.FindByNameAsync(userName);
 		}
 
-		public virtual async Task<UserEntity> GetUserAsync(string provider, string subject)
+		public virtual async Task<UserEntity> GetUserAsync(string provider, string userIdentifier)
 		{
-			return await this.UserManager.FindByLoginAsync(provider, subject);
+			return await this.UserManager.FindByLoginAsync(provider, userIdentifier);
 		}
 
-		protected internal virtual async Task<UserEntity> ModelToEntityAsync(UserModel user)
+		public virtual async Task<IEnumerable<UserLoginInfo>> GetUserLoginsAsync(string id)
 		{
-			return await Task.FromResult(user != null ? new UserEntity {Email = user.Email, EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email), UserName = user.UserName} : null);
+			return await this.UserManager.GetLoginsAsync(new UserEntity {Id = id});
 		}
 
-		public virtual async Task<UserEntity> ResolveUserAsync(IClaimBuilderCollection claims, string provider, string subject)
+		public virtual async Task<UserEntity> ResolveUserAsync(IClaimBuilderCollection claims, string provider, string userIdentifier)
 		{
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
@@ -97,10 +128,10 @@ namespace HansKindberg.IdentityServer.Identity
 			if(provider == null)
 				throw new ArgumentNullException(nameof(provider));
 
-			if(subject == null)
-				throw new ArgumentNullException(nameof(subject));
+			if(userIdentifier == null)
+				throw new ArgumentNullException(nameof(userIdentifier));
 
-			var user = await this.GetUserAsync(provider, subject);
+			var user = await this.GetUserAsync(provider, userIdentifier);
 			var userClaims = (user != null ? await this.UserManager.GetClaimsAsync(user) : null) ?? new List<Claim>();
 
 			if(user != null && await this.ClaimsAreEqualAsync(claims, userClaims))
@@ -124,7 +155,7 @@ namespace HansKindberg.IdentityServer.Identity
 					if(!identityResult.Succeeded)
 						throw new InvalidOperationException($"Could not create user: {await this.CreateErrorMessageAsync(identityResult)}");
 
-					identityResult = await this.UserManager.AddLoginAsync(user, new UserLoginInfo(provider, subject, provider));
+					identityResult = await this.UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userIdentifier, provider));
 
 					if(!identityResult.Succeeded)
 						throw new InvalidOperationException($"Could not add login for user: {await this.CreateErrorMessageAsync(identityResult)}");
@@ -200,38 +231,110 @@ namespace HansKindberg.IdentityServer.Identity
 			if(!result.Succeeded)
 				return result;
 
-			var userEntity = await this.UserManager.FindByNameAsync(user.UserName);
+			try
+			{
+				var userEntity = user.Id != null ? await this.UserManager.FindByIdAsync(user.Id) : await this.UserManager.FindByNameAsync(user.UserName);
 
-			if(userEntity == null)
-				return await this.UserManager.CreateAsync(await this.ModelToEntityAsync(user), user.Password);
+				if(userEntity == null)
+					return await this.UserManager.CreateAsync(await this.UserModelToUserEntityAsync(user), user.Password);
 
-			// This is to avoid a DbUpdateConcurrencyException to be thrown.
-			// We are doing 3 transactions:
-			// - Update
-			// - Remove password
-			// - Add password
-			// We need to reset the concurrency-stamp after each transaction to avoid a DbUpdateConcurrencyException.
-			var concurrencyStamp = userEntity.ConcurrencyStamp;
+				// This is to avoid a DbUpdateConcurrencyException to be thrown.
+				// We are doing 3 transactions:
+				// - Update
+				// - Remove password
+				// - Add password
+				// We need to reset the concurrency-stamp after each transaction to avoid a DbUpdateConcurrencyException.
+				var concurrencyStamp = userEntity.ConcurrencyStamp;
 
-			userEntity.Email = user.Email;
-			userEntity.EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email);
-			userEntity.UserName = user.UserName;
+				userEntity.Email = user.Email;
+				userEntity.EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email);
+				userEntity.UserName = user.UserName;
 
-			result = await this.UserManager.UpdateAsync(userEntity);
+				result = await this.UserManager.UpdateAsync(userEntity);
 
-			if(!result.Succeeded)
-				return result;
+				if(!result.Succeeded)
+					return result;
 
-			userEntity.ConcurrencyStamp = concurrencyStamp;
+				userEntity.ConcurrencyStamp = concurrencyStamp;
 
-			result = await this.UserManager.RemovePasswordAsync(userEntity);
+				result = await this.UserManager.RemovePasswordAsync(userEntity);
 
-			if(!result.Succeeded)
-				return result;
+				if(!result.Succeeded)
+					return result;
 
-			userEntity.ConcurrencyStamp = concurrencyStamp;
+				userEntity.ConcurrencyStamp = concurrencyStamp;
 
-			return await this.UserManager.AddPasswordAsync(userEntity, user.Password);
+				return await this.UserManager.AddPasswordAsync(userEntity, user.Password);
+			}
+			catch(Exception exception)
+			{
+				throw new InvalidOperationException($"Could not save user with id {user.Id.ToStringRepresentation()} and user-name {user.UserName.ToStringRepresentation()}.", exception);
+			}
+		}
+
+		public virtual async Task<IdentityResult> SaveUserLoginAsync(UserLoginModel userLogin, bool allowMultipleLoginsForUser = false)
+		{
+			if(userLogin == null)
+				throw new ArgumentNullException(nameof(userLogin));
+
+			if(userLogin.Provider == null)
+				throw new ArgumentException("The user-login-provider can not be null.", nameof(userLogin));
+
+			if(userLogin.UserIdentifier == null)
+				throw new ArgumentException("The user-login-user-identifier can not be null.", nameof(userLogin));
+
+			try
+			{
+				var existingUserLogin = await this.DatabaseContext.UserLogins.FirstOrDefaultAsync(item => item.LoginProvider == userLogin.Provider && item.ProviderKey == userLogin.UserIdentifier);
+
+				if(existingUserLogin != null)
+				{
+					if(userLogin.Id != null && !string.Equals(userLogin.Id, existingUserLogin.UserId, StringComparison.OrdinalIgnoreCase))
+					{
+						var oldLoginUserId = existingUserLogin.UserId;
+						var numberOfUserLoginsForOldLoginUserId = await this.DatabaseContext.UserLogins.CountAsync(item => item.UserId == oldLoginUserId);
+						var newLoginUser = await this.EnsureLoginUserAsync(userLogin);
+						existingUserLogin.UserId = newLoginUser.Id;
+
+						if(numberOfUserLoginsForOldLoginUserId < 2)
+						{
+							this.DatabaseContext.Users.Remove(await this.DatabaseContext.Users.FindAsync(oldLoginUserId));
+						}
+						else
+						{
+							this.DatabaseContext.UserClaims.RemoveRange(this.DatabaseContext.UserClaims.Where(item => item.UserId == oldLoginUserId));
+							(await this.DatabaseContext.Users.FindAsync(oldLoginUserId)).SecurityStamp = Guid.NewGuid().ToString();
+						}
+					}
+				}
+				else
+				{
+					var loginUser = await this.EnsureLoginUserAsync(userLogin);
+
+					this.DatabaseContext.UserClaims.RemoveRange(this.DatabaseContext.UserClaims.Where(item => item.UserId == loginUser.Id));
+					this.DatabaseContext.UserLogins.RemoveRange(this.DatabaseContext.UserLogins.Where(item => item.UserId == loginUser.Id));
+
+					await this.DatabaseContext.UserLogins.AddAsync(new UserLoginEntity {LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = loginUser.Id});
+				}
+
+				if(!allowMultipleLoginsForUser && userLogin.Id != null)
+				{
+					var userLoginsToDelete = this.DatabaseContext.UserLogins.Where(item => item.UserId == userLogin.Id && item.LoginProvider != userLogin.Provider && item.ProviderKey != userLogin.UserIdentifier);
+
+					if(userLoginsToDelete.Any())
+					{
+						this.DatabaseContext.UserLogins.RemoveRange(userLoginsToDelete);
+						this.DatabaseContext.UserClaims.RemoveRange(this.DatabaseContext.UserClaims.Where(item => item.UserId == userLogin.Id));
+						(await this.DatabaseContext.Users.FindAsync(userLogin.Id)).SecurityStamp = Guid.NewGuid().ToString();
+					}
+				}
+
+				return IdentityResult.Success;
+			}
+			catch(Exception exception)
+			{
+				throw new InvalidOperationException($"Could not save user-login with id {userLogin.Id.ToStringRepresentation()}, provider {userLogin.Provider.ToStringRepresentation()} and user-identifier {userLogin.UserIdentifier.ToStringRepresentation()}.", exception);
+			}
 		}
 
 		public virtual async Task<SignInResult> SignInAsync(string password, bool persistent, string userName)
@@ -242,6 +345,31 @@ namespace HansKindberg.IdentityServer.Identity
 		public virtual async Task SignOutAsync()
 		{
 			await this.SignInManager.SignOutAsync();
+		}
+
+		protected internal virtual async Task<UserLoginEntity> UserLoginModelToUserLoginEntityAsync(UserLoginModel userLogin)
+		{
+			UserLoginEntity userLoginEntity = null;
+
+			if(userLogin != null)
+				userLoginEntity = new UserLoginEntity {LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = userLogin.Id};
+
+			return await Task.FromResult(userLoginEntity);
+		}
+
+		protected internal virtual async Task<UserEntity> UserModelToUserEntityAsync(UserModel user)
+		{
+			UserEntity userEntity = null;
+
+			if(user != null)
+			{
+				userEntity = new UserEntity {Email = user.Email, EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email), UserName = user.UserName};
+
+				if(user.Id != null)
+					userEntity.Id = user.Id;
+			}
+
+			return await Task.FromResult(userEntity);
 		}
 
 		public virtual async Task<IdentityResult> ValidateUserAsync(UserModel user)
@@ -255,7 +383,7 @@ namespace HansKindberg.IdentityServer.Identity
 			if(user.Password == null)
 				return IdentityResult.Failed(new IdentityError {Description = $"The password for user \"{user.UserName}\" can not be null."});
 
-			var userEntity = await this.ModelToEntityAsync(user);
+			var userEntity = await this.UserModelToUserEntityAsync(user);
 
 			var passwordValidationErrors = new List<IdentityError>();
 
@@ -267,16 +395,13 @@ namespace HansKindberg.IdentityServer.Identity
 					passwordValidationErrors.AddRange(identityResult.Errors);
 			}
 
-			// ReSharper disable ConvertIfStatementToReturnStatement
-
 			if(passwordValidationErrors.Any())
 				return IdentityResult.Failed(new IdentityError {Description = $"The password \"{user.Password}\" for user \"{user.UserName}\" is invalid. {string.Join(" ", passwordValidationErrors.Select(identityError => identityError.Description))}"});
-
-			// ReSharper restore ConvertIfStatementToReturnStatement
 
 			return IdentityResult.Success;
 		}
 
 		#endregion
 	}
+	// ReSharper restore All
 }

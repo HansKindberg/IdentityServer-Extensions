@@ -13,6 +13,7 @@ using RegionOrebroLan.Logging.Extensions;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 {
+	// ReSharper disable All
 	public abstract class PartialImporter<TModel> : IPartialImporter
 	{
 		#region Constructors
@@ -62,18 +63,29 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 		protected internal virtual async Task FilterOutDuplicateModelsAsync(IList<TModel> models, IDataImportResult result)
 		{
+			await this.FilterOutDuplicateModelsAsync(models, this.ModelIdentifierFullName, this.ModelIdentifierSelector, result);
+		}
+
+		protected internal virtual async Task FilterOutDuplicateModelsAsync(IList<TModel> models, string propertyName, Func<TModel, string> propertySelector, IDataImportResult result)
+		{
 			if(models == null)
 				throw new ArgumentNullException(nameof(models));
+
+			if(propertyName == null)
+				throw new ArgumentNullException(nameof(propertyName));
+
+			if(propertySelector == null)
+				throw new ArgumentNullException(nameof(propertySelector));
 
 			if(result == null)
 				throw new ArgumentNullException(nameof(result));
 
-			var errorFormat = $"{this.ModelIdentifierFullName} {{0}} has {{1}} duplicate{{2}}.";
+			var errorFormat = $"{propertyName} {{0}} has {{1}} duplicate{{2}}.";
 
 			var copies = models.ToArray();
 			models.Clear();
 
-			foreach(var group in copies.GroupBy(this.ModelIdentifierSelector, StringComparer.OrdinalIgnoreCase))
+			foreach(var group in copies.GroupBy(propertySelector, StringComparer.OrdinalIgnoreCase))
 			{
 				if(group.Count() > 1)
 					await this.AddErrorAsync(string.Format(null, errorFormat, group.Key.ToStringRepresentation(), group.Count() - 1, group.Count() > 2 ? "s" : null), result);
@@ -84,42 +96,53 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 		protected internal virtual async Task FilterOutInvalidModelsAsync(IList<TModel> models, IDataImportResult result)
 		{
+			await this.FilterOutInvalidModelsAsync(models, this.ModelIdentifierFullName, this.ModelIdentifierSelector, result, this.AllowNullModelIdentifier, this.AllowEmptyModelIdentifier, this.AllowWhitespacesOnlyModelIdentifier);
+		}
+
+		protected internal virtual async Task FilterOutInvalidModelsAsync(IList<TModel> models, string propertyName, Func<TModel, string> propertySelector, IDataImportResult result, bool allowNull = false, bool allowEmpty = false, bool allowWhitespacesOnly = false)
+		{
 			if(models == null)
 				throw new ArgumentNullException(nameof(models));
+
+			if(propertyName == null)
+				throw new ArgumentNullException(nameof(propertyName));
+
+			if(propertySelector == null)
+				throw new ArgumentNullException(nameof(propertySelector));
 
 			if(result == null)
 				throw new ArgumentNullException(nameof(result));
 
-			var errorFormat = $"{this.ModelIdentifierFullName} {{0}} can not be {{1}}.";
+			var errorFormat = $"{propertyName} {{0}} can not be {{1}}.";
 
 			var copies = models.ToArray();
 			models.Clear();
 
 			foreach(var model in copies)
 			{
-				var identifier = this.ModelIdentifierSelector(model);
+				var propertyValue = propertySelector(model);
 
-				if(identifier == null)
+				if(propertyValue == null)
 				{
-					if(!this.AllowNullModelIdentifier)
+					if(!allowNull)
 					{
 						await this.AddErrorAsync($"{this.ModelIdentifierFullName} can not be null.", result);
 						continue;
 					}
 				}
-				else if(identifier.Length == 0)
+				else if(propertyValue.Length == 0)
 				{
-					if(!this.AllowEmptyModelIdentifier)
+					if(!allowEmpty)
 					{
-						await this.AddErrorAsync(string.Format(null, errorFormat, identifier.ToStringRepresentation(), "empty"), result);
+						await this.AddErrorAsync(string.Format(null, errorFormat, propertyValue.ToStringRepresentation(), "empty"), result);
 						continue;
 					}
 				}
-				else if(identifier.Trim().Length == 0)
+				else if(propertyValue.Trim().Length == 0)
 				{
-					if(!this.AllowWhitespacesOnlyModelIdentifier)
+					if(!allowWhitespacesOnly)
 					{
-						await this.AddErrorAsync(string.Format(null, errorFormat, identifier.ToStringRepresentation(), "whitespaces only"), result);
+						await this.AddErrorAsync(string.Format(null, errorFormat, propertyValue.ToStringRepresentation(), "whitespaces only"), result);
 						continue;
 					}
 				}
@@ -194,7 +217,6 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 				var state = entry.State;
 
-				// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 				switch(state)
 				{
 					case EntityState.Added:
@@ -234,10 +256,10 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 						throw new NotSupportedException($"Entity-state {state} is not supported.");
 					}
 				}
-				// ReSharper restore SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 			}
 		}
 
 		#endregion
 	}
+	// ReSharper restore All
 }

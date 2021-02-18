@@ -9,6 +9,7 @@ using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Logging.Extensions;
+using UserLoginModel = HansKindberg.IdentityServer.Identity.Models.UserLogin;
 using UserModel = HansKindberg.IdentityServer.Identity.Models.User;
 
 namespace HansKindberg.IdentityServer.Data.Transferring
@@ -31,6 +32,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 		private static readonly IEnumerable<Type> _identityTypes = new[]
 		{
+			typeof(UserLoginModel),
 			typeof(UserModel)
 		};
 
@@ -175,8 +177,15 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 			types = (types ?? Enumerable.Empty<Type>()).ToArray();
 
+			if(types.Contains(typeof(UserLoginModel)))
+				result.Instances.Add(typeof(UserLoginModel), this.IdentityFacade.DatabaseContext.UserLogins.Select(userLogin => new UserLoginModel {Id = userLogin.UserId, Provider = userLogin.LoginProvider, UserIdentifier = userLogin.ProviderKey}).ToArray());
+
 			if(types.Contains(typeof(UserModel)))
-				result.Instances.Add(typeof(UserModel), this.IdentityFacade.Users.ToArray().Select(userEntity => new UserModel {Email = userEntity.Email, Password = this.DefaultPassword, UserName = userEntity.UserName}).ToArray());
+			{
+				var users = this.IdentityFacade.Users.Where(user => user.PasswordHash != null);
+
+				result.Instances.Add(typeof(UserModel), users.Select(userEntity => new UserModel {Email = userEntity.Email, Id = userEntity.Id, Password = this.DefaultPassword, UserName = userEntity.UserName}).ToArray());
+			}
 		}
 
 		#endregion

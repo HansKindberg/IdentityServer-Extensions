@@ -1,6 +1,7 @@
 {
 	"Users": [
 		{
+			"Id": "fd12a771-1098-4116-98bc-38b2c74861b3",
 			"Password": "password",
 			"UserName": "User-1"
 		}

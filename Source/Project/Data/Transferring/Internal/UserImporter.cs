@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Identity;
-using HansKindberg.IdentityServer.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,47 +12,32 @@ using UserModel = HansKindberg.IdentityServer.Identity.Models.User;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 {
-	public class UserImporter : PartialImporter<UserModel>
+	// ReSharper disable All
+	public class UserImporter : IdentityPartialImporter<UserModel>
 	{
 		#region Constructors
 
-		public UserImporter(IIdentityFacade facade, ILoggerFactory loggerFactory) : base(loggerFactory)
-		{
-			this.Facade = facade ?? throw new ArgumentNullException(nameof(facade));
-		}
+		public UserImporter(IIdentityFacade facade, ILoggerFactory loggerFactory) : base(facade, loggerFactory) { }
 
 		#endregion
 
 		#region Properties
 
-		protected internal virtual IdentityContext DatabaseContext => this.Facade.DatabaseContext;
-		protected internal virtual IIdentityFacade Facade { get; }
-		protected internal override string ModelIdentifierName => "UserName";
-		protected internal override Func<UserModel, string> ModelIdentifierSelector => model => model.UserName;
+		protected internal override string ModelIdentifierName => nameof(UserModel.Id);
+		protected internal override Func<UserModel, string> ModelIdentifierSelector => model => model.Id;
 
 		#endregion
 
 		#region Methods
 
-		protected internal virtual async Task AddErrorAsync(IdentityResult identityResult, IDataImportResult result)
+		[SuppressMessage("Style", "IDE0082:'typeof' can be converted  to 'nameof'")]
+		protected internal override async Task FilterOutDuplicateModelsAsync(IList<UserModel> models, IDataImportResult result)
 		{
-			if(identityResult == null)
-				throw new ArgumentNullException(nameof(identityResult));
-
-			if(result == null)
-				throw new ArgumentNullException(nameof(result));
-
-			await this.AddErrorAsync(await this.CreateErrorMessageAsync(identityResult), result);
+			await base.FilterOutDuplicateModelsAsync(models, result);
+			await this.FilterOutDuplicateModelsAsync(models, $"{typeof(UserModel).Name}.{nameof(UserModel.UserName)}", model => model.UserName, result);
 		}
 
-		protected internal virtual async Task<string> CreateErrorMessageAsync(IdentityResult identityResult)
-		{
-			if(identityResult == null)
-				throw new ArgumentNullException(nameof(identityResult));
-
-			return await Task.FromResult(string.Join(" ", identityResult.Errors.Select(identityError => identityError.Description)));
-		}
-
+		[SuppressMessage("Style", "IDE0082:'typeof' can be converted  to 'nameof'")]
 		protected internal override async Task FilterOutInvalidModelsAsync(IList<UserModel> models, IDataImportResult result)
 		{
 			if(models == null)
@@ -68,6 +53,15 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 			foreach(var user in copies)
 			{
+				var userLogins = await this.Facade.GetUserLoginsAsync(user.Id);
+
+				if(userLogins.Any())
+				{
+					await this.AddErrorAsync($"{typeof(UserModel).Name}.{nameof(UserModel.Id)} \"{user.Id}\" has external logins.", result);
+
+					continue;
+				}
+
 				var validationResult = await this.Facade.ValidateUserAsync(user);
 
 				if(validationResult.Succeeded)
@@ -103,9 +97,9 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 			if(options.DeleteAllOthers)
 			{
-				var importIdentifiers = models.Select(import => import.UserName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+				var importIdentifiers = models.Select(import => import.Id).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-				foreach(var user in this.Facade.Users.Where(user => !importIdentifiers.Contains(user.UserName)))
+				foreach(var user in this.Facade.Users.Where(user => !importIdentifiers.Contains(user.Id) && user.PasswordHash != null))
 				{
 					var deleteResult = await this.Facade.DeleteUserAsync(user);
 
@@ -130,11 +124,6 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			item.Relations.Add(typeof(IdentityUserToken<string>), await this.CreateResultItemAsync(await this.DatabaseContext.UserTokens.CountAsync()));
 
 			result.Items.Add(typeof(UserEntity), item);
-		}
-
-		protected internal virtual async Task<UserEntity> ModelToEntityAsync(UserModel user)
-		{
-			return await Task.FromResult(user != null ? new UserEntity {Email = user.Email, UserName = user.UserName} : null);
 		}
 
 		protected internal override async Task PopulateResultAsync(IDataImportResult result)
@@ -173,4 +162,5 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 		#endregion
 	}
+	// ReSharper restore All
 }
