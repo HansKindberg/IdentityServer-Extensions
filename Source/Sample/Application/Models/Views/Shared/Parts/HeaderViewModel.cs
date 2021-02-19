@@ -118,7 +118,6 @@ namespace Application.Models.Views.Shared.Parts
 				return this._navigation;
 			}
 		}
-		//protected internal virtual ILogger Logger { get; }
 
 		protected internal virtual IRequestCultureFeature RequestCultureFeature
 		{
