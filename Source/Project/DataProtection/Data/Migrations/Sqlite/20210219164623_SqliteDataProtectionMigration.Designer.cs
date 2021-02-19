@@ -2,36 +2,32 @@
 using HansKindberg.IdentityServer.DataProtection.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace HansKindberg.IdentityServer.DataProtection.Data.Migrations.SqlServer
+namespace HansKindberg.IdentityServer.DataProtection.Data.Migrations.Sqlite
 {
-    [DbContext(typeof(SqlServerDataProtection))]
-    [Migration("20201227160851_SqlServerDataProtectionMigration")]
-    partial class SqlServerDataProtectionMigration
+    [DbContext(typeof(SqliteDataProtection))]
+    [Migration("20210219164623_SqliteDataProtectionMigration")]
+    partial class SqliteDataProtectionMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.3");
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.Property<string>("Xml")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT COLLATE NOCASE");
 
                     b.HasKey("Id");
 

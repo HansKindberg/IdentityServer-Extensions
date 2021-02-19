@@ -25,35 +25,21 @@ namespace IntegrationTests.Identity
 		#region Methods
 
 		[TestMethod]
-		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 		public async Task Case_Sqlite_Test()
 		{
-			using(var context = new Context(databaseProvider: DatabaseProvider.Sqlite))
-			{
-				var serviceProvider = context.ServiceProvider;
-				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
-				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
-
-				const string id = "32348cf4-1e8e-4a97-a185-b52cdd70b996";
-				await identityFacade.UserManager.CreateAsync(new UserEntity {Id = id, UserName = "Test"});
-				await identityFacade.DatabaseContext.SaveChangesAsync();
-				Assert.IsNotNull(await identityFacade.UserManager.FindByIdAsync(id));
-				Assert.IsNull(await identityFacade.UserManager.FindByIdAsync(id.ToUpperInvariant()));
-				Assert.IsNotNull(await identityFacade.DatabaseContext.Users.FirstOrDefaultAsync(user => user.Id == id));
-				Assert.IsNull(await identityFacade.DatabaseContext.Users.FirstOrDefaultAsync(user => user.Id == id.ToUpperInvariant()));
-				Assert.IsNotNull(await identityFacade.DatabaseContext.Users.FirstOrDefaultAsync(user => EF.Functions.Like(user.Id, id)));
-				Assert.IsNotNull(await identityFacade.DatabaseContext.Users.FirstOrDefaultAsync(user => EF.Functions.Like(user.Id, id.ToLowerInvariant())));
-				Assert.IsNotNull(await identityFacade.DatabaseContext.Users.FirstOrDefaultAsync(user => EF.Functions.Like(user.Id, id.ToUpperInvariant())));
-				Assert.IsNotNull(await identityFacade.DatabaseContext.Users.FindAsync(id));
-				Assert.IsNull(await identityFacade.DatabaseContext.Users.FindAsync(id.ToUpperInvariant()));
-			}
+			await this.CaseTest(DatabaseProvider.Sqlite);
 		}
 
 		[TestMethod]
-		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 		public async Task Case_SqlServer_Test()
 		{
-			using(var context = new Context(databaseProvider: DatabaseProvider.SqlServer))
+			await this.CaseTest(DatabaseProvider.SqlServer);
+		}
+
+		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
+		protected internal virtual async Task CaseTest(DatabaseProvider databaseProvider)
+		{
+			using(var context = new Context(databaseProvider: databaseProvider))
 			{
 				var serviceProvider = context.ServiceProvider;
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);

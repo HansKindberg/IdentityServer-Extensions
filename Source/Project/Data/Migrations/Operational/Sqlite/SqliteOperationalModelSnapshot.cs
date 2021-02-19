@@ -15,47 +15,47 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.Sqlite
 		{
 #pragma warning disable 612, 618
 			modelBuilder
-				.HasAnnotation("ProductVersion", "3.1.10");
+				.HasAnnotation("ProductVersion", "5.0.3");
 
 			modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
 			{
 				b.Property<string>("UserCode")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ClientId")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<DateTime>("CreationTime")
 					.HasColumnType("TEXT");
 
 				b.Property<string>("Data")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(50000);
+					.HasMaxLength(50000)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Description")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("DeviceCode")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<DateTime?>("Expiration")
 					.IsRequired()
 					.HasColumnType("TEXT");
 
 				b.Property<string>("SessionId")
-					.HasColumnType("TEXT")
-					.HasMaxLength(100);
+					.HasMaxLength(100)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("SubjectId")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("UserCode");
 
@@ -70,13 +70,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.Sqlite
 			modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.PersistedGrant", b =>
 			{
 				b.Property<string>("Key")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ClientId")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<DateTime?>("ConsumedTime")
 					.HasColumnType("TEXT");
@@ -86,28 +86,28 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.Sqlite
 
 				b.Property<string>("Data")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(50000);
+					.HasMaxLength(50000)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Description")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<DateTime?>("Expiration")
 					.HasColumnType("TEXT");
 
 				b.Property<string>("SessionId")
-					.HasColumnType("TEXT")
-					.HasMaxLength(100);
+					.HasMaxLength(100)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("SubjectId")
-					.HasColumnType("TEXT")
-					.HasMaxLength(200);
+					.HasMaxLength(200)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Type")
 					.IsRequired()
-					.HasColumnType("TEXT")
-					.HasMaxLength(50);
+					.HasMaxLength(50)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Key");
 

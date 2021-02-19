@@ -14,7 +14,7 @@ namespace HansKindberg.IdentityServer.DataProtection.Data.Migrations.Sqlite
 		{
 #pragma warning disable 612, 618
 			modelBuilder
-				.HasAnnotation("ProductVersion", "3.1.10");
+				.HasAnnotation("ProductVersion", "5.0.3");
 
 			modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
 			{
@@ -23,10 +23,10 @@ namespace HansKindberg.IdentityServer.DataProtection.Data.Migrations.Sqlite
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("FriendlyName")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Xml")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Id");
 

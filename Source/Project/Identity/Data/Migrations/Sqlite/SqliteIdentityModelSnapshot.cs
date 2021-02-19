@@ -15,30 +15,30 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 		{
 #pragma warning disable 612, 618
 			modelBuilder
-				.HasAnnotation("ProductVersion", "3.1.10");
+				.HasAnnotation("ProductVersion", "5.0.3");
 
 			modelBuilder.Entity("HansKindberg.IdentityServer.Identity.Role", b =>
 			{
 				b.Property<string>("Id")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ConcurrencyStamp")
 					.IsConcurrencyToken()
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Name")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("NormalizedName")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Id");
 
 				b.HasIndex("NormalizedName")
 					.IsUnique()
-					.HasName("RoleNameIndex");
+					.HasDatabaseName("RoleNameIndex");
 
 				b.ToTable("AspNetRoles");
 			});
@@ -46,18 +46,18 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 			modelBuilder.Entity("HansKindberg.IdentityServer.Identity.User", b =>
 			{
 				b.Property<string>("Id")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<int>("AccessFailedCount")
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("ConcurrencyStamp")
 					.IsConcurrencyToken()
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Email")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<bool>("EmailConfirmed")
 					.HasColumnType("INTEGER");
@@ -69,40 +69,40 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 					.HasColumnType("TEXT");
 
 				b.Property<string>("NormalizedEmail")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("NormalizedUserName")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("PasswordHash")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("PhoneNumber")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<bool>("PhoneNumberConfirmed")
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("SecurityStamp")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<bool>("TwoFactorEnabled")
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("UserName")
-					.HasColumnType("TEXT")
-					.HasMaxLength(256);
+					.HasMaxLength(256)
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Id");
 
 				b.HasIndex("NormalizedEmail")
-					.HasName("EmailIndex");
+					.HasDatabaseName("EmailIndex");
 
 				b.HasIndex("NormalizedUserName")
 					.IsUnique()
-					.HasName("UserNameIndex");
+					.HasDatabaseName("UserNameIndex");
 
 				b.ToTable("AspNetUsers");
 			});
@@ -114,14 +114,14 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("ClaimType")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ClaimValue")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("RoleId")
 					.IsRequired()
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Id");
 
@@ -137,14 +137,14 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 					.HasColumnType("INTEGER");
 
 				b.Property<string>("ClaimType")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ClaimValue")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("UserId")
 					.IsRequired()
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("Id");
 
@@ -156,17 +156,17 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
 			{
 				b.Property<string>("LoginProvider")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ProviderKey")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("ProviderDisplayName")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("UserId")
 					.IsRequired()
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("LoginProvider", "ProviderKey");
 
@@ -178,10 +178,10 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
 			{
 				b.Property<string>("UserId")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("RoleId")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("UserId", "RoleId");
 
@@ -193,16 +193,16 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
 			{
 				b.Property<string>("UserId")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("LoginProvider")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Name")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.Property<string>("Value")
-					.HasColumnType("TEXT");
+					.HasColumnType("TEXT COLLATE NOCASE");
 
 				b.HasKey("UserId", "LoginProvider", "Name");
 
