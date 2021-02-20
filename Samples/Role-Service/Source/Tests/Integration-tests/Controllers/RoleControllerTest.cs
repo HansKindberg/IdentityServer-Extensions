@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using HansKindberg.RoleService.Controllers;
+using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -61,6 +62,24 @@ namespace IntegrationTests.Controllers
 			roles = roles.OrderBy(item => item, StringComparer.OrdinalIgnoreCase);
 
 			return await Task.FromResult(roles);
+		}
+
+		[TestMethod]
+		public async Task List_IfTheHttpContextUserHasANameIdentifierClaimOrASubjectClaimThatIsConfigured_ShouldReturnRolesThatAreConfigured()
+		{
+			foreach(var nameIdentifierClaimType in new[] {JwtClaimTypes.Subject, ClaimTypes.NameIdentifier})
+			{
+				var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim> {new Claim(nameIdentifierClaimType, "40f297bb-47eb-464b-bb07-80b1ec3f862d")}, "Test"));
+
+				using(var webApplicationFactory = new WebApplicationFactory())
+				{
+					var controllerFactory = webApplicationFactory.Services.GetRequiredService<IControllerFactory>();
+					var roleController = (RoleController)controllerFactory.CreateController(await this.CreateControllerContextAsync(claimsPrincipal, webApplicationFactory.Services));
+					var roles = (await roleController.List()).ToArray();
+					Assert.AreEqual(1, roles.Length);
+					Assert.AreEqual("Administrators", roles.First());
+				}
+			}
 		}
 
 		[TestMethod]
