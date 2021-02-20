@@ -1,5 +1,4 @@
 using System;
-using HansKindberg.RoleService.Models.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,13 +8,9 @@ namespace HansKindberg.RoleService.Controllers
 	{
 		#region Constructors
 
-		protected ServiceController(ILoggerFactory loggerFactory, ISettings settings)
+		protected ServiceController(ILoggerFactory loggerFactory)
 		{
-			if(loggerFactory == null)
-				throw new ArgumentNullException(nameof(loggerFactory));
-
-			this.Logger = loggerFactory.CreateLogger(this.GetType());
-			this.Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 		}
 
 		#endregion
@@ -23,7 +18,6 @@ namespace HansKindberg.RoleService.Controllers
 		#region Properties
 
 		protected internal virtual ILogger Logger { get; }
-		protected internal virtual ISettings Settings { get; }
 
 		#endregion
 	}

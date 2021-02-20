@@ -5,6 +5,7 @@ using HansKindberg.RoleService.Models.Configuration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HansKindberg.RoleService.Controllers
 {
@@ -13,7 +14,16 @@ namespace HansKindberg.RoleService.Controllers
 	{
 		#region Constructors
 
-		public ErrorController(ILoggerFactory loggerFactory, ISettings settings) : base(loggerFactory, settings) { }
+		public ErrorController(ILoggerFactory loggerFactory, IOptionsMonitor<ExceptionHandlingOptions> optionsMonitor) : base(loggerFactory)
+		{
+			this.OptionsMonitor = optionsMonitor ?? throw new ArgumentNullException(nameof(optionsMonitor));
+		}
+
+		#endregion
+
+		#region Properties
+
+		protected internal virtual IOptionsMonitor<ExceptionHandlingOptions> OptionsMonitor { get; }
 
 		#endregion
 
@@ -21,7 +31,7 @@ namespace HansKindberg.RoleService.Controllers
 
 		protected internal virtual ProblemDetails CreateProblemDetails(Exception exception)
 		{
-			var details = this.Settings.ExceptionHandling.Value.Detailed ? exception?.ToString() : null;
+			var details = this.OptionsMonitor.CurrentValue.Detailed ? exception?.ToString() : null;
 			var title = exception is ServiceException ? exception.Message : null;
 
 			return this.ProblemDetailsFactory.CreateProblemDetails(this.HttpContext, 500, title, "Error", details);

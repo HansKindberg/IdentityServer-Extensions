@@ -64,7 +64,6 @@ namespace HansKindberg.RoleService
 
 			services.AddSingleton<IRoleLoader, WindowsRoleLoader>();
 			services.AddSingleton<IRoleResolver, RoleResolver>();
-			services.AddSingleton<ISettings, Settings>();
 
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(options => { jwtBearerConfigurationSection.Bind(options); });

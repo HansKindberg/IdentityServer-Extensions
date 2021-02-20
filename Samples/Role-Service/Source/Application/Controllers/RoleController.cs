@@ -8,6 +8,7 @@ using HansKindberg.RoleService.Models.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HansKindberg.RoleService.Controllers
 {
@@ -17,8 +18,9 @@ namespace HansKindberg.RoleService.Controllers
 	{
 		#region Constructors
 
-		public RoleController(ILoggerFactory loggerFactory, IRoleResolver resolver, ISettings settings) : base(loggerFactory, settings)
+		public RoleController(IOptionsMonitor<ExceptionHandlingOptions> exceptionHandlingOptionsMonitor, ILoggerFactory loggerFactory, IRoleResolver resolver) : base(loggerFactory)
 		{
+			this.ExceptionHandlingOptionsMonitor = exceptionHandlingOptionsMonitor ?? throw new ArgumentNullException(nameof(exceptionHandlingOptionsMonitor));
 			this.Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
 		}
 
@@ -26,6 +28,7 @@ namespace HansKindberg.RoleService.Controllers
 
 		#region Properties
 
+		protected internal virtual IOptionsMonitor<ExceptionHandlingOptions> ExceptionHandlingOptionsMonitor { get; }
 		protected internal virtual IRoleResolver Resolver { get; }
 
 		#endregion
@@ -47,7 +50,7 @@ namespace HansKindberg.RoleService.Controllers
 				if(this.Logger.IsEnabled(LogLevel.Error))
 					this.Logger.LogError(exception, message);
 
-				if(!this.Settings.ExceptionHandling.Value.ThrowExceptions)
+				if(!this.ExceptionHandlingOptionsMonitor.CurrentValue.ThrowExceptions)
 					return Enumerable.Empty<string>();
 
 				if(exception is ServiceException)
