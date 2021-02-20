@@ -18,10 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{93FAADB9-1E4E-4D97-88A3-EE5772100476}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		..\..\..\.gitignore = ..\..\..\.gitignore
-		..\..\..\License = ..\..\..\License
-		..\..\..\NuGet.config = ..\..\..\NuGet.config
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		..\License = ..\License
+		..\NuGet.config = ..\NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{36B430E9-85DE-4E25-873B-2F604E25E511}"
