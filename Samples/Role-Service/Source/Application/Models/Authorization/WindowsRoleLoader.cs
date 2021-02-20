@@ -65,7 +65,6 @@ namespace HansKindberg.RoleService.Models.Authorization
 			return await Task.FromResult(securityIdentifier.AccountDomainSid != null);
 		}
 
-		[SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code")]
 		public virtual async Task<IEnumerable<string>> ListAsync(IPrincipal principal)
 		{
 			// ReSharper disable All
