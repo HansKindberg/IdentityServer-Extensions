@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using HansKindberg.RoleService.Models.Authorization.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HostFiltering;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace HansKindberg.RoleService.Models.Configuration
 {
+	[SuppressMessage("Naming", "CA1724:Type names should not match namespaces")]
 	public class Settings : ISettings
 	{
 		#region Constructors
