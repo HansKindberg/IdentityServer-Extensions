@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RegionOrebroLan.Logging.Extensions;
 
 namespace HansKindberg.RoleService.Controllers
 {
@@ -29,28 +30,21 @@ namespace HansKindberg.RoleService.Controllers
 
 		#region Methods
 
-		protected internal virtual ProblemDetails CreateProblemDetails(Exception exception)
-		{
-			var details = this.OptionsMonitor.CurrentValue.Detailed ? exception?.ToString() : null;
-			var title = exception is ServiceException ? exception.Message : null;
-
-			return this.ProblemDetailsFactory.CreateProblemDetails(this.HttpContext, 500, title, "Error", details);
-		}
-
 		[Route("Error")]
 		public virtual async Task<IActionResult> Index()
 		{
 			var exception = this.HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+			var options = this.OptionsMonitor.CurrentValue;
 
-			if(this.Logger.IsEnabled(LogLevel.Error))
-				this.Logger.LogError(exception, "Error");
+			if(exception != null)
+				this.Logger.LogErrorIfEnabled(exception, "Error");
 
-			var problemDetails = this.CreateProblemDetails(exception);
-
-			return await Task.FromResult(new ObjectResult(problemDetails)
-			{
-				StatusCode = problemDetails.Status
-			});
+			return await Task.FromResult(
+				this.Problem(
+					options.Detailed ? exception?.ToString() : null,
+					title: exception is ServiceException ? exception.Message : "Error"
+				)
+			);
 		}
 
 		#endregion

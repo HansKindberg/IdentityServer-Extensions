@@ -1,3 +1,4 @@
 [*.cs]
 # Suppress
 dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA2234.severity = none

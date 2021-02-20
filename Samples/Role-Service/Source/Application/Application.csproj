@@ -15,6 +15,7 @@
 		<Version Condition="$(VersionPrereleaseName) != ''">$(Version)-$(VersionPrereleaseName)</Version>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.0-alpha" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
 		<PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />

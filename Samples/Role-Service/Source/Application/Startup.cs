@@ -1,8 +1,9 @@
 using System;
-using HansKindberg.RoleService.Models.Authorization;
-using HansKindberg.RoleService.Models.Authorization.Configuration;
 using HansKindberg.RoleService.Models.Configuration;
+using HansKindberg.Web.Authorization.Builder.Extentsions;
+using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +48,7 @@ namespace HansKindberg.RoleService
 			applicationBuilder.UseHttpsRedirection();
 			applicationBuilder.UseRouting();
 			applicationBuilder.UseAuthentication();
-			applicationBuilder.UseAuthorization();
+			applicationBuilder.UseExtendedAuthorization();
 			applicationBuilder.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
 
@@ -60,15 +61,12 @@ namespace HansKindberg.RoleService
 
 			services.Configure<ExceptionHandlingOptions>(this.Configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
 			services.Configure<JwtBearerOptions>(jwtBearerConfigurationSection);
-			services.Configure<RoleResolvingOptions>(this.Configuration.GetSection(ConfigurationKeys.RoleResolvingPath));
-
-			services.AddSingleton<IRoleLoader, WindowsRoleLoader>();
-			services.AddSingleton<IRoleResolver, RoleResolver>();
 
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(options => { jwtBearerConfigurationSection.Bind(options); });
 
-			services.AddAuthorization(options =>
+			services.AddExtendedAuthorization(this.Configuration);
+			services.Configure<AuthorizationOptions>(options =>
 			{
 				options.AddPolicy("scope", policy =>
 				{

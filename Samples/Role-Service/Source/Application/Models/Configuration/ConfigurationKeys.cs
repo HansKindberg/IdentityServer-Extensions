@@ -6,7 +6,6 @@ namespace HansKindberg.RoleService.Models.Configuration
 
 		public const string ExceptionHandlingPath = "ExceptionHandling";
 		public const string JwtBearerPath = "JwtBearer";
-		public const string RoleResolvingPath = "RoleResolving";
 
 		#endregion
 	}
