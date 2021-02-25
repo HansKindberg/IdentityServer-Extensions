@@ -64,7 +64,7 @@
 					</div>
 				</li>
 			}
-			@if(Model.UiCultureNavigation != null && Model.UiCultureNavigation.Children.Any())
+			@if(Model.UiCultureNavigation != null)
 			{
 				<li class="nav-item dropdown@(Model.UiCultureNavigation.Active ? " active" : string.Empty)">
 					<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="ui-culture-selector" title="@Model.UiCultureNavigation.Tooltip">
@@ -79,26 +79,29 @@
 				</li>
 			}
 		</ul>
-		<form asp-action="Save" asp-controller="CultureCookie" class="d-inline">
-			<input name="Culture" type="hidden" value="@Model.Culture" />
-			<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
-			<input name="UiCulture" type="hidden" value="@Model.UiCulture" />
-			<button class="bg-white btn btn-outline-success cookie-button" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
-				<svg class="size-1-point-4-rem text-success" role="presentation">
-					<use xlink:href="/Style/Icons/sprite.svg#check" />
-				</svg>
-			</button>
-		</form>
-		@if(Model.CultureCookieValue != null)
+		@if(Model.UiCultureNavigation != null)
 		{
-			<form asp-action="Delete" asp-controller="CultureCookie" class="d-inline">
+			<form asp-action="Save" asp-controller="CultureCookie" class="d-inline">
+				<input name="Culture" type="hidden" value="@Model.Culture" />
 				<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
-				<button class="bg-white btn btn-outline-danger cookie-button ml-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
-					<svg class="size-1-point-4-rem text-danger" role="presentation">
-						<use xlink:href="/Style/Icons/sprite.svg#x" />
+				<input name="UiCulture" type="hidden" value="@Model.UiCulture" />
+				<button class="bg-white btn btn-outline-success cookie-button" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
+					<svg class="size-1-point-4-rem text-success" role="presentation">
+						<use xlink:href="/Style/Icons/sprite.svg#check" />
 					</svg>
 				</button>
 			</form>
+			@if(Model.CultureCookieValue != null)
+			{
+				<form asp-action="Delete" asp-controller="CultureCookie" class="d-inline">
+					<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
+					<button class="bg-white btn btn-outline-danger cookie-button ml-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
+						<svg class="size-1-point-4-rem text-danger" role="presentation">
+							<use xlink:href="/Style/Icons/sprite.svg#x" />
+						</svg>
+					</button>
+				</form>
+			}
 		}
 	</div>
 </nav>

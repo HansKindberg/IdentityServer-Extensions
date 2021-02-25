@@ -35,7 +35,8 @@ namespace Application.Models.Views.Shared.Parts
 		private INavigationNode _navigation;
 		private Lazy<IRequestCultureFeature> _requestCultureFeature;
 		private Lazy<Uri> _returnUrlAsAbsoluteUrl;
-		private INavigationNode _uiCultureNavigation;
+		private IEnumerable<CultureInfo> _supportedUiCultures;
+		private Lazy<INavigationNode> _uiCultureNavigation;
 
 		#endregion
 
@@ -139,15 +140,20 @@ namespace Application.Models.Views.Shared.Parts
 			}
 		}
 
+		protected internal virtual IEnumerable<CultureInfo> SupportedUiCultures => this._supportedUiCultures ??= this.Facade.RequestLocalization.CurrentValue.SupportedUICultures.OrderBy(item => item.NativeName, StringComparer.Ordinal);
 		public virtual CultureInfo UiCulture => CultureInfo.CurrentUICulture;
 
 		public virtual INavigationNode UiCultureNavigation
 		{
 			get
 			{
-				// ReSharper disable InvertIf
-				if(this._uiCultureNavigation == null)
+				this._uiCultureNavigation ??= new Lazy<INavigationNode>(() =>
 				{
+					var supportedUiCultures = this.SupportedUiCultures.ToArray();
+
+					if(supportedUiCultures.Length < 2)
+						return null;
+
 					var uiCultureNavigation = new NavigationNode(null)
 					{
 						Active = true,
@@ -165,7 +171,7 @@ namespace Application.Models.Views.Shared.Parts
 						});
 					}
 
-					foreach(var supportedUiCulture in this.Facade.RequestLocalization.CurrentValue.SupportedUICultures.OrderBy(item => item.NativeName, StringComparer.Ordinal))
+					foreach(var supportedUiCulture in supportedUiCultures)
 					{
 						uiCultureNavigation.Children.Add(new NavigationNode(uiCultureNavigation)
 						{
@@ -176,11 +182,10 @@ namespace Application.Models.Views.Shared.Parts
 						});
 					}
 
-					this._uiCultureNavigation = uiCultureNavigation;
-				}
-				// ReSharper restore InvertIf
+					return uiCultureNavigation;
+				});
 
-				return this._uiCultureNavigation;
+				return this._uiCultureNavigation.Value;
 			}
 		}
 
