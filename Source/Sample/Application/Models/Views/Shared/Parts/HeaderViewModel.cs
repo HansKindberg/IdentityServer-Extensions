@@ -165,7 +165,7 @@ namespace Application.Models.Views.Shared.Parts
 						});
 					}
 
-					foreach(var supportedUiCulture in this.Facade.RequestLocalization.Value.SupportedUICultures.OrderBy(item => item.NativeName, StringComparer.Ordinal))
+					foreach(var supportedUiCulture in this.Facade.RequestLocalization.CurrentValue.SupportedUICultures.OrderBy(item => item.NativeName, StringComparer.Ordinal))
 					{
 						uiCultureNavigation.Children.Add(new NavigationNode(uiCultureNavigation)
 						{

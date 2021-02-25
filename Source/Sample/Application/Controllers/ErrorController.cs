@@ -24,7 +24,7 @@ namespace Application.Controllers
 		{
 			var model = new ErrorViewModel
 			{
-				Detailed = this.Facade.ExceptionHandling.Value.Detailed,
+				Detailed = this.Facade.ExceptionHandling.CurrentValue.Detailed,
 				IdentityServerError = await this.Facade.Interaction.GetErrorContextAsync(errorId)
 			};
 

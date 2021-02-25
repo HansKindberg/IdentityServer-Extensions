@@ -19,7 +19,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptions<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptions<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptions<RequestLocalizationOptions> requestLocalization)
+		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization)
 		{
 			this.AuthenticationSchemeLoader = authenticationSchemeLoader ?? throw new ArgumentNullException(nameof(authenticationSchemeLoader));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
@@ -46,15 +46,15 @@ namespace HansKindberg.IdentityServer
 		public virtual IClientStore ClientStore { get; }
 		public virtual IDecorationLoader DecorationLoader { get; }
 		public virtual IEventService Events { get; }
-		public virtual IOptions<ExceptionHandlingOptions> ExceptionHandling { get; }
+		public virtual IOptionsMonitor<ExceptionHandlingOptions> ExceptionHandling { get; }
 		public virtual IFeatureManager FeatureManager { get; }
 		public virtual IHttpContextAccessor HttpContextAccessor { get; }
 		public virtual IIdentityFacade Identity { get; }
-		public virtual IOptions<ExtendedIdentityServerOptions> IdentityServer { get; }
+		public virtual IOptionsMonitor<ExtendedIdentityServerOptions> IdentityServer { get; }
 		public virtual IIdentityServerInteractionService Interaction { get; }
 		public virtual IStringLocalizerFactory LocalizerFactory { get; }
 		public virtual ILoggerFactory LoggerFactory { get; }
-		public virtual IOptions<RequestLocalizationOptions> RequestLocalization { get; }
+		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
 
 		#endregion
 	}

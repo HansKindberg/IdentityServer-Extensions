@@ -23,15 +23,15 @@ namespace HansKindberg.IdentityServer
 		IClientStore ClientStore { get; }
 		IDecorationLoader DecorationLoader { get; }
 		IEventService Events { get; }
-		IOptions<ExceptionHandlingOptions> ExceptionHandling { get; }
+		IOptionsMonitor<ExceptionHandlingOptions> ExceptionHandling { get; }
 		IFeatureManager FeatureManager { get; }
 		IHttpContextAccessor HttpContextAccessor { get; }
 		IIdentityFacade Identity { get; }
-		IOptions<ExtendedIdentityServerOptions> IdentityServer { get; }
+		IOptionsMonitor<ExtendedIdentityServerOptions> IdentityServer { get; }
 		IIdentityServerInteractionService Interaction { get; }
 		IStringLocalizerFactory LocalizerFactory { get; }
 		ILoggerFactory LoggerFactory { get; }
-		IOptions<RequestLocalizationOptions> RequestLocalization { get; }
+		IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
 
 		#endregion
 	}

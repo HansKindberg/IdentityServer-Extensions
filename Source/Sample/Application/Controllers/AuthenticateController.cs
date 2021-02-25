@@ -66,7 +66,7 @@ namespace Application.Controllers
 			await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.IdentityProvider, user.ProviderUserId, user.SubjectId, user.DisplayName, true, authorizationRequest?.Client.ClientId));
 
 			if(authorizationRequest != null && authorizationRequest.IsNativeClient())
-				return await this.Redirect(returnUrl, this.Facade.IdentityServer.Value.Redirection.SecondsBeforeRedirect);
+				return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect);
 
 			return this.Redirect(returnUrl);
 		}
@@ -124,7 +124,7 @@ namespace Application.Controllers
 
 			await Task.CompletedTask;
 
-			foreach(var mapping in this.Facade.IdentityServer.Value.ClaimTypeMap)
+			foreach(var mapping in this.Facade.IdentityServer.CurrentValue.ClaimTypeMap)
 			{
 				foreach(var claim in claims)
 				{
@@ -162,7 +162,7 @@ namespace Application.Controllers
 
 		protected internal virtual async Task<string> GetCertificateAuthenticationHostAsync()
 		{
-			var domainNameForCertificateAuthentication = this.Facade.IdentityServer.Value.InteractiveMutualTlsDomain;
+			var domainNameForCertificateAuthentication = this.Facade.IdentityServer.CurrentValue.InteractiveMutualTlsDomain;
 
 			if(string.IsNullOrEmpty(domainNameForCertificateAuthentication))
 				return this.HttpContext.Request.Host.Value;
