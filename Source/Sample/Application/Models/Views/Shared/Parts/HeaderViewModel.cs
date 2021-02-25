@@ -99,7 +99,7 @@ namespace Application.Models.Views.Shared.Parts
 					if(this.Facade.FeatureManager.IsEnabled(Feature.Home))
 						navigation.Url = this.GetUrl();
 
-					if(this.Facade.AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, this.HttpContext.User).Result)
+					if(!this.HttpContext.SignedOut() && this.Facade.AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, this.HttpContext.User).Result)
 					{
 						if(this.Facade.FeatureManager.IsEnabled(Feature.DataTransfer))
 							this.AddNavigationNode(new[] {nameof(DataTransferController.Index), nameof(DataTransferController.Export), nameof(DataTransferController.Import)}, nameof(Feature.DataTransfer), navigation);
