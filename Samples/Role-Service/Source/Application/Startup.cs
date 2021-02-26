@@ -63,7 +63,7 @@ namespace HansKindberg.RoleService
 			services.Configure<JwtBearerOptions>(jwtBearerConfigurationSection);
 
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-				.AddJwtBearer(options => { jwtBearerConfigurationSection.Bind(options); });
+				.AddJwtBearer(options => jwtBearerConfigurationSection.Bind(options));
 
 			services.AddExtendedAuthorization(this.Configuration);
 			services.Configure<AuthorizationOptions>(options =>
