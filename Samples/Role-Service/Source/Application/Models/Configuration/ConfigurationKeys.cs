@@ -5,6 +5,7 @@ namespace HansKindberg.RoleService.Models.Configuration
 		#region Fields
 
 		public const string ExceptionHandlingPath = "ExceptionHandling";
+		public const string JsonOptionsPath = "JsonOptions";
 		public const string JwtBearerPath = "JwtBearer";
 
 		#endregion

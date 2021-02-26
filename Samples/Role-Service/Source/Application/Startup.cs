@@ -5,6 +5,7 @@ using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -60,6 +61,7 @@ namespace HansKindberg.RoleService
 			var jwtBearerConfigurationSection = this.Configuration.GetSection(ConfigurationKeys.JwtBearerPath);
 
 			services.Configure<ExceptionHandlingOptions>(this.Configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
+			services.Configure<JsonOptions>(this.Configuration.GetSection(ConfigurationKeys.JsonOptionsPath));
 			services.Configure<JwtBearerOptions>(jwtBearerConfigurationSection);
 
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
