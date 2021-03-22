@@ -4,10 +4,6 @@ namespace HansKindberg.IdentityServer.Configuration
 	{
 		#region Fields
 
-		//public const string ApiResourcesPath = "ApiResources";
-		//public const string ApiScopesPath = "ApiScopes";
-		//public const string ClientsPath = "Clients";
-		//public const string IdentityResourcesPath = "IdentityResources";
 		public const string CertificateForwardingPath = "CertificateForwarding";
 		public const string DataDirectoryPath = "DataDirectory";
 		public const string DataPath = "Data";
