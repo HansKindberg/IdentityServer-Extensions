@@ -14,6 +14,7 @@ namespace HansKindberg.IdentityServer.FeatureManagement
 		Home,
 		Hsts,
 		HttpsRedirection,
+		Saml,
 		SecurityHeaders
 	}
 }
