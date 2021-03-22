@@ -4,6 +4,8 @@
 		<AssemblyOriginatorKeyFile>$(SolutionDir).Global\Signing\StrongName.Development.snk</AssemblyOriginatorKeyFile>
 		<DelaySign>false</DelaySign>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<NoWarn>CA1014</NoWarn>
 		<SignAssembly>true</SignAssembly>
 	</PropertyGroup>
 </Project>
