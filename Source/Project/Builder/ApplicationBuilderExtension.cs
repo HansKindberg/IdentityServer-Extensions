@@ -155,6 +155,10 @@ namespace HansKindberg.IdentityServer.Builder
 				((DbContext)serviceScope.ServiceProvider.GetRequiredService<IPersistedGrantDbContext>()).Database.Migrate();
 			}
 
+			var featureManager = applicationBuilder.ApplicationServices.GetRequiredService<IFeatureManager>();
+			if(featureManager.IsEnabled(Feature.Saml))
+				applicationBuilder.ApplicationServices.GetRequiredService<ISamlPluginBuilder>().Use(applicationBuilder);
+
 			return applicationBuilder;
 		}
 

@@ -171,6 +171,29 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerOperationalMigrationUpdate -Context SqlServerOperational -OutputDir Data/Migrations/Operational/SqlServer -Project Project;
 	Write-Host "Finnished";
 
+#### 3.1.5 Plugins
+
+##### 3.1.5.1 SAML
+
+###### 3.1.5.1.1 Create migrations
+
+	Write-Host "Removing migrations...";
+	Remove-Migration -Context SqliteSamlConfiguration -Force -Project Project;
+	Remove-Migration -Context SqlServerSamlConfiguration -Force -Project Project;
+	Write-Host "Removing current migrations-directory...";
+	Remove-Item "Project\Data\Saml\Migrations" -ErrorAction Ignore -Force -Recurse;
+	Write-Host "Creating migrations...";
+	Add-Migration SqliteSamlConfigurationMigration -Context SqliteSamlConfiguration -OutputDir Data/Saml/Migrations/Sqlite -Project Project;
+	Add-Migration SqlServerSamlConfigurationMigration -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
+	Write-Host "Finnished";
+
+###### 3.1.5.1.2 Update migrations
+
+	Write-Host "Updating migrations...";
+	Add-Migration SqliteSamlConfigurationMigrationUpdate -Context SqliteSamlConfiguration -OutputDir Data/Saml/Migrations/Sqlite -Project Project;
+	Add-Migration SqlServerSamlConfigurationMigrationUpdate -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
+	Write-Host "Finnished";
+
 ## 4 Technicalities
 
 ### 4.1 Development-environment

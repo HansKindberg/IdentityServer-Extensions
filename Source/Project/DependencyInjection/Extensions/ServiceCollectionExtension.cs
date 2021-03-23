@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
+using HansKindberg.IdentityServer.Builder;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Configuration.Extensions;
 using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.Data.Configuration;
+using HansKindberg.IdentityServer.Data.Saml;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.DataProtection.Configuration;
 using HansKindberg.IdentityServer.Development;
@@ -39,6 +41,8 @@ using RegionOrebroLan;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
+using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
+using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
 
 namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 {
@@ -248,13 +252,13 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			return databaseProvider switch
 			{
-				DatabaseProvider.Sqlite => services.AddIdentityServer<SqliteConfiguration, SqliteOperational>(optionsBuilder => optionsBuilder.UseSqlite(connectionString), serviceConfiguration),
-				DatabaseProvider.SqlServer => services.AddIdentityServer<SqlServerConfiguration, SqlServerOperational>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString), serviceConfiguration),
+				DatabaseProvider.Sqlite => services.AddIdentityServer<SqliteConfiguration, SqliteOperational, SqliteSamlConfiguration>(optionsBuilder => optionsBuilder.UseSqlite(connectionString), serviceConfiguration),
+				DatabaseProvider.SqlServer => services.AddIdentityServer<SqlServerConfiguration, SqlServerOperational, SqlServerSamlConfiguration>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString), serviceConfiguration),
 				_ => throw new InvalidOperationException($"The database-provider \"{databaseProvider}\" is not supported.")
 			};
 		}
 
-		private static IIdentityServerBuilder AddIdentityServer<TConfiguration, TOperational>(this IServiceCollection services, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfiguration serviceConfiguration) where TConfiguration : DbContext, IConfigurationDbContext where TOperational : DbContext, IPersistedGrantDbContext
+		private static IIdentityServerBuilder AddIdentityServer<TConfiguration, TOperational, TSaml>(this IServiceCollection services, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfiguration serviceConfiguration) where TConfiguration : DbContext, IConfigurationDbContext where TOperational : DbContext, IPersistedGrantDbContext where TSaml : SamlConfigurationContext
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
@@ -290,6 +294,38 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			{
 				identityServerBuilder.AddValidationKey(serviceConfiguration.GetCertificate(validationCertificate));
 			}
+
+			identityServerBuilder.AddIdentityServerPlugins<TSaml>(optionsBuilderFunction, serviceConfiguration);
+
+			return identityServerBuilder;
+		}
+
+		private static IIdentityServerBuilder AddIdentityServerPlugins<TSaml>(this IIdentityServerBuilder identityServerBuilder, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfiguration serviceConfiguration) where TSaml : SamlConfigurationContext
+		{
+			if(identityServerBuilder == null)
+				throw new ArgumentNullException(nameof(identityServerBuilder));
+
+			if(optionsBuilderFunction == null)
+				throw new ArgumentNullException(nameof(optionsBuilderFunction));
+
+			if(serviceConfiguration == null)
+				throw new ArgumentNullException(nameof(serviceConfiguration));
+
+			// ReSharper disable InvertIf
+			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.Saml))
+			{
+				identityServerBuilder.Services.AddDbContext<TSaml>(optionsBuilder => optionsBuilderFunction(optionsBuilder));
+				identityServerBuilder.Services.AddScoped<ISamlConfigurationDbContext>(serviceProvider => serviceProvider.GetRequiredService<TSaml>());
+
+				identityServerBuilder.AddSamlPlugin(options =>
+					{
+						serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
+					})
+					.AddServiceProviderStore<ServiceProviderStore>();
+
+				identityServerBuilder.Services.TryAddSingleton<ISamlPluginBuilder, SamlPluginBuilder>();
+			}
+			// ReSharper restore InvertIf
 
 			return identityServerBuilder;
 		}

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.Security.Cryptography.Configuration;
+using Rsk.Saml.Configuration;
 
 namespace HansKindberg.IdentityServer.Configuration
 {
@@ -40,6 +41,7 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		public virtual OperationalStoreOptions OperationalStore { get; set; } = new OperationalStoreOptions();
 		public virtual RedirectionOptions Redirection { get; set; } = new RedirectionOptions();
+		public virtual SamlIdpOptions Saml { get; set; } = new SamlIdpOptions();
 
 		public virtual DynamicOptions SigningCertificate { get; set; } = new DynamicOptions
 		{
