@@ -17,7 +17,7 @@ IdentityServer:
 ## 1 Features
 
 - [Feature.cs](/Source/Project/FeatureManagement/Feature.cs)
-- [Example](/Source/Sample/Application/appsettings.Development.json#L353)
+- [Example](/Source/Sample/Application/appsettings.Development.json#L379)
 
 ## 2 Configuration
 
@@ -26,7 +26,7 @@ See above.
 
 ### 2.2 Globalization
 
-- [Example](/Source/Sample/Application/appsettings.Development.json#L473)
+- [Example](/Source/Sample/Application/appsettings.Development.json#L479)
 
 ### 2.3 Localization
 
