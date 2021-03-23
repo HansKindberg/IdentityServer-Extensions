@@ -194,6 +194,27 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerSamlConfigurationMigrationUpdate -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
+##### 3.1.5.2 WsFederation
+
+###### 3.1.5.2.1 Create migrations
+
+	Write-Host "Removing migrations...";
+	Remove-Migration -Context SqliteWsFederationConfiguration -Force -Project Project;
+	Remove-Migration -Context SqlServerWsFederationConfiguration -Force -Project Project;
+	Write-Host "Removing current migrations-directory...";
+	Remove-Item "Project\Data\WsFederation\Migrations" -ErrorAction Ignore -Force -Recurse;
+	Write-Host "Creating migrations...";
+	Add-Migration SqliteWsFederationConfigurationMigration -Context SqliteWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/Sqlite -Project Project;
+	Add-Migration SqlServerWsFederationConfigurationMigration -Context SqlServerWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/SqlServer -Project Project;
+	Write-Host "Finnished";
+
+###### 3.1.5.2.2 Update migrations
+
+	Write-Host "Updating migrations...";
+	Add-Migration SqliteWsFederationConfigurationMigrationUpdate -Context SqliteWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/Sqlite -Project Project;
+	Add-Migration SqlServerWsFederationConfigurationMigrationUpdate -Context SqlServerWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/SqlServer -Project Project;
+	Write-Host "Finnished";
+
 ## 4 Technicalities
 
 ### 4.1 Development-environment

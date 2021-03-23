@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration.Memory;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.Security.Cryptography.Configuration;
 using Rsk.Saml.Configuration;
+using Rsk.WsFederation.Configuration;
 
 namespace HansKindberg.IdentityServer.Configuration
 {
@@ -59,6 +60,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		};
 
 		public virtual IList<DynamicOptions> ValidationCertificates { get; } = new List<DynamicOptions>();
+		public virtual WsFederationOptions WsFederation { get; set; } = new WsFederationOptions();
 
 		#endregion
 	}

@@ -156,8 +156,12 @@ namespace HansKindberg.IdentityServer.Builder
 			}
 
 			var featureManager = applicationBuilder.ApplicationServices.GetRequiredService<IFeatureManager>();
+
 			if(featureManager.IsEnabled(Feature.Saml))
 				applicationBuilder.ApplicationServices.GetRequiredService<ISamlPluginBuilder>().Use(applicationBuilder);
+
+			if(featureManager.IsEnabled(Feature.WsFederation))
+				applicationBuilder.ApplicationServices.GetRequiredService<IWsFederationPluginBuilder>().Use(applicationBuilder);
 
 			return applicationBuilder;
 		}

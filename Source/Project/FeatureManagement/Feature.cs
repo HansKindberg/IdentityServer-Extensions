@@ -15,6 +15,7 @@ namespace HansKindberg.IdentityServer.FeatureManagement
 		Hsts,
 		HttpsRedirection,
 		Saml,
-		SecurityHeaders
+		SecurityHeaders,
+		WsFederation
 	}
 }

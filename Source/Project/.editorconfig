@@ -12,6 +12,10 @@ dotnet_diagnostic.IDE0050.severity = none
 dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.IDE0050.severity = none
 
+[/Data/WsFederation/Migrations/**.cs]
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.IDE0050.severity = none
+
 [/DataProtection/Data/Migrations/**.cs]
 dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.IDE0050.severity = none
