@@ -6,6 +6,8 @@ using HansKindberg.IdentityServer.Json.Serialization;
 using IdentityServer4.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Rsk.Saml.Models;
+using Rsk.WsFederation.Models;
 
 namespace HansKindberg.IdentityServer.Data.Transferring
 {
@@ -30,6 +32,8 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 		[System.Text.Json.Serialization.JsonIgnore]
 		public virtual IDictionary<Type, IEnumerable<object>> Instances { get; } = new Dictionary<Type, IEnumerable<object>>();
 
+		public virtual IEnumerable<RelyingParty> RelyingParties => this.Instances.TryGetValue(typeof(RelyingParty), out var relyingParties) ? relyingParties.OfType<RelyingParty>() : Enumerable.Empty<RelyingParty>();
+		public virtual IEnumerable<ServiceProvider> ServiceProviders => this.Instances.TryGetValue(typeof(ServiceProvider), out var serviceProviders) ? serviceProviders.OfType<ServiceProvider>() : Enumerable.Empty<ServiceProvider>();
 		public virtual IEnumerable<UserLogin> UserLogins => this.Instances.TryGetValue(typeof(UserLogin), out var userLogins) ? userLogins.OfType<UserLogin>() : Enumerable.Empty<UserLogin>();
 		public virtual IEnumerable<User> Users => this.Instances.TryGetValue(typeof(User), out var users) ? users.OfType<User>() : Enumerable.Empty<User>();
 
