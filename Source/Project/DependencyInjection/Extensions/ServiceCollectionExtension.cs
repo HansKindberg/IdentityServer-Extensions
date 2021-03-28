@@ -321,6 +321,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 				identityServerBuilder.AddSamlPlugin(options =>
 					{
+						options.UseLegacyRsaEncryption = false;
 						serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
