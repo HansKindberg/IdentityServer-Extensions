@@ -154,6 +154,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 			var result = new DataExportResult();
 
+			await this.ExportIdentityServerPluginTypesAsync(result, types);
 			await this.ExportIdentityServerTypesAsync(result, types);
 			await this.ExportIdentityTypesAsync(result, types);
 
@@ -267,7 +268,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 				var relyingParties = wsFederationDatabaseContext.RelyingParties
 					.Include(relyingParty => relyingParty.ClaimMapping);
 
-				result.Instances.Add(typeof(RelyingParty), relyingParties.Select(relyingParty => relyingParty.ToModel()));
+				result.Instances.Add(typeof(RelyingParty), relyingParties.Select(relyingParty => relyingParty.ToModel()).ToArray());
 			}
 		}
 
@@ -288,7 +289,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 					.Include(serviceProvider => serviceProvider.SigningCertificates)
 					.Include(serviceProvider => serviceProvider.SingleLogoutServices);
 
-				result.Instances.Add(typeof(ServiceProvider), serviceProviders.Select(serviceProvider => serviceProvider.ToModel()));
+				result.Instances.Add(typeof(ServiceProvider), serviceProviders.Select(serviceProvider => serviceProvider.ToModel()).ToArray());
 			}
 		}
 
