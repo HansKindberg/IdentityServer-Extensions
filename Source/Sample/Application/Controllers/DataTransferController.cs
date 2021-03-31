@@ -11,6 +11,7 @@ using HansKindberg.IdentityServer.Data.Extensions;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
+using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Json.Serialization;
 using HansKindberg.IdentityServer.Web.Authorization;
@@ -22,11 +23,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegionOrebroLan.Logging.Extensions;
+using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Entities;
+using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
+using Rsk.WsFederation.EntityFramework.DbContexts;
+using Rsk.WsFederation.EntityFramework.Entities;
+using ServiceProvider = Rsk.Saml.IdentityProvider.Storage.EntityFramework.Entities.ServiceProvider;
 
 namespace Application.Controllers
 {
@@ -42,11 +50,21 @@ namespace Application.Controllers
 
 		#region Constructors
 
-		public DataTransferController(IConfigurationDbContext configurationDatabaseContext, IDataExporter dataExporter, IDataImporter dataImporter, IFacade facade) : base(facade)
+		public DataTransferController(IConfigurationDbContext configurationDatabaseContext, IDataExporter dataExporter, IDataImporter dataImporter, IFacade facade, IFeatureManager featureManager, IServiceProvider serviceProvider) : base(facade)
 		{
 			this.ConfigurationDatabaseContext = configurationDatabaseContext ?? throw new ArgumentNullException(nameof(configurationDatabaseContext));
 			this.DataExporter = dataExporter ?? throw new ArgumentNullException(nameof(dataExporter));
 			this.DataImporter = dataImporter ?? throw new ArgumentNullException(nameof(dataImporter));
+			this.FeatureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
+
+			if(serviceProvider == null)
+				throw new ArgumentNullException(nameof(serviceProvider));
+
+			if(featureManager.IsEnabled(Feature.Saml))
+				this.SamlDatabaseContext = serviceProvider.GetRequiredService<ISamlConfigurationDbContext>();
+
+			if(featureManager.IsEnabled(Feature.WsFederation))
+				this.WsFederationDatabaseContext = serviceProvider.GetRequiredService<IWsFederationConfigurationDbContext>();
 		}
 
 		#endregion
@@ -63,6 +81,10 @@ namespace Application.Controllers
 			Formatting = Formatting.Indented,
 			NullValueHandling = NullValueHandling.Ignore
 		};
+
+		protected internal virtual IFeatureManager FeatureManager { get; }
+		protected internal ISamlConfigurationDbContext SamlDatabaseContext { get; }
+		protected internal IWsFederationConfigurationDbContext WsFederationDatabaseContext { get; }
 
 		#endregion
 
@@ -274,6 +296,23 @@ namespace Application.Controllers
 			model.ExistingData.Add(typeof(IdentityUserToken<string>).FriendlyName(), await identityContext.UserTokens.CountAsync());
 			model.ExistingData.Add(typeof(Role).FriendlyName(), await identityContext.Roles.CountAsync());
 			model.ExistingData.Add(typeof(User).FriendlyName(), await identityContext.Users.CountAsync());
+
+			if(this.FeatureManager.IsEnabled(Feature.Saml))
+			{
+				model.ExistingData.Add(typeof(AssertionConsumerService).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.AssertionConsumerServices).SelectMany(serviceProvider => serviceProvider.AssertionConsumerServices).CountAsync());
+				model.ExistingData.Add(typeof(SamlClaimMap).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.ClaimsMapping).SelectMany(serviceProvider => serviceProvider.ClaimsMapping).CountAsync());
+				model.ExistingData.Add(typeof(ServiceProvider).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.CountAsync());
+				model.ExistingData.Add(typeof(SingleLogoutService).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.SingleLogoutServices).SelectMany(serviceProvider => serviceProvider.SingleLogoutServices).CountAsync());
+				model.ExistingData.Add(typeof(SigningCertificate).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.SigningCertificates).SelectMany(serviceProvider => serviceProvider.SigningCertificates).CountAsync());
+			}
+
+			// ReSharper disable InvertIf
+			if(this.FeatureManager.IsEnabled(Feature.WsFederation))
+			{
+				model.ExistingData.Add(typeof(RelyingParty).FriendlyName(), await this.WsFederationDatabaseContext.RelyingParties.CountAsync());
+				model.ExistingData.Add(typeof(WsFederationClaimMap).FriendlyName(), await this.WsFederationDatabaseContext.RelyingParties.Include(relyingParty => relyingParty.ClaimMapping).SelectMany(relyingParty => relyingParty.ClaimMapping).CountAsync());
+			}
+			// ReSharper restore InvertIf
 
 			return await Task.FromResult(this.View(model));
 		}
