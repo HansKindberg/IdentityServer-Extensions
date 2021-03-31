@@ -66,7 +66,15 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 			this.FeatureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
 			this.IdentityFacade = identityFacade ?? throw new ArgumentNullException(nameof(identityFacade));
 			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
-			this.ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+			if(serviceProvider == null)
+				throw new ArgumentNullException(nameof(serviceProvider));
+
+			if(featureManager.IsEnabled(Feature.Saml))
+				this.SamlDatabaseContext = serviceProvider.GetRequiredService<ISamlConfigurationDbContext>();
+
+			if(featureManager.IsEnabled(Feature.WsFederation))
+				this.WsFederationDatabaseContext = serviceProvider.GetRequiredService<IWsFederationConfigurationDbContext>();
 		}
 
 		#endregion
@@ -104,8 +112,9 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 		protected internal virtual IEnumerable<Type> IdentityServerTypes => _identityServerTypes;
 		protected internal virtual IEnumerable<Type> IdentityTypes => _identityTypes;
 		protected internal virtual ILogger Logger { get; }
+		protected internal virtual ISamlConfigurationDbContext SamlDatabaseContext { get; }
 		protected internal virtual IEnumerable<Type> SamlPluginTypes => _samlPluginTypes;
-		protected internal virtual IServiceProvider ServiceProvider { get; }
+		protected internal virtual IWsFederationConfigurationDbContext WsFederationDatabaseContext { get; }
 		protected internal virtual IEnumerable<Type> WsFederationPluginTypes => _wsFederationPluginTypes;
 
 		#endregion
@@ -261,15 +270,10 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 			await Task.CompletedTask;
 
-			using(var serviceScope = this.ServiceProvider.CreateScope())
-			{
-				var wsFederationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IWsFederationConfigurationDbContext>();
+			var relyingParties = this.WsFederationDatabaseContext.RelyingParties
+				.Include(relyingParty => relyingParty.ClaimMapping);
 
-				var relyingParties = wsFederationDatabaseContext.RelyingParties
-					.Include(relyingParty => relyingParty.ClaimMapping);
-
-				result.Instances.Add(typeof(RelyingParty), relyingParties.Select(relyingParty => relyingParty.ToModel()).ToArray());
-			}
+			result.Instances.Add(typeof(RelyingParty), relyingParties.Select(relyingParty => relyingParty.ToModel()));
 		}
 
 		protected internal virtual async Task ExportServiceProvidersAsync(IDataExportResult result)
@@ -279,18 +283,13 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 			await Task.CompletedTask;
 
-			using(var serviceScope = this.ServiceProvider.CreateScope())
-			{
-				var samlDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<ISamlConfigurationDbContext>();
+			var serviceProviders = this.SamlDatabaseContext.ServiceProviders
+				.Include(serviceProvider => serviceProvider.AssertionConsumerServices)
+				.Include(serviceProvider => serviceProvider.ClaimsMapping)
+				.Include(serviceProvider => serviceProvider.SigningCertificates)
+				.Include(serviceProvider => serviceProvider.SingleLogoutServices);
 
-				var serviceProviders = samlDatabaseContext.ServiceProviders
-					.Include(serviceProvider => serviceProvider.AssertionConsumerServices)
-					.Include(serviceProvider => serviceProvider.ClaimsMapping)
-					.Include(serviceProvider => serviceProvider.SigningCertificates)
-					.Include(serviceProvider => serviceProvider.SingleLogoutServices);
-
-				result.Instances.Add(typeof(ServiceProvider), serviceProviders.Select(serviceProvider => serviceProvider.ToModel()).ToArray());
-			}
+			result.Instances.Add(typeof(ServiceProvider), serviceProviders.Select(serviceProvider => serviceProvider.ToModel()));
 		}
 
 		#endregion
