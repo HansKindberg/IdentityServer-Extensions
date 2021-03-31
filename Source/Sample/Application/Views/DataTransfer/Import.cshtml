@@ -21,6 +21,7 @@
 			@foreach(var (type, item) in Model.Result.Items.OrderBy(item => item.Key.FriendlyName()))
 			{
 				var name = type.FriendlyName();
+				var identifier = name.Replace("<", "-").Replace(">", string.Empty);
 				<h3 class="h6">@name</h3>
 				<ul>
 					<li>
@@ -41,10 +42,10 @@
 					@if(item.Relations.Any())
 					{
 						<li>
-							<button aria-controls="collapse-@name" aria-expanded="false" class="btn btn-outline-secondary btn-collapse" data-target="#collapse-@name" data-toggle="collapse" type="button">
+							<button aria-controls="collapse-@identifier" aria-expanded="false" class="btn btn-outline-secondary btn-collapse" data-target="#collapse-@identifier" data-toggle="collapse" type="button">
 								@Localizer.GetString("Relations")
 							</button>
-							<div class="collapse" id="collapse-@name">
+							<div class="collapse" id="collapse-@identifier">
 								@foreach(var (relationType, relationItem) in item.Relations.OrderBy(relationItem => relationItem.Key.FriendlyName()))
 								{
 									<h4 class="h6 mt-2">@relationType.FriendlyName()</h4>

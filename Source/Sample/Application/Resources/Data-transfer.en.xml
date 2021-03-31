@@ -42,11 +42,10 @@
 					<submit>Export</submit>
 					<types>Types</types>
 				</exportForm>
-				<importForm>
-					<submit>Import</submit>
-				</importForm>
 				<heading>Data</heading>
 				<import>
+					<confirmation>Confirmation</confirmation>
+					<confirmation-information>The data was imported successfully.</confirmation-information>
 					<heading>Import data</heading>
 					<information>Import data - information.</information>
 					<relations>Relations</relations>
@@ -58,6 +57,9 @@
 					<result-SavedChanges>Total number of saved entries</result-SavedChanges>
 					<result-Updates>Updates</result-Updates>
 				</import>
+				<importForm>
+					<submit>Import</submit>
+				</importForm>
 				<index>
 					<heading>Current data</heading>
 					<information>Information about the current data in the database. The list shows the number of entries of each type.</information>

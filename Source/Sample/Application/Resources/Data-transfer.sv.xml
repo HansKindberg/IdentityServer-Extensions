@@ -42,11 +42,10 @@
 					<submit>Exportera</submit>
 					<types>Typer</types>
 				</exportForm>
-				<importForm>
-					<submit>Importera</submit>
-				</importForm>
 				<heading>Data</heading>
 				<import>
+					<confirmation>Bekräftelse</confirmation>
+					<confirmation-information>Data importerades utan problem.</confirmation-information>
 					<heading>Importera data</heading>
 					<information>Importera data - information.</information>
 					<relations>Relationer</relations>
@@ -58,6 +57,9 @@
 					<result-SavedChanges>Totalt antal sparade poster</result-SavedChanges>
 					<result-Updates>Uppdateringar</result-Updates>
 				</import>
+				<importForm>
+					<submit>Importera</submit>
+				</importForm>
 				<index>
 					<heading>Nuvarande data</heading>
 					<information>Information om nuvarande data i databasen. Listan visar antal poster av respektive typ.</information>
