@@ -7,6 +7,8 @@ using System.Reflection;
 using IdentityServer4.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Rsk.Saml.Models;
+using Rsk.WsFederation.Models;
 
 namespace HansKindberg.IdentityServer.Json.Serialization
 {
@@ -43,7 +45,10 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 							this.PopulateDefaultValues<Client>(defaultValues);
 							this.PopulateDefaultValues<ClientClaim>(defaultValues);
 							this.PopulateDefaultValues<IdentityResource>(defaultValues);
+							this.PopulateDefaultValues<RelyingParty>(defaultValues);
 							this.PopulateDefaultValues<Secret>(defaultValues);
+							this.PopulateDefaultValues<Service>(defaultValues);
+							this.PopulateDefaultValues<ServiceProvider>(defaultValues);
 
 							_defaultValues = defaultValues;
 						}

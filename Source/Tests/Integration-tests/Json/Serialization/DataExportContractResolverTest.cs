@@ -6,6 +6,7 @@ using HansKindberg.IdentityServer.Json.Serialization;
 using IdentityServer4.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Rsk.Saml.Models;
 
 namespace IntegrationTests.Json.Serialization
 {
@@ -107,6 +108,44 @@ namespace IntegrationTests.Json.Serialization
 			};
 			json = JsonConvert.SerializeObject(identityResource, this.JsonSerializerSettings);
 			Assert.AreEqual("{\"Name\":\"name\"}", json);
+		}
+
+		[TestMethod]
+		public async Task Serialize_SamlServiceProvider_Test()
+		{
+			await Task.CompletedTask;
+
+			var serviceProvider = new ServiceProvider();
+			var json = JsonConvert.SerializeObject(serviceProvider, this.JsonSerializerSettings);
+			Assert.AreEqual("{}", json);
+
+			serviceProvider = new ServiceProvider
+			{
+				AllowIdpInitiatedSso = true,
+				AssertionConsumerServices =
+				{
+					new Service
+					{
+						Binding = "Binding-1"
+					}
+				},
+				SingleLogoutServices =
+				{
+					new Service
+					{
+						Binding = "Binding-1",
+						Index = 1,
+						IsDefault = true,
+						Location = "Location-1"
+					},
+					new Service
+					{
+						Binding = "Binding-2"
+					}
+				}
+			};
+			json = JsonConvert.SerializeObject(serviceProvider, this.JsonSerializerSettings);
+			Assert.AreEqual("{\"AllowIdpInitiatedSso\":true,\"AssertionConsumerServices\":[{\"Binding\":\"Binding-1\"}],\"SingleLogoutServices\":[{\"Binding\":\"Binding-1\",\"Index\":1,\"IsDefault\":true,\"Location\":\"Location-1\"},{\"Binding\":\"Binding-2\"}]}", json);
 		}
 
 		[TestMethod]
