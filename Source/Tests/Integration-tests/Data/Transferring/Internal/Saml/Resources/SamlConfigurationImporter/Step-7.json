@@ -3,18 +3,18 @@
 		{
 			"AssertionConsumerServices": [
 				{
-					"Binding": "Bindig-1",
+					"Binding": "Binding-1",
 					"Index": 1,
 					"IsDefault": true,
 					"Location": "Location-1"
 				},
 				{
-					"Binding": "Bindig-2",
+					"Binding": "Binding-2",
 					"Index": 2,
 					"Location": "Location-2"
 				},
 				{
-					"Binding": "Bindig-3",
+					"Binding": "Binding-3",
 					"Index": 3,
 					"Location": "Location-3"
 				}
@@ -32,18 +32,18 @@
 			],
 			"SingleLogoutServices": [
 				{
-					"Binding": "Bindig-1",
+					"Binding": "Binding-1",
 					"Index": 1,
 					"IsDefault": true,
 					"Location": "Location-1"
 				},
 				{
-					"Binding": "Bindig-2",
+					"Binding": "Binding-2",
 					"Index": 2,
 					"Location": "Location-2"
 				},
 				{
-					"Binding": "Bindig-3",
+					"Binding": "Binding-3",
 					"Index": 3,
 					"Location": "Location-3"
 				}
