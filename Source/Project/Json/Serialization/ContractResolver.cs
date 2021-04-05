@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -27,14 +28,8 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 		{
 			var property = this.CreatePropertyInternal(member, memberSerialization);
 
-			if(property.PropertyType != typeof(string) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null)
-				property.ShouldSerialize = instance =>
-				{
-					if(instance?.GetType().GetProperty(property.PropertyName)?.GetValue(instance) is IEnumerable propertyValue)
-						return propertyValue.Cast<object>().Any();
-
-					return false;
-				};
+			if(this.IsEnumerableButNotStringProperty(property))
+				this.SetShouldSerializeForEnumerableProperty(property);
 
 			return property;
 		}
@@ -45,6 +40,30 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 		protected internal virtual JsonProperty CreatePropertyInternal(MemberInfo member, MemberSerialization memberSerialization)
 		{
 			return base.CreateProperty(member, memberSerialization);
+		}
+
+		[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+		protected internal virtual bool IsEnumerableButNotStringProperty(JsonProperty property)
+		{
+			if(property == null)
+				throw new ArgumentNullException(nameof(property));
+
+			return property.PropertyType != typeof(string) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null;
+		}
+
+		[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+		protected internal virtual void SetShouldSerializeForEnumerableProperty(JsonProperty property)
+		{
+			if(property == null)
+				throw new ArgumentNullException(nameof(property));
+
+			property.ShouldSerialize = instance =>
+			{
+				if(instance?.GetType().GetProperty(property.PropertyName)?.GetValue(instance) is IEnumerable propertyValue)
+					return propertyValue.Cast<object>().Any();
+
+				return false;
+			};
 		}
 
 		#endregion

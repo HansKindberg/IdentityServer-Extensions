@@ -129,6 +129,10 @@ namespace IntegrationTests.Json.Serialization
 						Binding = "Binding-1"
 					}
 				},
+				ClaimsMapping = new Dictionary<string, string>
+				{
+					{"Key-1", "Value-1"}
+				},
 				SingleLogoutServices =
 				{
 					new Service
@@ -145,7 +149,7 @@ namespace IntegrationTests.Json.Serialization
 				}
 			};
 			json = JsonConvert.SerializeObject(serviceProvider, this.JsonSerializerSettings);
-			Assert.AreEqual("{\"AllowIdpInitiatedSso\":true,\"AssertionConsumerServices\":[{\"Binding\":\"Binding-1\"}],\"SingleLogoutServices\":[{\"Binding\":\"Binding-1\",\"Index\":1,\"IsDefault\":true,\"Location\":\"Location-1\"},{\"Binding\":\"Binding-2\"}]}", json);
+			Assert.AreEqual("{\"AllowIdpInitiatedSso\":true,\"AssertionConsumerServices\":[{\"Binding\":\"Binding-1\"}],\"ClaimsMapping\":{\"Key-1\":\"Value-1\"},\"SingleLogoutServices\":[{\"Binding\":\"Binding-1\",\"Index\":1,\"IsDefault\":true,\"Location\":\"Location-1\"},{\"Binding\":\"Binding-2\"}]}", json);
 		}
 
 		[TestMethod]

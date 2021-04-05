@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -70,9 +69,9 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 		{
 			var property = this.CreatePropertyInternal(member, memberSerialization);
 
-			if(property.PropertyType != typeof(string) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null)
+			if(this.IsEnumerableButNotStringProperty(property))
 			{
-				property.ShouldSerialize = instance => (instance?.GetType().GetProperty(property.PropertyName)?.GetValue(instance) as IEnumerable<object>)?.Count() > 0;
+				this.SetShouldSerializeForEnumerableProperty(property);
 			}
 			else if(this.DefaultValues.Keys.Select(key => key.Item1).Distinct().Any(type => property.DeclaringType.IsAssignableFrom(type)))
 			{
