@@ -28,7 +28,13 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 			var property = this.CreatePropertyInternal(member, memberSerialization);
 
 			if(property.PropertyType != typeof(string) && property.PropertyType.GetInterface(nameof(IEnumerable)) != null)
-				property.ShouldSerialize = instance => (instance?.GetType().GetProperty(property.PropertyName)?.GetValue(instance) as IEnumerable<object>)?.Count() > 0;
+				property.ShouldSerialize = instance =>
+				{
+					if(instance?.GetType().GetProperty(property.PropertyName)?.GetValue(instance) is IEnumerable propertyValue)
+						return propertyValue.Cast<object>().Any();
+
+					return false;
+				};
 
 			return property;
 		}
