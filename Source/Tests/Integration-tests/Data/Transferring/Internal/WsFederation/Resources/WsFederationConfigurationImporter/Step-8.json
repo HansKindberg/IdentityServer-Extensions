@@ -1,0 +1,10 @@
+{
+	"RelyingParties": [
+		{
+			"ClaimMapping": {
+				"Key-1": "Value-1 (changed)"
+			},
+			"Realm": "Relying-party-1"
+		}
+	]
+}

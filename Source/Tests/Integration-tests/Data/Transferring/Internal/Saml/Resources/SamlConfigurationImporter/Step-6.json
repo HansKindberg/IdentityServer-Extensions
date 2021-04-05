@@ -1,0 +1,10 @@
+{
+	"ServiceProviders": [
+		{
+			"EntityId": "Service-provider-1"
+		},
+		{
+			"EntityId": "Service-provider-2"
+		}
+	]
+}

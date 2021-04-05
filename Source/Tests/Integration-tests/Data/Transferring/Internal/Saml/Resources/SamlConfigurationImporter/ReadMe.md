@@ -1,0 +1,1 @@
+You can recreate the certificate-files by running Create-Certificates.ps1

@@ -1,0 +1,10 @@
+{
+	"RelyingParties": [
+		{
+			"Realm": "Relying-party-1"
+		},
+		{
+			"Realm": "Relying-party-2"
+		}
+	]
+}

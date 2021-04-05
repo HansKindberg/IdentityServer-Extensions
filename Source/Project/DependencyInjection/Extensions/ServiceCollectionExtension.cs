@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using HansKindberg.IdentityServer.Builder;
+using HansKindberg.IdentityServer.ComponentModel;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Configuration.Extensions;
 using HansKindberg.IdentityServer.Data;
@@ -17,6 +20,7 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Identity.Data;
+using HansKindberg.IdentityServer.Json;
 using HansKindberg.IdentityServer.Logging.Configuration;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
@@ -38,6 +42,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
+using Newtonsoft.Json;
 using RegionOrebroLan;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
@@ -449,6 +454,12 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 				return services;
 			}
+
+			JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+			{
+				Converters = new List<JsonConverter> {new JsonCertificateConverter()}
+			};
+			TypeDescriptor.AddAttributes(typeof(X509Certificate2), new TypeConverterAttribute(typeof(CertificateConverter)));
 
 			var serviceConfiguration = new ServiceConfiguration(configuration, hostEnvironment);
 

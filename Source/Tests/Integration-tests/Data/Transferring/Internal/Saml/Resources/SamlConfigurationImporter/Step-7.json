@@ -1,0 +1,56 @@
+{
+	"ServiceProviders": [
+		{
+			"AssertionConsumerServices": [
+				{
+					"Binding": "Bindig-1",
+					"Index": 1,
+					"IsDefault": true,
+					"Location": "Location-1"
+				},
+				{
+					"Binding": "Bindig-2",
+					"Index": 2,
+					"Location": "Location-2"
+				},
+				{
+					"Binding": "Bindig-3",
+					"Index": 3,
+					"Location": "Location-3"
+				}
+			],
+			"ClaimsMapping": {
+				"Key-1": "Value-1",
+				"Key-2": "Value-2",
+				"Key-3": "Value-3"
+			},
+			"EntityId": "Service-provider-1",
+			"SigningCertificates": [
+				"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"
+			],
+			"SingleLogoutServices": [
+				{
+					"Binding": "Bindig-1",
+					"Index": 1,
+					"IsDefault": true,
+					"Location": "Location-1"
+				},
+				{
+					"Binding": "Bindig-2",
+					"Index": 2,
+					"Location": "Location-2"
+				},
+				{
+					"Binding": "Bindig-3",
+					"Index": 3,
+					"Location": "Location-3"
+				}
+			]
+		},
+		{
+			"EntityId": "Service-provider-2"
+		}
+	]
+}

@@ -1,0 +1,7 @@
+{
+	"ServiceProviders": [
+		{
+			"SignAssertions": false
+		}
+	]
+}

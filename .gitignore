@@ -385,6 +385,8 @@ Source/Sample/Application/wwwroot/Style/*
 Source/Sample/Application/package-lock.json
 Source/Sample/Application/yarn.lock
 
+!Source/Tests/Integration-tests/Data/Transferring/Internal/Saml/Resources/SamlConfigurationImporter/*.pfx
+
 Source/Tests/Integration-tests/Test-data/*
 !Source/Tests/Integration-tests/Test-data/Development-Signing-Certificate.pfx
 !Source/Tests/Integration-tests/Test-data/Development-Key-Protection-Certificate.pfx

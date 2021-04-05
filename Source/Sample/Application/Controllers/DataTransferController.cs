@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Application.Models.Views.DataTransfer;
 using HansKindberg.IdentityServer;
 using HansKindberg.IdentityServer.Data.Extensions;
+using HansKindberg.IdentityServer.Data.Saml.Extensions;
 using HansKindberg.IdentityServer.Data.Transferring;
+using HansKindberg.IdentityServer.Data.WsFederation.Extensions;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
@@ -38,6 +40,7 @@ using ServiceProvider = Rsk.Saml.IdentityProvider.Storage.EntityFramework.Entiti
 
 namespace Application.Controllers
 {
+	// ReSharper disable All
 	[Authorize(Permissions.Administrator)]
 	[FeatureGate(Feature.DataTransfer)]
 	public class DataTransferController : SiteController
@@ -189,7 +192,6 @@ namespace Application.Controllers
 
 			var model = this.CreateExportViewModel(form);
 
-			// ReSharper disable InvertIf
 			if(this.ModelState.IsValid)
 			{
 				try
@@ -206,7 +208,6 @@ namespace Application.Controllers
 					this.ModelState.AddModelError(nameof(ImportForm.Files), this.Localizer.GetString("errors/ExportException"));
 				}
 			}
-			// ReSharper restore InvertIf
 
 			return await Task.FromResult(this.View(model));
 		}
@@ -228,7 +229,6 @@ namespace Application.Controllers
 
 			var model = new ImportViewModel {Form = form};
 
-			// ReSharper disable InvertIf
 			if(this.ModelState.IsValid)
 			{
 				try
@@ -256,7 +256,6 @@ namespace Application.Controllers
 					this.ModelState.AddModelError(nameof(ImportForm.Files), this.Localizer.GetString("errors/ImportException"));
 				}
 			}
-			// ReSharper restore InvertIf
 
 			return await Task.FromResult(this.View(model));
 		}
@@ -299,24 +298,23 @@ namespace Application.Controllers
 
 			if(this.FeatureManager.IsEnabled(Feature.Saml))
 			{
-				model.ExistingData.Add(typeof(AssertionConsumerService).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.AssertionConsumerServices).SelectMany(serviceProvider => serviceProvider.AssertionConsumerServices).CountAsync());
-				model.ExistingData.Add(typeof(SamlClaimMap).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.ClaimsMapping).SelectMany(serviceProvider => serviceProvider.ClaimsMapping).CountAsync());
+				model.ExistingData.Add(typeof(AssertionConsumerService).FriendlyName(), await this.SamlDatabaseContext.AssertionConsumerServices().CountAsync());
+				model.ExistingData.Add(typeof(SamlClaimMap).FriendlyName(), await this.SamlDatabaseContext.ClaimsMapping().CountAsync());
 				model.ExistingData.Add(typeof(ServiceProvider).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.CountAsync());
-				model.ExistingData.Add(typeof(SingleLogoutService).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.SingleLogoutServices).SelectMany(serviceProvider => serviceProvider.SingleLogoutServices).CountAsync());
-				model.ExistingData.Add(typeof(SigningCertificate).FriendlyName(), await this.SamlDatabaseContext.ServiceProviders.Include(serviceProvider => serviceProvider.SigningCertificates).SelectMany(serviceProvider => serviceProvider.SigningCertificates).CountAsync());
+				model.ExistingData.Add(typeof(SigningCertificate).FriendlyName(), await this.SamlDatabaseContext.SigningCertificates().CountAsync());
+				model.ExistingData.Add(typeof(SingleLogoutService).FriendlyName(), await this.SamlDatabaseContext.SingleLogoutServices().CountAsync());
 			}
 
-			// ReSharper disable InvertIf
 			if(this.FeatureManager.IsEnabled(Feature.WsFederation))
 			{
 				model.ExistingData.Add(typeof(RelyingParty).FriendlyName(), await this.WsFederationDatabaseContext.RelyingParties.CountAsync());
-				model.ExistingData.Add(typeof(WsFederationClaimMap).FriendlyName(), await this.WsFederationDatabaseContext.RelyingParties.Include(relyingParty => relyingParty.ClaimMapping).SelectMany(relyingParty => relyingParty.ClaimMapping).CountAsync());
+				model.ExistingData.Add(typeof(WsFederationClaimMap).FriendlyName(), await this.WsFederationDatabaseContext.ClaimMapping().CountAsync());
 			}
-			// ReSharper restore InvertIf
 
 			return await Task.FromResult(this.View(model));
 		}
 
 		#endregion
 	}
+	// ReSharper restore All
 }
