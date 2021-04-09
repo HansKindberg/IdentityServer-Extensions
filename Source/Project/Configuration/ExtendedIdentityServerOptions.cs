@@ -29,7 +29,8 @@ namespace HansKindberg.IdentityServer.Configuration
 			{ClaimTypes.SerialNumber, "certserialnumber"},
 			{ClaimTypes.Thumbprint, "certthumbprint"},
 			{ClaimTypes.Upn, "upn"},
-			{ClaimTypes.WindowsAccountName, "winaccountname"}
+			{ClaimTypes.WindowsAccountName, "winaccountname"},
+			{ClaimTypes.X500DistinguishedName, "certsubject"}
 		};
 
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();
