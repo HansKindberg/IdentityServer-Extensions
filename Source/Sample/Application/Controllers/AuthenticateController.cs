@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
 using IdentityServer4;
@@ -128,7 +129,7 @@ namespace Application.Controllers
 			{
 				foreach(var claim in claims)
 				{
-					if(string.Equals(mapping.Key, claim.Type, StringComparison.OrdinalIgnoreCase))
+					if(string.Equals(mapping.Key.UrlDecodeColon(), claim.Type, StringComparison.OrdinalIgnoreCase))
 						claim.Type = mapping.Value;
 				}
 			}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using HansKindberg.IdentityServer.Extensions;
 using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.EntityFramework.Options;
@@ -19,18 +20,22 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		public virtual AccountOptions Account { get; set; } = new AccountOptions();
 
+		/// <summary>
+		/// The key can not contain colon, ":". Any colon should be url-encoded to "%3a". This is because keys can not contain colon, ":", in AppSettings.json.
+		/// </summary>
 		public virtual IDictionary<string, string> ClaimTypeMap { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ClaimTypes.Email, JwtClaimTypes.Email},
-			{"http://schemas.microsoft.com/identity/claims/identityprovider", JwtClaimTypes.IdentityProvider},
-			{ClaimTypes.Name, JwtClaimTypes.Name},
-			{ClaimTypes.NameIdentifier, JwtClaimTypes.Subject},
-			{ClaimTypes.PrimarySid, "primarysid"},
-			{ClaimTypes.SerialNumber, "certserialnumber"},
-			{ClaimTypes.Thumbprint, "certthumbprint"},
-			{ClaimTypes.Upn, "upn"},
-			{ClaimTypes.WindowsAccountName, "winaccountname"},
-			{ClaimTypes.X500DistinguishedName, "certsubject"}
+			{ClaimTypes.Email.UrlEncodeColon(), JwtClaimTypes.Email},
+			{"http%3a//schemas.microsoft.com/identity/claims/identityprovider", JwtClaimTypes.IdentityProvider},
+			{ClaimTypes.Name.UrlEncodeColon(), JwtClaimTypes.Name},
+			{ClaimTypes.NameIdentifier.UrlEncodeColon(), JwtClaimTypes.Subject},
+			{ClaimTypes.PrimarySid.UrlEncodeColon(), "primarysid"},
+			{ClaimTypes.SerialNumber.UrlEncodeColon(), "certserialnumber"},
+			{"http%3a//schemas.microsoft.com/2012/12/certificatecontext/field/subject", "certsubject"},
+			{ClaimTypes.Thumbprint.UrlEncodeColon(), "certthumbprint"},
+			{ClaimTypes.Upn.UrlEncodeColon(), "upn"},
+			{ClaimTypes.WindowsAccountName.UrlEncodeColon(), "winaccountname"},
+			{ClaimTypes.X500DistinguishedName.UrlEncodeColon(), "certsubject"}
 		};
 
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();
