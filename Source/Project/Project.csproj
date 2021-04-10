@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup Label="Initial">
 		<Company>Hans Kindberg - open source</Company>
-		<VersionPrefix>0.0.10</VersionPrefix>
+		<VersionPrefix>0.0.11</VersionPrefix>
 		<VersionPrereleaseName>alpha</VersionPrereleaseName>
 	</PropertyGroup>
 	<PropertyGroup Label="Assembly">
