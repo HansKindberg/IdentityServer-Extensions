@@ -37,7 +37,7 @@ namespace HansKindberg.IdentityServer
 		/// <summary>
 		/// The SAML-interaction-service if the SAML-feature is enabled otherwise null.
 		/// </summary>
-		ISamlInteractionService SamlInteractionService { get; }
+		ISamlInteractionService SamlInteraction { get; }
 
 		#endregion
 	}

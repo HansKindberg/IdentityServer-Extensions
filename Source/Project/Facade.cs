@@ -44,7 +44,7 @@ namespace HansKindberg.IdentityServer
 				throw new ArgumentNullException(nameof(serviceProvider));
 
 			if(featureManager.IsEnabled(Feature.Saml))
-				this.SamlInteractionService = serviceProvider.GetRequiredService<ISamlInteractionService>();
+				this.SamlInteraction = serviceProvider.GetRequiredService<ISamlInteractionService>();
 		}
 
 		#endregion
@@ -65,7 +65,7 @@ namespace HansKindberg.IdentityServer
 		public virtual IStringLocalizerFactory LocalizerFactory { get; }
 		public virtual ILoggerFactory LoggerFactory { get; }
 		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
-		public virtual ISamlInteractionService SamlInteractionService { get; }
+		public virtual ISamlInteractionService SamlInteraction { get; }
 
 		#endregion
 	}
