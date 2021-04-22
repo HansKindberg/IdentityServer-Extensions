@@ -7,6 +7,7 @@ namespace HansKindberg.IdentityServer.Web
 		public const string Debug = "Debug";
 		public const string ErrorId = "ErrorId";
 		public const string ReturnUrl = "ReturnUrl";
+		public const string SamlRequestId = "SamlRequestId";
 		public const string Scheme = "Scheme";
 		public const string SignOutId = "SignOutId";
 		public const string UiLocales = "UI_Locales";

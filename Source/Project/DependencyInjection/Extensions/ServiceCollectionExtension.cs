@@ -23,6 +23,7 @@ using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Json;
 using HansKindberg.IdentityServer.Logging.Configuration;
 using HansKindberg.IdentityServer.Validation;
+using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
 using HansKindberg.IdentityServer.Web.Configuration;
 using HansKindberg.IdentityServer.Web.Mvc.Filters;
@@ -327,6 +328,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				identityServerBuilder.AddSamlPlugin(options =>
 					{
 						options.UseLegacyRsaEncryption = false;
+						options.UserInteraction.RequestIdParameter = QueryStringKeys.SamlRequestId;
 						serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
