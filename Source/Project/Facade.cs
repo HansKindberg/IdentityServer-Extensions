@@ -1,17 +1,21 @@
 using System;
 using HansKindberg.IdentityServer.Configuration;
+using HansKindberg.IdentityServer.FeatureManagement;
+using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.Web.Authorization;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Decoration;
+using Rsk.Saml.Services;
 
 namespace HansKindberg.IdentityServer
 {
@@ -19,7 +23,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization)
+		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider)
 		{
 			this.AuthenticationSchemeLoader = authenticationSchemeLoader ?? throw new ArgumentNullException(nameof(authenticationSchemeLoader));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
@@ -35,6 +39,12 @@ namespace HansKindberg.IdentityServer
 			this.LocalizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
 			this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
 			this.RequestLocalization = requestLocalization ?? throw new ArgumentNullException(nameof(requestLocalization));
+
+			if(serviceProvider == null)
+				throw new ArgumentNullException(nameof(serviceProvider));
+
+			if(featureManager.IsEnabled(Feature.Saml))
+				this.SamlInteractionService = serviceProvider.GetRequiredService<ISamlInteractionService>();
 		}
 
 		#endregion
@@ -55,6 +65,7 @@ namespace HansKindberg.IdentityServer
 		public virtual IStringLocalizerFactory LocalizerFactory { get; }
 		public virtual ILoggerFactory LoggerFactory { get; }
 		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
+		public virtual ISamlInteractionService SamlInteractionService { get; }
 
 		#endregion
 	}

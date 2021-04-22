@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Decoration;
+using Rsk.Saml.Services;
 
 namespace HansKindberg.IdentityServer
 {
@@ -32,6 +33,11 @@ namespace HansKindberg.IdentityServer
 		IStringLocalizerFactory LocalizerFactory { get; }
 		ILoggerFactory LoggerFactory { get; }
 		IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
+
+		/// <summary>
+		/// The SAML-interaction-service if the SAML-feature is enabled otherwise null.
+		/// </summary>
+		ISamlInteractionService SamlInteractionService { get; }
 
 		#endregion
 	}
