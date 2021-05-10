@@ -29,20 +29,20 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 
 			services.AddFeatureManagement();
 			services.AddHttpContextAccessor();
-			services.AddSingleton(AppDomain.CurrentDomain);
 			services.AddSingleton(configuration);
-			services.AddSingleton<FileCertificateResolver>();
 			services.AddSingleton(hostEnvironment);
-			services.AddSingleton<IApplicationDomain, ApplicationHost>();
-			services.AddSingleton<ICertificateResolver, CertificateResolver>();
-			services.AddSingleton<StoreCertificateResolver>();
 			services.Configure<DataOptions>(configuration.GetSection(ConfigurationKeys.DataPath));
 			services.Configure<DevelopmentOptions>(configuration.GetSection(ConfigurationKeys.DevelopmentPath));
 
 			var serviceProvider = services.BuildServiceProvider();
 
-			this.ApplicationDomain = serviceProvider.GetRequiredService<IApplicationDomain>();
-			this.CertificateResolver = serviceProvider.GetRequiredService<ICertificateResolver>();
+			var applicationDomain = new ApplicationHost(AppDomain.CurrentDomain, hostEnvironment);
+			this.ApplicationDomain = applicationDomain;
+
+			var fileCertificateResolver = new FileCertificateResolver(applicationDomain);
+			var storeCertificateResolver = new StoreCertificateResolver();
+			this.CertificateResolver = new CertificateResolver(fileCertificateResolver, storeCertificateResolver);
+
 			this.Configuration = configuration;
 			this.Data = serviceProvider.GetRequiredService<IOptions<DataOptions>>();
 			this.Development = serviceProvider.GetRequiredService<IOptions<DevelopmentOptions>>();
