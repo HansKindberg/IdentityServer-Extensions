@@ -2,7 +2,6 @@ using System;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.Transferring.Extensions;
-using HansKindberg.IdentityServer.DataProtection.Configuration;
 using HansKindberg.IdentityServer.Development;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
@@ -17,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using RegionOrebroLan.DataProtection.Builder.Extensions;
 using RegionOrebroLan.Web.Authentication.Builder.Extensions;
 
 namespace HansKindberg.IdentityServer.Builder
@@ -36,11 +36,6 @@ namespace HansKindberg.IdentityServer.Builder
 			}
 
 			return applicationBuilder;
-		}
-
-		public static IApplicationBuilder UseDataProtection(this IApplicationBuilder applicationBuilder)
-		{
-			return applicationBuilder.UseFeature<ExtendedDataProtectionOptions>();
 		}
 
 		public static IApplicationBuilder UseDataSeeding(this IApplicationBuilder applicationBuilder)

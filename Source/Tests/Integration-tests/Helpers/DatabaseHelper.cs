@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using HansKindberg.IdentityServer.DataProtection.Data;
 using HansKindberg.IdentityServer.Identity.Data;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,19 +22,29 @@ namespace IntegrationTests.Helpers
 
 		#region Methods
 
+		private static void DeleteIdentityServerDatabase(IServiceCollection services)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			using(var serviceProvider = services.BuildServiceProvider())
+			{
+				using(var serviceScope = serviceProvider.CreateScope())
+				{
+					serviceScope.ServiceProvider.GetRequiredService<EmptyDatabaseContext>().Database.EnsureDeleted();
+				}
+			}
+		}
+
 		public static void DeleteIdentityServerDatabase()
 		{
 			var services = new ServiceCollection();
-			services.AddDbContext<SqliteDataProtection>(optionsBuilder => optionsBuilder.UseSqlite(SqliteConnectionString));
-			services.AddDbContext<SqlServerDataProtection>(optionsBuilder => optionsBuilder.UseSqlServer(SqlServerConnectionString));
+			services.AddDbContext<EmptyDatabaseContext>(optionsBuilder => optionsBuilder.UseSqlite(SqliteConnectionString));
+			DeleteIdentityServerDatabase(services);
 
-			var serviceProvider = services.BuildServiceProvider();
-
-			using(var serviceScope = serviceProvider.CreateScope())
-			{
-				serviceScope.ServiceProvider.GetRequiredService<SqliteDataProtection>().Database.EnsureDeleted();
-				serviceScope.ServiceProvider.GetRequiredService<SqlServerDataProtection>().Database.EnsureDeleted();
-			}
+			services = new ServiceCollection();
+			services.AddDbContext<EmptyDatabaseContext>(optionsBuilder => optionsBuilder.UseSqlServer(SqlServerConnectionString));
+			DeleteIdentityServerDatabase(services);
 		}
 
 		public static async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)

@@ -14,7 +14,6 @@ using HansKindberg.IdentityServer.Data.Configuration;
 using HansKindberg.IdentityServer.Data.Saml;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.WsFederation;
-using HansKindberg.IdentityServer.DataProtection.Configuration;
 using HansKindberg.IdentityServer.Development;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
@@ -46,6 +45,7 @@ using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using RegionOrebroLan;
 using RegionOrebroLan.Configuration;
+using RegionOrebroLan.DataProtection.DependencyInjection.Extensions;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
@@ -96,11 +96,6 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			serviceConfiguration.ApplicationDomain.SetData(ConfigurationKeys.DataDirectoryPath, path);
 
 			return services;
-		}
-
-		public static IServiceCollection AddDataProtection(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
-		{
-			return services.AddFeature<ExtendedDataProtectionOptions>(ConfigurationKeys.DataProtectionPath, serviceConfiguration, true);
 		}
 
 		public static IServiceCollection AddDataTransfer(this IServiceCollection services)
@@ -476,7 +471,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.CertificateForwarding))
 				services.AddCertificateForwarding(serviceConfiguration);
 
-			services.AddDataProtection(serviceConfiguration);
+			services.AddDataProtection(serviceConfiguration.CertificateResolver, configuration, hostEnvironment, serviceConfiguration.InstanceFactory);
 			services.AddDataTransfer();
 
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.Development))

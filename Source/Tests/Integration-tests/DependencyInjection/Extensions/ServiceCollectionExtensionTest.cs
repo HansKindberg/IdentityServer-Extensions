@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Builder;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data;
-using HansKindberg.IdentityServer.DataProtection.Data;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
@@ -17,10 +16,6 @@ using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.AspNetCore.DataProtection.Repositories;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,113 +58,6 @@ namespace IntegrationTests.DependencyInjection.Extensions
 
 				Assert.AreEqual(expectedDataDirectoryPath, applicationDomain.GetData(ConfigurationKeys.DataDirectoryPath) as string);
 				Assert.IsTrue(featureManager.IsEnabled(Feature.DataDirectory));
-			}
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public async Task AddDataProtection_IfXmlEncryptorIsConfiguredWithTheDefaultXmlRepository_ShouldThrowAnException()
-		{
-			var exceptions = new List<InvalidOperationException>();
-
-			var configurationFileName = "Default-Certificate";
-			try
-			{
-				await this.AddDataProtectionTest(configurationFileName, typeof(CertificateXmlEncryptor), null);
-			}
-			catch(InvalidOperationException invalidOperationException)
-			{
-				exceptions.Add(invalidOperationException);
-			}
-
-			configurationFileName = "Default-Dpapi";
-			try
-			{
-				await this.AddDataProtectionTest(configurationFileName, typeof(DpapiXmlEncryptor), null);
-			}
-			catch(InvalidOperationException invalidOperationException)
-			{
-				exceptions.Add(invalidOperationException);
-			}
-
-			configurationFileName = "Default-DpapiNg";
-			try
-			{
-				await this.AddDataProtectionTest(configurationFileName, typeof(DpapiNGXmlEncryptor), null);
-			}
-			catch(InvalidOperationException invalidOperationException)
-			{
-				exceptions.Add(invalidOperationException);
-			}
-
-			if(exceptions.Count == 3)
-				throw exceptions.First();
-		}
-
-		[TestMethod]
-		public async Task AddDataProtection_Test()
-		{
-			var configurationFileName = "Default";
-			var pathToDirectoryToDelete = Path.Combine(Global.ProjectDirectoryPath, "Test-data", "Data-protection");
-			await this.AddDataProtectionTest(configurationFileName, null, null);
-
-			var expectedXmlRepositoryType = typeof(FileSystemXmlRepository);
-			configurationFileName = "FileSystem";
-			await this.AddDataProtectionTest(configurationFileName, null, expectedXmlRepositoryType);
-			Directory.Delete(pathToDirectoryToDelete, true);
-
-			configurationFileName = "FileSystem-Certificate";
-			await this.AddDataProtectionTest(configurationFileName, typeof(CertificateXmlEncryptor), expectedXmlRepositoryType);
-			Directory.Delete(pathToDirectoryToDelete, true);
-
-			configurationFileName = "FileSystem-Dpapi";
-			await this.AddDataProtectionTest(configurationFileName, typeof(DpapiXmlEncryptor), expectedXmlRepositoryType);
-			Directory.Delete(pathToDirectoryToDelete, true);
-
-			configurationFileName = "FileSystem-DpapiNg";
-			await this.AddDataProtectionTest(configurationFileName, typeof(DpapiNGXmlEncryptor), expectedXmlRepositoryType);
-			Directory.Delete(pathToDirectoryToDelete, true);
-
-			expectedXmlRepositoryType = typeof(EntityFrameworkCoreXmlRepository<SqliteDataProtection>);
-			configurationFileName = "Sqlite";
-			var pathToDatabaseFileToDelete = Path.Combine(Global.ProjectDirectoryPath, "Test-data", "Data-Protection.db");
-			await this.AddDataProtectionTest(configurationFileName, null, expectedXmlRepositoryType);
-			File.Delete(pathToDatabaseFileToDelete);
-
-			configurationFileName = "Sqlite-Certificate";
-			await this.AddDataProtectionTest(configurationFileName, typeof(CertificateXmlEncryptor), expectedXmlRepositoryType);
-			File.Delete(pathToDatabaseFileToDelete);
-
-			configurationFileName = "Sqlite-Dpapi";
-			await this.AddDataProtectionTest(configurationFileName, typeof(DpapiXmlEncryptor), expectedXmlRepositoryType);
-			File.Delete(pathToDatabaseFileToDelete);
-
-			configurationFileName = "Sqlite-DpapiNg";
-			await this.AddDataProtectionTest(configurationFileName, typeof(DpapiNGXmlEncryptor), expectedXmlRepositoryType);
-			File.Delete(pathToDatabaseFileToDelete);
-		}
-
-		protected internal virtual async Task AddDataProtectionTest(string configurationFileName, Type expectedXmlEncryptorType, Type expectedXmlRepositoryType)
-		{
-			await Task.CompletedTask;
-
-			var jsonFileRelativePath = $"DependencyInjection/Extensions/Resources/DataProtection/{configurationFileName}.json";
-			var failMessage = $"Failed for {jsonFileRelativePath}.";
-
-			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
-			{
-				context.ApplicationBuilder.UseDataProtection();
-
-				var serviceProvider = context.ServiceProvider;
-
-				// This will trigger exceptions if the configuration is invalid.
-				var keyManager = serviceProvider.GetRequiredService<IKeyManager>();
-				Assert.IsNotNull(keyManager);
-				Assert.IsNotNull(keyManager.CreateNewKey(new DateTimeOffset(), new DateTimeOffset()));
-
-				var keyManagementOptions = serviceProvider.GetRequiredService<IOptions<KeyManagementOptions>>().Value;
-				Assert.AreEqual(expectedXmlEncryptorType, keyManagementOptions.XmlEncryptor?.GetType(), failMessage);
-				Assert.AreEqual(expectedXmlRepositoryType, keyManagementOptions.XmlRepository?.GetType(), failMessage);
 			}
 		}
 

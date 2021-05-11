@@ -1,8 +1,0 @@
-{
-	"DataProtection": {
-		"Options": {
-			"Path": "Test-data/Data-protection"
-		},
-		"Type": "HansKindberg.IdentityServer.DataProtection.Configuration.FileSystemOptions, HansKindberg.IdentityServer"
-	}
-}
