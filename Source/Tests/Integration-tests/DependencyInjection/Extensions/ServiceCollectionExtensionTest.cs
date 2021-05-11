@@ -117,7 +117,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 
 				var serviceProvider = context.ServiceProvider;
 
-				using(var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var identityContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
 					Assert.IsFalse(identityContext.Users.Any());
@@ -169,7 +169,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 			{
 				context.ApplicationBuilder.UseIdentityServer();
 
-				using(var serviceScope = context.ServiceProvider.GetService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = context.ServiceProvider.CreateScope())
 				{
 					var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 					Assert.IsFalse(configurationDbContext.ApiScopes.Any());
