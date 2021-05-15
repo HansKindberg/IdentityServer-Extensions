@@ -108,30 +108,9 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerConfigurationMigrationUpdate -Context SqlServerConfiguration -OutputDir Data/Migrations/Configuration/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.2 DataProtection
+#### 3.1.2 Identity
 
 ##### 3.1.2.1 Create migrations
-
-	Write-Host "Removing migrations...";
-	Remove-Migration -Context SqliteDataProtection -Force -Project Project;
-	Remove-Migration -Context SqlServerDataProtection -Force -Project Project;
-	Write-Host "Removing current migrations-directory...";
-	Remove-Item "Project\DataProtection\Data\Migrations" -ErrorAction Ignore -Force -Recurse;
-	Write-Host "Creating migrations...";
-	Add-Migration SqliteDataProtectionMigration -Context SqliteDataProtection -OutputDir DataProtection/Data/Migrations/Sqlite -Project Project;
-	Add-Migration SqlServerDataProtectionMigration -Context SqlServerDataProtection -OutputDir DataProtection/Data/Migrations/SqlServer -Project Project;
-	Write-Host "Finnished";
-
-##### 3.1.2.2 Update migrations
-
-	Write-Host "Updating migrations...";
-	Add-Migration SqliteDataProtectionMigrationUpdate -Context SqliteDataProtection -OutputDir DataProtection/Data/Migrations/Sqlite -Project Project;
-	Add-Migration SqlServerDataProtectionMigrationUpdate -Context SqlServerDataProtection -OutputDir DataProtection/Data/Migrations/SqlServer -Project Project;
-	Write-Host "Finnished";
-
-#### 3.1.3 Identity
-
-##### 3.1.3.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteIdentity -Force -Project Project;
@@ -143,16 +122,16 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerIdentityMigration -Context SqlServerIdentity -OutputDir Identity/Data/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.3.2 Update migrations
+##### 3.1.2.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteIdentityMigrationUpdate -Context SqliteIdentity -OutputDir Identity/Data/Migrations/Sqlite -Project Project;
 	Add-Migration SqlServerIdentityMigrationUpdate -Context SqlServerIdentity -OutputDir Identity/Data/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.4 Operational (PersistedGrant)
+#### 3.1.3 Operational (PersistedGrant)
 
-##### 3.1.4.1 Create migrations
+##### 3.1.3.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteOperational -Force -Project Project;
@@ -164,18 +143,18 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerOperationalMigration -Context SqlServerOperational -OutputDir Data/Migrations/Operational/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.4.2 Update migrations
+##### 3.1.3.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteOperationalMigrationUpdate -Context SqliteOperational -OutputDir Data/Migrations/Operational/Sqlite -Project Project;
 	Add-Migration SqlServerOperationalMigrationUpdate -Context SqlServerOperational -OutputDir Data/Migrations/Operational/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.5 Plugins
+#### 3.1.4 Plugins
 
-##### 3.1.5.1 SAML
+##### 3.1.4.1 SAML
 
-###### 3.1.5.1.1 Create migrations
+###### 3.1.4.1.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteSamlConfiguration -Force -Project Project;
@@ -187,16 +166,16 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerSamlConfigurationMigration -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-###### 3.1.5.1.2 Update migrations
+###### 3.1.4.1.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteSamlConfigurationMigrationUpdate -Context SqliteSamlConfiguration -OutputDir Data/Saml/Migrations/Sqlite -Project Project;
 	Add-Migration SqlServerSamlConfigurationMigrationUpdate -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.5.2 WsFederation
+##### 3.1.4.2 WsFederation
 
-###### 3.1.5.2.1 Create migrations
+###### 3.1.4.2.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteWsFederationConfiguration -Force -Project Project;
@@ -208,7 +187,7 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerWsFederationConfigurationMigration -Context SqlServerWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-###### 3.1.5.2.2 Update migrations
+###### 3.1.4.2.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteWsFederationConfigurationMigrationUpdate -Context SqliteWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/Sqlite -Project Project;
