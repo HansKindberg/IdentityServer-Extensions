@@ -17,7 +17,7 @@ namespace HansKindberg.IdentityServer.EntityFramework.Extensions
 				foreach(var property in entityType.GetProperties())
 				{
 					if(property.ClrType == typeof(string))
-						property.SetColumnType("TEXT COLLATE NOCASE");
+						property.SetCollation("NOCASE");
 				}
 			}
 		}
