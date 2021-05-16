@@ -39,7 +39,7 @@ namespace IntegrationTests.Builder
 				var applicationBuilder = context.ApplicationBuilder;
 				applicationBuilder.UseIdentityServer();
 
-				using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 				{
 					var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 
@@ -61,7 +61,7 @@ namespace IntegrationTests.Builder
 			{
 				var applicationBuilder = context.ApplicationBuilder;
 
-				using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 				{
 					var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 
@@ -76,7 +76,7 @@ namespace IntegrationTests.Builder
 
 				applicationBuilder.UseIdentityServer();
 
-				using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 				{
 					var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 

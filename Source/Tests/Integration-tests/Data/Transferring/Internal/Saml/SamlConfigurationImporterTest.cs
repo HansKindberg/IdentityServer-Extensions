@@ -568,7 +568,7 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 			if(importOptions == null)
 				throw new ArgumentNullException(nameof(importOptions));
 
-			using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = context.ServiceProvider.CreateScope())
 			{
 				var samlConfigurationContext = serviceScope.ServiceProvider.GetRequiredService<ISamlConfigurationDbContext>();
 				var samlConfigurationImporter = await this.CreateSamlConfigurationImporterAsync(serviceScope.ServiceProvider);
@@ -580,7 +580,7 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 				Assert.AreEqual(expectedSavedChanges, result.SavedChanges);
 			}
 
-			using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = context.ServiceProvider.CreateScope())
 			{
 				var samlConfigurationContext = serviceScope.ServiceProvider.GetRequiredService<ISamlConfigurationDbContext>();
 				Assert.AreEqual(expectedServiceProvidersAfterImport, await samlConfigurationContext.ServiceProviders.CountAsync());

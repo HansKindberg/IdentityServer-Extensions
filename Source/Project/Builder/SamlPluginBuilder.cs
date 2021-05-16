@@ -16,7 +16,7 @@ namespace HansKindberg.IdentityServer.Builder
 			if(applicationBuilder == null)
 				throw new ArgumentNullException(nameof(applicationBuilder));
 
-			using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				((DbContext)serviceScope.ServiceProvider.GetRequiredService<ISamlConfigurationDbContext>()).Database.Migrate();
 			}

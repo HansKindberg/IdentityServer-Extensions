@@ -361,7 +361,7 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 			if(importOptions == null)
 				throw new ArgumentNullException(nameof(importOptions));
 
-			using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = context.ServiceProvider.CreateScope())
 			{
 				var wsFederationConfigurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IWsFederationConfigurationDbContext>();
 				var wsFederationConfigurationImporter = await this.CreateWsFederationConfigurationImporterAsync(serviceScope.ServiceProvider);
@@ -373,7 +373,7 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 				Assert.AreEqual(expectedSavedChanges, result.SavedChanges);
 			}
 
-			using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = context.ServiceProvider.CreateScope())
 			{
 				var wsFederationConfigurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IWsFederationConfigurationDbContext>();
 				Assert.AreEqual(expectedRelyingPartiesAfterImport, await wsFederationConfigurationDatabaseContext.RelyingParties.CountAsync());

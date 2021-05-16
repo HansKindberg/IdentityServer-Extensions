@@ -30,7 +30,7 @@ namespace HansKindberg.IdentityServer.Builder
 			if(applicationBuilder == null)
 				throw new ArgumentNullException(nameof(applicationBuilder));
 
-			using(var serviceScope = applicationBuilder.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				serviceScope.ServiceProvider.GetRequiredService<T>().Database.Migrate();
 			}
@@ -43,7 +43,7 @@ namespace HansKindberg.IdentityServer.Builder
 			if(applicationBuilder == null)
 				throw new ArgumentNullException(nameof(applicationBuilder));
 
-			using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				serviceScope.ServiceProvider.GetRequiredService<IDataImporter>().Import(applicationBuilder.ApplicationServices.GetRequiredService<IConfiguration>());
 			}
@@ -144,7 +144,7 @@ namespace HansKindberg.IdentityServer.Builder
 
 			applicationBuilder.UseIdentityServer(new IdentityServerMiddlewareOptions());
 
-			using(var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				((DbContext)serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>()).Database.Migrate();
 				((DbContext)serviceScope.ServiceProvider.GetRequiredService<IPersistedGrantDbContext>()).Database.Migrate();

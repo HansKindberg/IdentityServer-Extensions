@@ -361,7 +361,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 			var serviceProvider = context.ServiceProvider;
 
-			using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = serviceProvider.CreateScope())
 			{
 				var identityContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
 				var identityImporter = await this.CreateIdentityImporterAsync(serviceScope.ServiceProvider);
@@ -373,7 +373,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 				Assert.AreEqual(expectedSavedChanges, result.SavedChanges);
 			}
 
-			using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = serviceProvider.CreateScope())
 			{
 				var databaseContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
 

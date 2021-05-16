@@ -130,7 +130,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		{
 			await this.AddIdentityServerTest(context =>
 			{
-				using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = context.ServiceProvider.CreateScope())
 				{
 					var configurationContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 					// ReSharper disable PossibleNullReferenceException
@@ -146,7 +146,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		{
 			await this.AddIdentityServerTest(context =>
 			{
-				using(var serviceScope = context.ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = context.ServiceProvider.CreateScope())
 				{
 					var operationalContext = serviceScope.ServiceProvider.GetRequiredService<IPersistedGrantDbContext>();
 					// ReSharper disable PossibleNullReferenceException

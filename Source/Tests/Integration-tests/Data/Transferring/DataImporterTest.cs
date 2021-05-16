@@ -134,7 +134,7 @@ namespace IntegrationTests.Data.Transferring
 				var serviceProvider = context.ServiceProvider;
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configuration = await this.CreateConfigurationAsync("Duplicates", context.FileProvider);
 
@@ -165,7 +165,7 @@ namespace IntegrationTests.Data.Transferring
 				var serviceProvider = context.ServiceProvider;
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configuration = await this.CreateConfigurationAsync("Invalid-Client", context.FileProvider);
 
@@ -191,7 +191,7 @@ namespace IntegrationTests.Data.Transferring
 				// Step 1
 				foreach(var options in new[] {new ImportOptions(), new ImportOptions {VerifyOnly = true}})
 				{
-					using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+					using(var serviceScope = serviceProvider.CreateScope())
 					{
 						var configuration = await this.CreateConfigurationAsync("Step-1", context.FileProvider);
 
@@ -213,7 +213,7 @@ namespace IntegrationTests.Data.Transferring
 				// Step 2
 				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
 				{
-					using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+					using(var serviceScope = serviceProvider.CreateScope())
 					{
 						var configuration = await this.CreateConfigurationAsync("Step-2", context.FileProvider);
 
@@ -230,7 +230,7 @@ namespace IntegrationTests.Data.Transferring
 				// Step 3
 				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
 				{
-					using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+					using(var serviceScope = serviceProvider.CreateScope())
 					{
 						var configuration = await this.CreateConfigurationAsync("Step-3", context.FileProvider);
 
@@ -243,7 +243,7 @@ namespace IntegrationTests.Data.Transferring
 					}
 				}
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 
@@ -254,7 +254,7 @@ namespace IntegrationTests.Data.Transferring
 					Assert.AreEqual(2, await configurationDatabaseContext.IdentityResources.CountAsync());
 				}
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var identityDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
 
@@ -270,7 +270,7 @@ namespace IntegrationTests.Data.Transferring
 				// Step 4
 				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
 				{
-					using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+					using(var serviceScope = serviceProvider.CreateScope())
 					{
 						var configuration = await this.CreateConfigurationAsync("Step-4", context.FileProvider);
 
@@ -287,7 +287,7 @@ namespace IntegrationTests.Data.Transferring
 				// Step 5
 				foreach(var options in new[] {new ImportOptions {DeleteAllOthers = true, VerifyOnly = true}, new ImportOptions {DeleteAllOthers = true}})
 				{
-					using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+					using(var serviceScope = serviceProvider.CreateScope())
 					{
 						var configuration = await this.CreateConfigurationAsync("Step-5", context.FileProvider);
 
@@ -300,7 +300,7 @@ namespace IntegrationTests.Data.Transferring
 					}
 				}
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 
@@ -311,7 +311,7 @@ namespace IntegrationTests.Data.Transferring
 					Assert.AreEqual(0, await configurationDatabaseContext.IdentityResources.CountAsync());
 				}
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var identityDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
 
@@ -333,7 +333,7 @@ namespace IntegrationTests.Data.Transferring
 				var serviceProvider = context.ServiceProvider;
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 
@@ -357,7 +357,7 @@ namespace IntegrationTests.Data.Transferring
 				var serviceProvider = context.ServiceProvider;
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
-				using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+				using(var serviceScope = serviceProvider.CreateScope())
 				{
 					var configuration = serviceScope.ServiceProvider.GetRequiredService<IConfiguration>();
 					var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();

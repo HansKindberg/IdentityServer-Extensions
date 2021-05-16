@@ -129,7 +129,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			if(serviceProvider == null)
 				throw new ArgumentNullException(nameof(serviceProvider));
 
-			using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = serviceProvider.CreateScope())
 			{
 				var clientStore = serviceScope.ServiceProvider.GetRequiredService<IClientStore>();
 				var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
@@ -162,7 +162,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 				}
 			}
 
-			using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = serviceProvider.CreateScope())
 			{
 				var configurationDatabaseContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
 

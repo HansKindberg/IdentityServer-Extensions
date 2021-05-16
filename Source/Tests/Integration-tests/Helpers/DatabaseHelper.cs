@@ -52,7 +52,7 @@ namespace IntegrationTests.Helpers
 			if(serviceProvider == null)
 				throw new ArgumentNullException(nameof(serviceProvider));
 
-			using(var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			using(var serviceScope = serviceProvider.CreateScope())
 			{
 				await ((DbContext)serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>()).Database.MigrateAsync();
 				await serviceScope.ServiceProvider.GetRequiredService<IdentityContext>().Database.MigrateAsync();
