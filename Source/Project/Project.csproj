@@ -27,9 +27,9 @@
 		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.0-alpha" />
 		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
 		<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.14" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="5.0.1" />
@@ -37,7 +37,7 @@
 		<PackageReference Include="morelinq" Version="3.3.2" />
 		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.0-alpha" />
 		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.5-alpha" />
-		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.6-alpha" />
+		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.8-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.1.2" />
 		<PackageReference Include="Rsk.Saml.IdentityServer4.EntityFramework" Version="3.1.0" />
