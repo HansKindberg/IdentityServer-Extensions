@@ -283,9 +283,7 @@
 					<expiration>Expires</expiration>
 					<heading>Access to client-applications</heading>
 					<identityResources>Personal information</identityResources>
-					<information>
-						List of the client applications you have granted access to and the resources they have access to.
-					</information>
+					<information>List of the client applications you have granted access to and the resources they have access to.</information>
 					<label>Access</label>
 					<no-grants>
 						<heading>No granted access</heading>
