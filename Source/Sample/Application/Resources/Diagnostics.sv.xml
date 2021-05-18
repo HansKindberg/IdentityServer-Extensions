@@ -24,6 +24,12 @@
 					<heading>Konfiguration</heading>
 					<information>Information om applikationens konfiguration.</information>
 				</configuration>
+				<cookies>
+					<bytes>bytes</bytes>
+					<heading>Kakor</heading>
+					<information>Information om kakor och storlek.</information>
+					<no-cookies>Inga kakor.</no-cookies>
+				</cookies>
 				<dataProtection>
 					<applicationDiscriminator>Applikations-diskriminator</applicationDiscriminator>
 					<heading>Dataskydd</heading>

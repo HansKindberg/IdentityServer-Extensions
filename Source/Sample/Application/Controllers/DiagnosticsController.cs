@@ -120,6 +120,26 @@ namespace Application.Controllers
 			return await Task.FromResult(this.View(model));
 		}
 
+		public virtual async Task<IActionResult> Cookies()
+		{
+			var model = new CookieInformationViewModel();
+
+			// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+			foreach(var header in this.HttpContext.Request.Headers["Cookie"])
+			{
+				// The following is necessary with IIS Express but not with Kestrel.
+				foreach(var part in header.Split(';'))
+				{
+					var resolvedPart = part.StartsWith(' ') ? part[1..] : part;
+
+					model.Cookies.Add(resolvedPart.Split('=').First(), resolvedPart.Length - 1);
+				}
+			}
+			// ReSharper restore ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+
+			return await Task.FromResult(this.View(model));
+		}
+
 		public virtual async Task<IActionResult> DataProtection()
 		{
 			var model = new DataProtectionViewModel

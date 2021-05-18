@@ -24,6 +24,12 @@
 					<heading>Configuration</heading>
 					<information>Information about the application configuration.</information>
 				</configuration>
+				<cookies>
+					<bytes>bytes</bytes>
+					<heading>Cookies</heading>
+					<information>Information about cookies and size.</information>
+					<no-cookies>No cookies.</no-cookies>
+				</cookies>
 				<dataProtection>
 					<applicationDiscriminator>Application-discriminator</applicationDiscriminator>
 					<heading>Data protection</heading>

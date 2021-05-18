@@ -1,0 +1,29 @@
+﻿@model CookieInformationViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4">@Localizer.GetString("Heading")</h1>
+	</div>
+	<div class="card-body">
+		<p>@Localizer.GetString("Information")</p>
+		@if(Model.Cookies.Any())
+		{
+			<ul class="list-group">
+				@foreach(var (key, value) in Model.Cookies)
+				{
+					<li class="list-group-item">
+						<h3 class="h6">@key</h3>
+						<div class="alert alert-info mb-0">
+							@value @Localizer.GetString("bytes")
+						</div>
+					</li>
+				}
+			</ul>
+		}
+		else
+		{
+			<div class="alert alert-info">
+				<i>@Localizer.GetString("no-cookies")</i>
+			</div>
+		}
+	</div>
+</div>
