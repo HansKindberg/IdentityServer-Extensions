@@ -44,9 +44,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using RegionOrebroLan;
+using RegionOrebroLan.Caching.Distributed.DependencyInjection.Extensions;
 using RegionOrebroLan.Configuration;
 using RegionOrebroLan.DataProtection.DependencyInjection.Extensions;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
+using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
@@ -477,6 +479,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.Development))
 				services.AddDevelopment(serviceConfiguration);
 
+			services.AddDistributedCache(configuration, hostEnvironment, serviceConfiguration.InstanceFactory);
 			services.AddFeatureManagement();
 
 			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.ForwardedHeaders))
@@ -488,6 +491,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.AddPathBasedLocalization(configuration);
 			services.AddRequestLocalization(serviceConfiguration);
 			services.AddSameSiteCookiePolicy();
+			services.AddTicketStore(configuration, hostEnvironment, serviceConfiguration.InstanceFactory);
 
 			services.AddScoped<IFacade, Facade>();
 

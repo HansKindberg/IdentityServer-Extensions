@@ -36,9 +36,11 @@
 		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.3.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
 		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.0-alpha" />
+		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.8-alpha" />
 		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.5-alpha" />
 		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.8-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
+		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.1-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.1.2" />
 		<PackageReference Include="Rsk.Saml.IdentityServer4.EntityFramework" Version="3.1.0" />
 		<PackageReference Include="Rsk.WsFederation" Version="4.0.0" />

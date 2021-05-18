@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using RegionOrebroLan.Caching.Distributed.Builder.Extensions;
 using RegionOrebroLan.DataProtection.Builder.Extensions;
 using RegionOrebroLan.Web.Authentication.Builder.Extensions;
 
@@ -96,6 +97,7 @@ namespace HansKindberg.IdentityServer.Builder
 			applicationBuilder
 				.UseCookiePolicy()
 				.UseDataProtection()
+				.UseDistributedCache()
 				.UseLoggingProvider()
 				.UseStaticFiles()
 				.UseRouting()
