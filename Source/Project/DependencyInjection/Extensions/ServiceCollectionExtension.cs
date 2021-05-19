@@ -20,7 +20,6 @@ using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Json;
-using HansKindberg.IdentityServer.Logging.Configuration;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
@@ -45,7 +44,6 @@ using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using RegionOrebroLan;
 using RegionOrebroLan.Caching.Distributed.DependencyInjection.Extensions;
-using RegionOrebroLan.Configuration;
 using RegionOrebroLan.DataProtection.DependencyInjection.Extensions;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
@@ -122,36 +120,6 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			var developmentStartup = new DevelopmentStartup(serviceConfigurationBuilder);
 			developmentStartup.ConfigureServices(services);
 			services.TryAddSingleton<IDevelopmentStartup>(developmentStartup);
-
-			return services;
-		}
-
-		private static IServiceCollection AddFeature<T>(this IServiceCollection services, string configurationKey, IServiceConfigurationBuilder serviceConfigurationBuilder, bool bindConfigurationSection = false) where T : IServiceConfigurationOptions
-		{
-			if(services == null)
-				throw new ArgumentNullException(nameof(services));
-
-			if(serviceConfigurationBuilder == null)
-				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
-
-			var configurationSection = serviceConfigurationBuilder.Configuration.GetSection(configurationKey);
-			var dynamicOptions = new DynamicOptions();
-			configurationSection.Bind(dynamicOptions);
-
-			// ReSharper disable InvertIf
-			if(dynamicOptions.Type != null)
-			{
-				var configurationSections = new List<IConfigurationSection>
-				{
-					dynamicOptions.Options
-				};
-
-				if(bindConfigurationSection)
-					configurationSections.Insert(0, configurationSection);
-
-				((T)serviceConfigurationBuilder.InstanceFactory.Create(dynamicOptions.Type)).Add(serviceConfigurationBuilder, services, configurationSections.ToArray());
-			}
-			// ReSharper restore InvertIf
 
 			return services;
 		}
@@ -352,11 +320,6 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return identityServerBuilder;
 		}
 
-		public static IServiceCollection AddLoggingProvider(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
-		{
-			return services.AddFeature<LoggingProviderOptions>(ConfigurationKeys.LoggingProviderPath, serviceConfigurationBuilder);
-		}
-
 		public static IServiceCollection AddRequestLocalization(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
@@ -487,7 +450,6 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			services.AddIdentity(serviceConfiguration);
 			services.AddIdentityServer(serviceConfiguration);
-			services.AddLoggingProvider(serviceConfiguration);
 			services.AddPathBasedLocalization(configuration);
 			services.AddRequestLocalization(serviceConfiguration);
 			services.AddSameSiteCookiePolicy();

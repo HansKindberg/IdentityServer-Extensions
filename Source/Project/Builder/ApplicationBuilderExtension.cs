@@ -6,7 +6,6 @@ using HansKindberg.IdentityServer.Development;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
-using HansKindberg.IdentityServer.Logging.Configuration;
 using HansKindberg.Web.Authorization.Builder.Extentsions;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -98,7 +97,6 @@ namespace HansKindberg.IdentityServer.Builder
 				.UseCookiePolicy()
 				.UseDataProtection()
 				.UseDistributedCache()
-				.UseLoggingProvider()
 				.UseStaticFiles()
 				.UseRouting()
 				.UseRequestLocalization()
@@ -120,16 +118,6 @@ namespace HansKindberg.IdentityServer.Builder
 				throw new ArgumentNullException(nameof(applicationBuilder));
 
 			applicationBuilder.ApplicationServices.GetRequiredService<IDevelopmentStartup>().Configure(applicationBuilder);
-
-			return applicationBuilder;
-		}
-
-		private static IApplicationBuilder UseFeature<T>(this IApplicationBuilder applicationBuilder) where T : IApplicationOptions
-		{
-			if(applicationBuilder == null)
-				throw new ArgumentNullException(nameof(applicationBuilder));
-
-			applicationBuilder.ApplicationServices.GetService<T>()?.Use(applicationBuilder);
 
 			return applicationBuilder;
 		}
@@ -161,11 +149,6 @@ namespace HansKindberg.IdentityServer.Builder
 				applicationBuilder.ApplicationServices.GetRequiredService<IWsFederationPluginBuilder>().Use(applicationBuilder);
 
 			return applicationBuilder;
-		}
-
-		public static IApplicationBuilder UseLoggingProvider(this IApplicationBuilder applicationBuilder)
-		{
-			return applicationBuilder.UseFeature<LoggingProviderOptions>();
 		}
 
 		#endregion
