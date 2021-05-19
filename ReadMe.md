@@ -17,7 +17,7 @@ IdentityServer:
 ## 1 Features
 
 - [Feature.cs](/Source/Project/FeatureManagement/Feature.cs)
-- [Example](/Source/Sample/Application/appsettings.Development.json#L379)
+- [Example](/Source/Sample/Application/appsettings.Development.json#L397)
 
 ## 2 Configuration
 
@@ -26,7 +26,7 @@ See above.
 
 ### 2.2 Globalization
 
-- [Example](/Source/Sample/Application/appsettings.Development.json#L479)
+- [Example](/Source/Sample/Application/appsettings.Development.json#L495)
 
 ### 2.3 Localization
 
@@ -38,7 +38,7 @@ See above.
 #### 2.4.1 Example
 
 - [Authentication](/Source/Sample/Application/appsettings.Development.json#L64)
-- [Scheme-registrations](/Source/Sample/Application/appsettings.Development.json#L103)
+- [Scheme-registrations](/Source/Sample/Application/appsettings.Development.json#L113)
 
 Solution behind it:
 
@@ -55,7 +55,7 @@ Solution behind it:
 
 - [Google external login setup in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins/)
 - https://console.developers.google.com/
-- [Example](/Source/Application/Data/Authentication.json#L92)
+- [Example](/Source/Sample/Application/appsettings.Development.json#L171)
 
 ##### 2.4.2.3 Microsoft
 
