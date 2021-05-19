@@ -1,11 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data.Configuration;
 using HansKindberg.IdentityServer.Development.Configuration;
+using HansKindberg.IdentityServer.FeatureManagement;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan;
 using RegionOrebroLan.DependencyInjection;
@@ -17,6 +17,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 	{
 		#region Constructors
 
+		[SuppressMessage("Style", "IDE0016:Use 'throw' expression")]
 		public ServiceConfigurationBuilder(IConfiguration configuration, IHostEnvironment hostEnvironment)
 		{
 			if(configuration == null)
@@ -24,17 +25,6 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 
 			if(hostEnvironment == null)
 				throw new ArgumentNullException(nameof(hostEnvironment));
-
-			var services = new ServiceCollection();
-
-			services.AddFeatureManagement();
-			services.AddHttpContextAccessor();
-			services.AddSingleton(configuration);
-			services.AddSingleton(hostEnvironment);
-			services.Configure<DataOptions>(configuration.GetSection(ConfigurationKeys.DataPath));
-			services.Configure<DevelopmentOptions>(configuration.GetSection(ConfigurationKeys.DevelopmentPath));
-
-			var serviceProvider = services.BuildServiceProvider();
 
 			var applicationDomain = new ApplicationHost(AppDomain.CurrentDomain, hostEnvironment);
 			this.ApplicationDomain = applicationDomain;
@@ -44,9 +34,16 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 			this.CertificateResolver = new CertificateResolver(fileCertificateResolver, storeCertificateResolver);
 
 			this.Configuration = configuration;
-			this.Data = serviceProvider.GetRequiredService<IOptions<DataOptions>>();
-			this.Development = serviceProvider.GetRequiredService<IOptions<DevelopmentOptions>>();
-			this.FeatureManager = serviceProvider.GetRequiredService<IFeatureManager>();
+
+			var data = new DataOptions();
+			configuration.GetSection(ConfigurationKeys.DataPath).Bind(data);
+			this.Data = data;
+
+			var development = new DevelopmentOptions();
+			configuration.GetSection(ConfigurationKeys.DevelopmentPath).Bind(development);
+			this.Development = development;
+
+			this.FeatureManager = new ConfigurationFeatureManager(configuration);
 			this.HostEnvironment = hostEnvironment;
 			this.InstanceFactory = new InstanceFactory();
 		}
@@ -58,8 +55,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 		public virtual IApplicationDomain ApplicationDomain { get; }
 		public virtual ICertificateResolver CertificateResolver { get; }
 		public virtual IConfiguration Configuration { get; }
-		public virtual IOptions<DataOptions> Data { get; }
-		public virtual IOptions<DevelopmentOptions> Development { get; }
+		public virtual DataOptions Data { get; }
+		public virtual DevelopmentOptions Development { get; }
 		public virtual IFeatureManager FeatureManager { get; }
 		public virtual IHostEnvironment HostEnvironment { get; }
 		public virtual IInstanceFactory InstanceFactory { get; }

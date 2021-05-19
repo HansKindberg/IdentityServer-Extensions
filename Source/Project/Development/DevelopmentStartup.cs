@@ -6,7 +6,6 @@ using HansKindberg.IdentityServer.DependencyInjection;
 using HansKindberg.IdentityServer.Development.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace HansKindberg.IdentityServer.Development
 {
@@ -38,7 +37,7 @@ namespace HansKindberg.IdentityServer.Development
 			{
 				this._assembly ??= new Lazy<Assembly>(() =>
 				{
-					var path = this.Options.Value.AssemblyPath?.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+					var path = this.Options.AssemblyPath?.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
 					if(string.IsNullOrWhiteSpace(path))
 						return null;
@@ -91,7 +90,7 @@ namespace HansKindberg.IdentityServer.Development
 			}
 		}
 
-		protected internal virtual IOptions<DevelopmentOptions> Options => this.ServiceConfigurationBuilder.Development;
+		protected internal virtual DevelopmentOptions Options => this.ServiceConfigurationBuilder.Development;
 		protected internal virtual IServiceConfigurationBuilder ServiceConfigurationBuilder { get; }
 
 		protected internal virtual Type StartupType

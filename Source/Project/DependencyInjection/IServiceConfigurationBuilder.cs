@@ -2,7 +2,6 @@ using HansKindberg.IdentityServer.Data.Configuration;
 using HansKindberg.IdentityServer.Development.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan;
 using RegionOrebroLan.DependencyInjection;
@@ -17,8 +16,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 		IApplicationDomain ApplicationDomain { get; }
 		ICertificateResolver CertificateResolver { get; }
 		IConfiguration Configuration { get; }
-		IOptions<DataOptions> Data { get; }
-		IOptions<DevelopmentOptions> Development { get; }
+		DataOptions Data { get; }
+		DevelopmentOptions Development { get; }
 		IFeatureManager FeatureManager { get; }
 		IHostEnvironment HostEnvironment { get; }
 		IInstanceFactory InstanceFactory { get; }

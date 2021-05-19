@@ -166,9 +166,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfigurationBuilder == null)
 				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var dataOptions = serviceConfigurationBuilder.Data.Value;
-			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
-			var databaseProvider = dataOptions.Provider;
+			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(serviceConfigurationBuilder.Data.ConnectionStringName);
+			var databaseProvider = serviceConfigurationBuilder.Data.Provider;
 
 			return databaseProvider switch
 			{
@@ -220,9 +219,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfigurationBuilder == null)
 				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var dataOptions = serviceConfigurationBuilder.Data.Value;
-			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
-			var databaseProvider = dataOptions.Provider;
+			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(serviceConfigurationBuilder.Data.ConnectionStringName);
+			var databaseProvider = serviceConfigurationBuilder.Data.Provider;
 
 			return databaseProvider switch
 			{
