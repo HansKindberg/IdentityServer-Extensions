@@ -13,11 +13,11 @@ using RegionOrebroLan.Security.Cryptography;
 
 namespace HansKindberg.IdentityServer.DependencyInjection
 {
-	public class ServiceConfiguration : IServiceConfiguration
+	public class ServiceConfigurationBuilder : IServiceConfigurationBuilder
 	{
 		#region Constructors
 
-		public ServiceConfiguration(IConfiguration configuration, IHostEnvironment hostEnvironment)
+		public ServiceConfigurationBuilder(IConfiguration configuration, IHostEnvironment hostEnvironment)
 		{
 			if(configuration == null)
 				throw new ArgumentNullException(nameof(configuration));

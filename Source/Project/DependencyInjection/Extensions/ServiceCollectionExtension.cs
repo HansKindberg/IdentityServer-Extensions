@@ -62,15 +62,15 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 	{
 		#region Methods
 
-		public static IServiceCollection AddCertificateForwarding(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddCertificateForwarding(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var configurationSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.CertificateForwardingPath);
+			var configurationSection = serviceConfigurationBuilder.Configuration.GetSection(ConfigurationKeys.CertificateForwardingPath);
 
 			return services.AddCertificateForwarding(options =>
 			{
@@ -78,24 +78,24 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			});
 		}
 
-		public static IServiceCollection AddDataDirectory(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddDataDirectory(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
 			var options = new DataDirectoryOptions();
 
-			serviceConfiguration.Configuration.GetSection(ConfigurationKeys.DataDirectoryPath).Bind(options);
+			serviceConfigurationBuilder.Configuration.GetSection(ConfigurationKeys.DataDirectoryPath).Bind(options);
 
 			var path = options.Path;
 
 			if(!Path.IsPathRooted(path))
-				path = Path.Combine(serviceConfiguration.HostEnvironment.ContentRootPath, path);
+				path = Path.Combine(serviceConfigurationBuilder.HostEnvironment.ContentRootPath, path);
 
-			serviceConfiguration.ApplicationDomain.SetData(ConfigurationKeys.DataDirectoryPath, path);
+			serviceConfigurationBuilder.ApplicationDomain.SetData(ConfigurationKeys.DataDirectoryPath, path);
 
 			return services;
 		}
@@ -111,30 +111,30 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddDevelopment(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddDevelopment(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var developmentStartup = new DevelopmentStartup(serviceConfiguration);
+			var developmentStartup = new DevelopmentStartup(serviceConfigurationBuilder);
 			developmentStartup.ConfigureServices(services);
 			services.TryAddSingleton<IDevelopmentStartup>(developmentStartup);
 
 			return services;
 		}
 
-		private static IServiceCollection AddFeature<T>(this IServiceCollection services, string configurationKey, IServiceConfiguration serviceConfiguration, bool bindConfigurationSection = false) where T : IServiceConfigurationOptions
+		private static IServiceCollection AddFeature<T>(this IServiceCollection services, string configurationKey, IServiceConfigurationBuilder serviceConfigurationBuilder, bool bindConfigurationSection = false) where T : IServiceConfigurationOptions
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var configurationSection = serviceConfiguration.Configuration.GetSection(configurationKey);
+			var configurationSection = serviceConfigurationBuilder.Configuration.GetSection(configurationKey);
 			var dynamicOptions = new DynamicOptions();
 			configurationSection.Bind(dynamicOptions);
 
@@ -149,20 +149,20 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				if(bindConfigurationSection)
 					configurationSections.Insert(0, configurationSection);
 
-				((T)serviceConfiguration.InstanceFactory.Create(dynamicOptions.Type)).Add(serviceConfiguration, services, configurationSections.ToArray());
+				((T)serviceConfigurationBuilder.InstanceFactory.Create(dynamicOptions.Type)).Add(serviceConfigurationBuilder, services, configurationSections.ToArray());
 			}
 			// ReSharper restore InvertIf
 
 			return services;
 		}
 
-		public static IServiceCollection AddForwardedHeaders(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddForwardedHeaders(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
 			return services.Configure<ForwardedHeadersOptions>(options =>
 			{
@@ -170,7 +170,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				options.KnownNetworks.Clear();
 				options.KnownProxies.Clear();
 
-				var forwardedHeadersSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.ForwardedHeadersPath);
+				var forwardedHeadersSection = serviceConfigurationBuilder.Configuration.GetSection(ConfigurationKeys.ForwardedHeadersPath);
 
 				forwardedHeadersSection?.Bind(options);
 
@@ -190,16 +190,16 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			});
 		}
 
-		public static IServiceCollection AddIdentity(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddIdentity(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var dataOptions = serviceConfiguration.Data.Value;
-			var connectionString = serviceConfiguration.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
+			var dataOptions = serviceConfigurationBuilder.Data.Value;
+			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
 			var databaseProvider = dataOptions.Provider;
 
 			return databaseProvider switch
@@ -244,27 +244,27 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return services;
 		}
 
-		public static IIdentityServerBuilder AddIdentityServer(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IIdentityServerBuilder AddIdentityServer(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var dataOptions = serviceConfiguration.Data.Value;
-			var connectionString = serviceConfiguration.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
+			var dataOptions = serviceConfigurationBuilder.Data.Value;
+			var connectionString = serviceConfigurationBuilder.Configuration.GetConnectionString(dataOptions.ConnectionStringName);
 			var databaseProvider = dataOptions.Provider;
 
 			return databaseProvider switch
 			{
-				DatabaseProvider.Sqlite => services.AddIdentityServer<SqliteConfiguration, SqliteOperational, SqliteSamlConfiguration, SqliteWsFederationConfiguration>(optionsBuilder => optionsBuilder.UseSqlite(connectionString), serviceConfiguration),
-				DatabaseProvider.SqlServer => services.AddIdentityServer<SqlServerConfiguration, SqlServerOperational, SqlServerSamlConfiguration, SqlServerWsFederationConfiguration>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString), serviceConfiguration),
+				DatabaseProvider.Sqlite => services.AddIdentityServer<SqliteConfiguration, SqliteOperational, SqliteSamlConfiguration, SqliteWsFederationConfiguration>(optionsBuilder => optionsBuilder.UseSqlite(connectionString), serviceConfigurationBuilder),
+				DatabaseProvider.SqlServer => services.AddIdentityServer<SqlServerConfiguration, SqlServerOperational, SqlServerSamlConfiguration, SqlServerWsFederationConfiguration>(optionsBuilder => optionsBuilder.UseSqlServer(connectionString), serviceConfigurationBuilder),
 				_ => throw new InvalidOperationException($"The database-provider \"{databaseProvider}\" is not supported.")
 			};
 		}
 
-		private static IIdentityServerBuilder AddIdentityServer<TConfiguration, TOperational, TSaml, TWsFederation>(this IServiceCollection services, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfiguration serviceConfiguration) where TConfiguration : DbContext, IConfigurationDbContext where TOperational : DbContext, IPersistedGrantDbContext where TSaml : SamlConfigurationContext where TWsFederation : WsFederationConfigurationContext
+		private static IIdentityServerBuilder AddIdentityServer<TConfiguration, TOperational, TSaml, TWsFederation>(this IServiceCollection services, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfigurationBuilder serviceConfigurationBuilder) where TConfiguration : DbContext, IConfigurationDbContext where TOperational : DbContext, IPersistedGrantDbContext where TSaml : SamlConfigurationContext where TWsFederation : WsFederationConfigurationContext
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
@@ -272,17 +272,17 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(optionsBuilderFunction == null)
 				throw new ArgumentNullException(nameof(optionsBuilderFunction));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var identityServerOptions = services.ConfigureIdentityServer(serviceConfiguration);
+			var identityServerOptions = services.ConfigureIdentityServer(serviceConfigurationBuilder);
 
 			var identityServerBuilder = services.AddIdentityServer()
 				.AddConfigurationStore<TConfiguration>(options =>
 				{
 					options.ConfigureDbContext = optionsBuilder => optionsBuilderFunction(optionsBuilder);
 
-					serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.ConfigurationStore)}").Bind(options);
+					serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.ConfigurationStore)}").Bind(options);
 				})
 				.AddConfigurationStoreCache()
 				.AddJwtBearerClientAuthentication()
@@ -292,21 +292,21 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				{
 					options.ConfigureDbContext = optionsBuilder => optionsBuilderFunction(optionsBuilder);
 
-					serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.OperationalStore)}").Bind(options);
+					serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.OperationalStore)}").Bind(options);
 				})
-				.AddSigningCredential(serviceConfiguration.GetCertificate(identityServerOptions.SigningCertificate));
+				.AddSigningCredential(serviceConfigurationBuilder.GetCertificate(identityServerOptions.SigningCertificate));
 
 			foreach(var validationCertificate in identityServerOptions.ValidationCertificates)
 			{
-				identityServerBuilder.AddValidationKey(serviceConfiguration.GetCertificate(validationCertificate));
+				identityServerBuilder.AddValidationKey(serviceConfigurationBuilder.GetCertificate(validationCertificate));
 			}
 
-			identityServerBuilder.AddIdentityServerPlugins<TSaml, TWsFederation>(optionsBuilderFunction, serviceConfiguration);
+			identityServerBuilder.AddIdentityServerPlugins<TSaml, TWsFederation>(optionsBuilderFunction, serviceConfigurationBuilder);
 
 			return identityServerBuilder;
 		}
 
-		private static IIdentityServerBuilder AddIdentityServerPlugins<TSaml, TWsFederation>(this IIdentityServerBuilder identityServerBuilder, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfiguration serviceConfiguration) where TSaml : SamlConfigurationContext where TWsFederation : WsFederationConfigurationContext
+		private static IIdentityServerBuilder AddIdentityServerPlugins<TSaml, TWsFederation>(this IIdentityServerBuilder identityServerBuilder, Func<DbContextOptionsBuilder, DbContextOptionsBuilder> optionsBuilderFunction, IServiceConfigurationBuilder serviceConfigurationBuilder) where TSaml : SamlConfigurationContext where TWsFederation : WsFederationConfigurationContext
 		{
 			if(identityServerBuilder == null)
 				throw new ArgumentNullException(nameof(identityServerBuilder));
@@ -314,10 +314,10 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(optionsBuilderFunction == null)
 				throw new ArgumentNullException(nameof(optionsBuilderFunction));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.Saml))
+			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.Saml))
 			{
 				identityServerBuilder.Services.AddDbContext<TSaml>(optionsBuilder => optionsBuilderFunction(optionsBuilder));
 				identityServerBuilder.Services.AddScoped<ISamlConfigurationDbContext>(serviceProvider => serviceProvider.GetRequiredService<TSaml>());
@@ -326,7 +326,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 					{
 						options.UseLegacyRsaEncryption = false;
 						options.UserInteraction.RequestIdParameter = QueryStringKeys.SamlRequestId;
-						serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
+						serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
 
@@ -334,14 +334,14 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			}
 
 			// ReSharper disable InvertIf
-			if(serviceConfiguration.FeatureManager.IsEnabled(Feature.WsFederation))
+			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.WsFederation))
 			{
 				identityServerBuilder.Services.AddDbContext<TWsFederation>(optionsBuilder => optionsBuilderFunction(optionsBuilder));
 				identityServerBuilder.Services.AddScoped<IWsFederationConfigurationDbContext>(serviceProvider => serviceProvider.GetRequiredService<TWsFederation>());
 
 				identityServerBuilder.AddWsFederationPlugin(options =>
 					{
-						serviceConfiguration.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.WsFederation)}").Bind(options);
+						serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.WsFederation)}").Bind(options);
 					})
 					.AddRelyingPartyStore<RelyingPartyStore>();
 
@@ -352,22 +352,22 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return identityServerBuilder;
 		}
 
-		public static IServiceCollection AddLoggingProvider(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddLoggingProvider(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
-			return services.AddFeature<LoggingProviderOptions>(ConfigurationKeys.LoggingProviderPath, serviceConfiguration);
+			return services.AddFeature<LoggingProviderOptions>(ConfigurationKeys.LoggingProviderPath, serviceConfigurationBuilder);
 		}
 
-		public static IServiceCollection AddRequestLocalization(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		public static IServiceCollection AddRequestLocalization(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
 			services.Configure<RequestLocalizationOptions>(options =>
 			{
-				var requestLocalizationSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.RequestLocalizationPath);
+				var requestLocalizationSection = serviceConfigurationBuilder.Configuration.GetSection(ConfigurationKeys.RequestLocalizationPath);
 
 				options.RequestCultureProviders.Clear();
 				options.SupportedCultures.Clear();
@@ -390,7 +390,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				requestLocalizationSection.GetSection(nameof(RequestLocalizationOptions.RequestCultureProviders)).Bind(requestCultureProviders);
 				foreach(var type in requestCultureProviders)
 				{
-					options.RequestCultureProviders.Add((IRequestCultureProvider)serviceConfiguration.InstanceFactory.Create(type));
+					options.RequestCultureProviders.Add((IRequestCultureProvider)serviceConfigurationBuilder.InstanceFactory.Create(type));
 				}
 			});
 
@@ -460,7 +460,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			};
 			TypeDescriptor.AddAttributes(typeof(X509Certificate2), new TypeConverterAttribute(typeof(CertificateConverter)));
 
-			var serviceConfiguration = new ServiceConfiguration(configuration, hostEnvironment);
+			var serviceConfiguration = new ServiceConfigurationBuilder(configuration, hostEnvironment);
 
 			services.Configure<ExceptionHandlingOptions>(configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
 			services.Configure<SecurityHeaderOptions>(configuration.GetSection(ConfigurationKeys.SecurityHeadersPath));
@@ -518,15 +518,15 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return services;
 		}
 
-		private static ExtendedIdentityServerOptions ConfigureIdentityServer(this IServiceCollection services, IServiceConfiguration serviceConfiguration)
+		private static ExtendedIdentityServerOptions ConfigureIdentityServer(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
-			var identityServerSection = serviceConfiguration.Configuration.GetSection(ConfigurationKeys.IdentityServerPath);
+			var identityServerSection = serviceConfigurationBuilder.Configuration.GetSection(ConfigurationKeys.IdentityServerPath);
 
 			var identityServerOptions = new ExtendedIdentityServerOptions();
 			identityServerOptions.SetDefaults();

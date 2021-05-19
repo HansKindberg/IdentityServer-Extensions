@@ -12,20 +12,20 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 	{
 		#region Methods
 
-		public static X509Certificate2 GetCertificate(this IServiceConfiguration serviceConfiguration, DynamicOptions certificateOptions)
+		public static X509Certificate2 GetCertificate(this IServiceConfigurationBuilder serviceConfigurationBuilder, DynamicOptions certificateOptions)
 		{
-			if(serviceConfiguration == null)
-				throw new ArgumentNullException(nameof(serviceConfiguration));
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 
 			if(certificateOptions == null)
 				throw new ArgumentNullException(nameof(certificateOptions));
 
 			try
 			{
-				var resolverOptions = (ResolverOptions)serviceConfiguration.InstanceFactory.Create(certificateOptions.Type);
+				var resolverOptions = (ResolverOptions)serviceConfigurationBuilder.InstanceFactory.Create(certificateOptions.Type);
 				certificateOptions.Options?.Bind(resolverOptions);
 
-				var certificate = serviceConfiguration.CertificateResolver.Resolve(resolverOptions);
+				var certificate = serviceConfigurationBuilder.CertificateResolver.Resolve(resolverOptions);
 
 				return certificate.Unwrap<X509Certificate2>();
 			}

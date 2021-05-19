@@ -19,7 +19,7 @@ namespace HansKindberg.IdentityServer.Logging.Configuration
 
 		#region Methods
 
-		protected internal override void AddInternal(IServiceConfiguration serviceConfiguration, IServiceCollection services) { }
+		protected internal override void AddInternal(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services) { }
 
 		protected internal override void UseInternal(IApplicationBuilder applicationBuilder)
 		{

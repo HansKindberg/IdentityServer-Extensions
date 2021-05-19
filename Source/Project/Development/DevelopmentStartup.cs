@@ -23,9 +23,9 @@ namespace HansKindberg.IdentityServer.Development
 
 		#region Constructors
 
-		public DevelopmentStartup(IServiceConfiguration serviceConfiguration)
+		public DevelopmentStartup(IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
-			this.ServiceConfiguration = serviceConfiguration ?? throw new ArgumentNullException(nameof(serviceConfiguration));
+			this.ServiceConfigurationBuilder = serviceConfigurationBuilder ?? throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
 		}
 
 		#endregion
@@ -91,8 +91,8 @@ namespace HansKindberg.IdentityServer.Development
 			}
 		}
 
-		protected internal virtual IOptions<DevelopmentOptions> Options => this.ServiceConfiguration.Development;
-		protected internal virtual IServiceConfiguration ServiceConfiguration { get; }
+		protected internal virtual IOptions<DevelopmentOptions> Options => this.ServiceConfigurationBuilder.Development;
+		protected internal virtual IServiceConfigurationBuilder ServiceConfigurationBuilder { get; }
 
 		protected internal virtual Type StartupType
 		{

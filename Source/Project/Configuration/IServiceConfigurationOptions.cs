@@ -8,7 +8,7 @@ namespace HansKindberg.IdentityServer.Configuration
 	{
 		#region Methods
 
-		void Add(IServiceConfiguration serviceConfiguration, IServiceCollection services, params IConfigurationSection[] configurationSections);
+		void Add(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services, params IConfigurationSection[] configurationSections);
 
 		#endregion
 	}

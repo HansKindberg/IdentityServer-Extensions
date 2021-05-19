@@ -10,7 +10,7 @@ using RegionOrebroLan.Security.Cryptography;
 
 namespace HansKindberg.IdentityServer.DependencyInjection
 {
-	public interface IServiceConfiguration
+	public interface IServiceConfigurationBuilder
 	{
 		#region Properties
 

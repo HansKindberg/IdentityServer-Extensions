@@ -10,11 +10,11 @@ namespace HansKindberg.IdentityServer.Logging.Configuration
 	{
 		#region Methods
 
-		protected internal override void Add(IServiceConfiguration serviceConfiguration, IServiceCollection services)
+		protected internal override void Add(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services)
 		{
 			try
 			{
-				this.AddInternal(serviceConfiguration, services);
+				this.AddInternal(serviceConfigurationBuilder, services);
 			}
 			catch(Exception exception)
 			{
@@ -22,7 +22,7 @@ namespace HansKindberg.IdentityServer.Logging.Configuration
 			}
 		}
 
-		protected internal abstract void AddInternal(IServiceConfiguration serviceConfiguration, IServiceCollection services);
+		protected internal abstract void AddInternal(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services);
 
 		protected internal override void AddService(IServiceCollection services)
 		{

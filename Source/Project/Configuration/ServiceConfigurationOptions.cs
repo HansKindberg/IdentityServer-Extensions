@@ -9,7 +9,7 @@ namespace HansKindberg.IdentityServer.Configuration
 	{
 		#region Methods
 
-		public virtual void Add(IServiceConfiguration serviceConfiguration, IServiceCollection services, params IConfigurationSection[] configurationSections)
+		public virtual void Add(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services, params IConfigurationSection[] configurationSections)
 		{
 			try
 			{
@@ -23,7 +23,7 @@ namespace HansKindberg.IdentityServer.Configuration
 
 				this.AddService(services);
 
-				this.Add(serviceConfiguration, services);
+				this.Add(serviceConfigurationBuilder, services);
 			}
 			catch(Exception exception)
 			{
@@ -31,7 +31,7 @@ namespace HansKindberg.IdentityServer.Configuration
 			}
 		}
 
-		protected internal abstract void Add(IServiceConfiguration serviceConfiguration, IServiceCollection services);
+		protected internal abstract void Add(IServiceConfigurationBuilder serviceConfigurationBuilder, IServiceCollection services);
 		protected internal abstract void AddService(IServiceCollection services);
 
 		#endregion
