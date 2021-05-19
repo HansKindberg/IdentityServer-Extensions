@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteWsFederationConfiguration))]
-    [Migration("20210323094845_SqliteWsFederationConfigurationMigration")]
+    [Migration("20210519093528_SqliteWsFederationConfigurationMigration")]
     partial class SqliteWsFederationConfigurationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.4");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("Rsk.WsFederation.EntityFramework.Entities.RelyingParty", b =>
                 {
@@ -24,21 +24,26 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DigestAlgorithm")
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Realm")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("SamlNameIdentifierFormat")
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("SignatureAlgorithm")
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("TokenType")
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -57,12 +62,14 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
                     b.Property<string>("NewClaimType")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("OriginalClaimType")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int>("RelyingPartyId")
                         .HasColumnType("INTEGER");

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 {
@@ -23,11 +23,11 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Realm = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					TokenType = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					SignatureAlgorithm = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					DigestAlgorithm = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					SamlNameIdentifierFormat = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true)
+					Realm = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					TokenType = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					SignatureAlgorithm = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					DigestAlgorithm = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					SamlNameIdentifierFormat = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -40,8 +40,8 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					OriginalClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					NewClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					OriginalClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					NewClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					RelyingPartyId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>

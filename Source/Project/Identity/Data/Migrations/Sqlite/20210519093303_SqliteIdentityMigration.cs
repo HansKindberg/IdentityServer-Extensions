@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
@@ -37,10 +37,10 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				name: "AspNetRoles",
 				columns: table => new
 				{
-					Id = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					Name = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
-					NormalizedName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
-					ConcurrencyStamp = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true)
+					Id = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
+					NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
+					ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -51,16 +51,16 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				name: "AspNetUsers",
 				columns: table => new
 				{
-					Id = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					UserName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
-					NormalizedUserName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
-					Email = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
-					NormalizedEmail = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 256, nullable: true),
+					Id = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
+					NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
+					Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
+					NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true, collation: "NOCASE"),
 					EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-					PasswordHash = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					SecurityStamp = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					ConcurrencyStamp = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					PhoneNumber = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
+					PasswordHash = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					SecurityStamp = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					PhoneNumber = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
 					PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
 					TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
 					LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
@@ -78,9 +78,9 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					RoleId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					ClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					ClaimValue = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true)
+					RoleId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					ClaimType = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					ClaimValue = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -99,9 +99,9 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					UserId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					ClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					ClaimValue = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true)
+					UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					ClaimType = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					ClaimValue = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -118,10 +118,10 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				name: "AspNetUserLogins",
 				columns: table => new
 				{
-					LoginProvider = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					ProviderKey = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					ProviderDisplayName = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true),
-					UserId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false)
+					LoginProvider = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					ProviderKey = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
+					UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -138,8 +138,8 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				name: "AspNetUserRoles",
 				columns: table => new
 				{
-					UserId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					RoleId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false)
+					UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					RoleId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -162,10 +162,10 @@ namespace HansKindberg.IdentityServer.Identity.Data.Migrations.Sqlite
 				name: "AspNetUserTokens",
 				columns: table => new
 				{
-					UserId = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					LoginProvider = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					Name = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", nullable: true)
+					UserId = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					LoginProvider = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					Name = table.Column<string>(type: "TEXT", nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
 				},
 				constraints: table =>
 				{

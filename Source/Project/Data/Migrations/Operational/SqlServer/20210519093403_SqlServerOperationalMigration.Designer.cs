@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HansKindberg.IdentityServer.Data.Migrations.Operational.SqlServer
 {
     [DbContext(typeof(SqlServerOperational))]
-    [Migration("20210219164812_SqlServerOperationalMigration")]
+    [Migration("20210519093403_SqlServerOperationalMigration")]
     partial class SqlServerOperationalMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.SqlServer
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerWsFederationConfiguration))]
-    [Migration("20210323094857_SqlServerWsFederationConfigurationMigration")]
+    [Migration("20210519093543_SqlServerWsFederationConfigurationMigration")]
     partial class SqlServerWsFederationConfigurationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.SqlServer
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Rsk.WsFederation.EntityFramework.Entities.RelyingParty", b =>

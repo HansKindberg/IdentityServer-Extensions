@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 {
     [DbContext(typeof(SqliteConfiguration))]
-    [Migration("20210219164534_SqliteConfigurationMigration")]
+    [Migration("20210519093208_SqliteConfigurationMigration")]
     partial class SqliteConfigurationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.ApiResource", b =>
                 {
@@ -26,18 +26,21 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("INTEGER");
@@ -48,7 +51,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("NonEditable")
                         .HasColumnType("INTEGER");
@@ -79,7 +83,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -100,12 +105,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -126,7 +133,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -149,7 +157,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<DateTime?>("Expiration")
                         .HasColumnType("TEXT");
@@ -157,12 +166,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -179,11 +190,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("Emphasize")
                         .HasColumnType("INTEGER");
@@ -194,7 +207,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("Required")
                         .HasColumnType("INTEGER");
@@ -222,7 +236,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -240,7 +255,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int>("ScopeId")
                         .HasColumnType("INTEGER");
@@ -248,7 +264,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -286,7 +303,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("AllowedIdentityTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("AlwaysIncludeUserClaimsInIdToken")
                         .HasColumnType("INTEGER");
@@ -302,24 +320,29 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("BackChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("ClientClaimsPrefix")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("ClientName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("ClientUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int?>("ConsentLifetime")
                         .HasColumnType("INTEGER");
@@ -329,7 +352,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int>("DeviceCodeLifetime")
                         .HasColumnType("INTEGER");
@@ -345,7 +369,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("FrontChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int>("IdentityTokenLifetime")
                         .HasColumnType("INTEGER");
@@ -358,19 +383,22 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("LogoUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("NonEditable")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PairWiseSubjectSalt")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("ProtocolType")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int>("RefreshTokenExpiration")
                         .HasColumnType("INTEGER");
@@ -401,7 +429,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("UserCodeType")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<int?>("UserSsoLifetime")
                         .HasColumnType("INTEGER");
@@ -426,12 +455,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -452,7 +483,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -473,7 +505,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("GrantType")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -494,7 +527,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -515,7 +549,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("PostLogoutRedirectUri")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -536,12 +571,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -562,7 +599,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("RedirectUri")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -583,7 +621,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -606,7 +645,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<DateTime?>("Expiration")
                         .HasColumnType("TEXT");
@@ -614,12 +654,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -639,11 +681,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("Emphasize")
                         .HasColumnType("INTEGER");
@@ -654,7 +698,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<bool>("NonEditable")
                         .HasColumnType("INTEGER");
@@ -688,7 +733,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 
@@ -709,12 +755,14 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("TEXT COLLATE NOCASE");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.HasKey("Id");
 

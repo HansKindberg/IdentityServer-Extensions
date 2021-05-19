@@ -22,15 +22,15 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.Sqlite
 				name: "DeviceCodes",
 				columns: table => new
 				{
-					UserCode = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					DeviceCode = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					SubjectId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					SessionId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 100, nullable: true),
-					ClientId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
+					UserCode = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					DeviceCode = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					SubjectId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					SessionId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
+					ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
 					CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
 					Expiration = table.Column<DateTime>(type: "TEXT", nullable: false),
-					Data = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 50000, nullable: false)
+					Data = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -41,16 +41,16 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Operational.Sqlite
 				name: "PersistedGrants",
 				columns: table => new
 				{
-					Key = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 50, nullable: false),
-					SubjectId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					SessionId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 100, nullable: true),
-					ClientId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
+					Key = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					Type = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false, collation: "NOCASE"),
+					SubjectId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					SessionId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
+					ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
 					CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
 					Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
 					ConsumedTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-					Data = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 50000, nullable: false)
+					Data = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{

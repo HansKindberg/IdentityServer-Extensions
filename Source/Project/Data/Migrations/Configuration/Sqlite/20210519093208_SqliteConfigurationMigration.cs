@@ -82,10 +82,10 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-					Name = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					DisplayName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 1000, nullable: true),
-					AllowedAccessTokenSigningAlgorithms = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 100, nullable: true),
+					Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
+					AllowedAccessTokenSigningAlgorithms = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
 					ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false),
 					Created = table.Column<DateTime>(type: "TEXT", nullable: false),
 					Updated = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -104,9 +104,9 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-					Name = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					DisplayName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 1000, nullable: true),
+					Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
 					Required = table.Column<bool>(type: "INTEGER", nullable: false),
 					Emphasize = table.Column<bool>(type: "INTEGER", nullable: false),
 					ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -123,13 +123,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-					ClientId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					ProtocolType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
+					ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					ProtocolType = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
 					RequireClientSecret = table.Column<bool>(type: "INTEGER", nullable: false),
-					ClientName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 1000, nullable: true),
-					ClientUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: true),
-					LogoUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: true),
+					ClientName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
+					ClientUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true, collation: "NOCASE"),
+					LogoUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true, collation: "NOCASE"),
 					RequireConsent = table.Column<bool>(type: "INTEGER", nullable: false),
 					AllowRememberConsent = table.Column<bool>(type: "INTEGER", nullable: false),
 					AlwaysIncludeUserClaimsInIdToken = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -137,13 +137,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					AllowPlainTextPkce = table.Column<bool>(type: "INTEGER", nullable: false),
 					RequireRequestObject = table.Column<bool>(type: "INTEGER", nullable: false),
 					AllowAccessTokensViaBrowser = table.Column<bool>(type: "INTEGER", nullable: false),
-					FrontChannelLogoutUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: true),
+					FrontChannelLogoutUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true, collation: "NOCASE"),
 					FrontChannelLogoutSessionRequired = table.Column<bool>(type: "INTEGER", nullable: false),
-					BackChannelLogoutUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: true),
+					BackChannelLogoutUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true, collation: "NOCASE"),
 					BackChannelLogoutSessionRequired = table.Column<bool>(type: "INTEGER", nullable: false),
 					AllowOfflineAccess = table.Column<bool>(type: "INTEGER", nullable: false),
 					IdentityTokenLifetime = table.Column<int>(type: "INTEGER", nullable: false),
-					AllowedIdentityTokenSigningAlgorithms = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 100, nullable: true),
+					AllowedIdentityTokenSigningAlgorithms = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
 					AccessTokenLifetime = table.Column<int>(type: "INTEGER", nullable: false),
 					AuthorizationCodeLifetime = table.Column<int>(type: "INTEGER", nullable: false),
 					ConsentLifetime = table.Column<int>(type: "INTEGER", nullable: true),
@@ -156,13 +156,13 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					EnableLocalLogin = table.Column<bool>(type: "INTEGER", nullable: false),
 					IncludeJwtId = table.Column<bool>(type: "INTEGER", nullable: false),
 					AlwaysSendClientClaims = table.Column<bool>(type: "INTEGER", nullable: false),
-					ClientClaimsPrefix = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					PairWiseSubjectSalt = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
+					ClientClaimsPrefix = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					PairWiseSubjectSalt = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
 					Created = table.Column<DateTime>(type: "TEXT", nullable: false),
 					Updated = table.Column<DateTime>(type: "TEXT", nullable: true),
 					LastAccessed = table.Column<DateTime>(type: "TEXT", nullable: true),
 					UserSsoLifetime = table.Column<int>(type: "INTEGER", nullable: true),
-					UserCodeType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 100, nullable: true),
+					UserCodeType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
 					DeviceCodeLifetime = table.Column<int>(type: "INTEGER", nullable: false),
 					NonEditable = table.Column<bool>(type: "INTEGER", nullable: false)
 				},
@@ -178,9 +178,9 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-					Name = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
-					DisplayName = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: true),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 1000, nullable: true),
+					Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
 					Required = table.Column<bool>(type: "INTEGER", nullable: false),
 					Emphasize = table.Column<bool>(type: "INTEGER", nullable: false),
 					ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -200,7 +200,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ApiResourceId = table.Column<int>(type: "INTEGER", nullable: false),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false)
+					Type = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -220,8 +220,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ApiResourceId = table.Column<int>(type: "INTEGER", nullable: false),
-					Key = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false)
+					Key = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -240,7 +240,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Scope = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
+					Scope = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
 					ApiResourceId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -261,10 +261,10 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ApiResourceId = table.Column<int>(type: "INTEGER", nullable: false),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 1000, nullable: true),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 4000, nullable: false),
+					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: false, collation: "NOCASE"),
 					Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					Type = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					Created = table.Column<DateTime>(type: "TEXT", nullable: false)
 				},
 				constraints: table =>
@@ -285,7 +285,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ScopeId = table.Column<int>(type: "INTEGER", nullable: false),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false)
+					Type = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -305,8 +305,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ScopeId = table.Column<int>(type: "INTEGER", nullable: false),
-					Key = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false)
+					Key = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -325,8 +325,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					Type = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -346,7 +346,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Origin = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 150, nullable: false),
+					Origin = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -366,7 +366,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					GrantType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					GrantType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -386,7 +386,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Provider = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
+					Provider = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -406,7 +406,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					PostLogoutRedirectUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
+					PostLogoutRedirectUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -427,8 +427,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false),
-					Key = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false)
+					Key = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -447,7 +447,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					RedirectUri = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
+					RedirectUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -467,7 +467,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Scope = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
+					Scope = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -488,10 +488,10 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					ClientId = table.Column<int>(type: "INTEGER", nullable: false),
-					Description = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: true),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 4000, nullable: false),
+					Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: false, collation: "NOCASE"),
 					Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					Type = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					Created = table.Column<DateTime>(type: "TEXT", nullable: false)
 				},
 				constraints: table =>
@@ -512,7 +512,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					IdentityResourceId = table.Column<int>(type: "INTEGER", nullable: false),
-					Type = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false)
+					Type = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{
@@ -532,8 +532,8 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					IdentityResourceId = table.Column<int>(type: "INTEGER", nullable: false),
-					Key = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					Value = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false)
+					Key = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE")
 				},
 				constraints: table =>
 				{

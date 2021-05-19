@@ -32,7 +32,7 @@ namespace HansKindberg.IdentityServer.Data.Saml.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					EntityId = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 200, nullable: false),
+					EntityId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
 					EncryptionCertificate = table.Column<byte[]>(type: "BLOB", nullable: true),
 					SignAssertions = table.Column<bool>(type: "INTEGER", nullable: false),
 					EncryptAssertions = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -51,8 +51,8 @@ namespace HansKindberg.IdentityServer.Data.Saml.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Binding = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
-					Location = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
+					Binding = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
+					Location = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
 					Index = table.Column<int>(type: "INTEGER", nullable: false),
 					IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
 					ServiceProviderId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -74,8 +74,8 @@ namespace HansKindberg.IdentityServer.Data.Saml.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					OriginalClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
-					NewClaimType = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 250, nullable: false),
+					OriginalClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
+					NewClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
 					ServiceProviderId = table.Column<int>(type: "INTEGER", nullable: false)
 				},
 				constraints: table =>
@@ -115,8 +115,8 @@ namespace HansKindberg.IdentityServer.Data.Saml.Migrations.Sqlite
 				{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
-					Binding = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
-					Location = table.Column<string>(type: "TEXT COLLATE NOCASE", maxLength: 2000, nullable: false),
+					Binding = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
+					Location = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false, collation: "NOCASE"),
 					Index = table.Column<int>(type: "INTEGER", nullable: false),
 					IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
 					ServiceProviderId = table.Column<int>(type: "INTEGER", nullable: false)

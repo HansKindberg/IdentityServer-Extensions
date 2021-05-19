@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HansKindberg.IdentityServer.Data.Saml.Migrations.SqlServer
 {
     [DbContext(typeof(SqlServerSamlConfiguration))]
-    [Migration("20210323072924_SqlServerSamlConfigurationMigration")]
+    [Migration("20210519093451_SqlServerSamlConfigurationMigration")]
     partial class SqlServerSamlConfigurationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace HansKindberg.IdentityServer.Data.Saml.Migrations.SqlServer
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Rsk.Saml.IdentityProvider.Storage.EntityFramework.Entities.AssertionConsumerService", b =>
