@@ -1,18 +1,18 @@
 # IdentityServer-Extensions
 
-Additions and extensions for [IdentityServer](https://github.com/IdentityServer/IdentityServer4/).
+Additions and extensions for [IdentityServer](https://github.com/DuendeSoftware/IdentityServer/).
 
 [![NuGet](https://img.shields.io/nuget/v/HansKindberg.IdentityServer.svg?label=NuGet)](https://www.nuget.org/packages/HansKindberg.IdentityServer)
 
-Additions/extensions to be able to setup a **configurable**, **globalizable** and **localizable** implementation of [IdentityServer](https://github.com/IdentityServer/IdentityServer4/).
+Additions/extensions to be able to setup a **configurable**, **globalizable** and **localizable** implementation of [IdentityServer](https://github.com/DuendeSoftware/IdentityServer/).
 
 The idea is to setup an IdentityServer-implementation like the included [sample](/Source/Sample/Application) and configure continous-release with substitution/transforms for Web.config & AppSettings.json or to copy the sample and use it as a template. The copy can then bee changed regarding configuration, style and translations.
 
 IdentityServer:
 
-- Documentation: https://identityserver.io/
-- GitHub: https://github.com/IdentityServer/IdentityServer4/
-- NuGet: https://www.nuget.org/packages/IdentityServer4/
+- Documentation: https://docs.duendesoftware.com/
+- GitHub: https://github.com/DuendeSoftware/IdentityServer/
+- NuGet: https://www.nuget.org/packages/Duende.IdentityServer/
 
 ## 1 Features
 
@@ -209,13 +209,13 @@ The solution uses the following NuGet-packages:
 
 ### 4.3 Documentation
 
-- [IdentityServer4](https://identityserver4.readthedocs.io/)
-- [SAML 2.0 Integration with IdentityServer4](https://www.identityserver.com/articles/saml-20-integration-with-identityserver4/)
-- [IdentityServer4 Saml 2.0 Component](https://www.identityserver.com/documentation/saml2p/)
+- [IdentityServer](https://docs.duendesoftware.com/)
+- [SAML 2.0 Integration with IdentityServer](https://www.identityserver.com/articles/saml-20-integration-with-identityserver4/)
+- [IdentityServer Saml 2.0 Component](https://www.identityserver.com/documentation/saml2p/)
 
 ### 4.4 Examples
 
-- [IdentityServer4 samples](https://github.com/RockSolidKnowledge/)
+- [IdentityServer samples](https://github.com/RockSolidKnowledge/)
 
 ### 4.5 Information
 
