@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.Transferring.Extensions;
@@ -7,9 +9,10 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.Web.Authorization.Builder.Extentsions;
-using IdentityServer4.EntityFramework.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.IIS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +20,30 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Caching.Distributed.Builder.Extensions;
 using RegionOrebroLan.DataProtection.Builder.Extensions;
-using RegionOrebroLan.Web.Authentication.Builder.Extensions;
+using RegionOrebroLan.Web.Authentication;
 
 namespace HansKindberg.IdentityServer.Builder
 {
 	public static class ApplicationBuilderExtension
 	{
 		#region Methods
+
+		public static IApplicationBuilder ResolveWindowsAuthentication(this IApplicationBuilder applicationBuilder)
+		{
+			if(applicationBuilder == null)
+				throw new ArgumentNullException(nameof(applicationBuilder));
+
+			var windowsAuthenticationScheme = applicationBuilder.ApplicationServices.GetRequiredService<IAuthenticationSchemeLoader>().ListAsync().Result.FirstOrDefault(authenticationScheme => string.Equals(authenticationScheme.Name, IISServerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase));
+
+			// ReSharper disable MergeIntoNegatedPattern
+
+			if(windowsAuthenticationScheme == null || !windowsAuthenticationScheme.Enabled)
+				applicationBuilder.ApplicationServices.GetRequiredService<IAuthenticationSchemeProvider>().RemoveScheme(IISServerDefaults.AuthenticationScheme);
+
+			// ReSharper restore MergeIntoNegatedPattern
+
+			return applicationBuilder;
+		}
 
 		private static IApplicationBuilder UseDatabaseContext<T>(this IApplicationBuilder applicationBuilder) where T : DbContext
 		{

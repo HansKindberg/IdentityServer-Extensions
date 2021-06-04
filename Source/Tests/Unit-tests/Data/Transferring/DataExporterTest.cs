@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Identity;
-using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;

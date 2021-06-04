@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Interfaces;
+using Duende.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Data.Extensions;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal

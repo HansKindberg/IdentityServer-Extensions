@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Models;
 using HansKindberg.IdentityServer.Identity.Models;
 using HansKindberg.IdentityServer.Json.Serialization;
-using IdentityServer4.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Rsk.Saml.Models;

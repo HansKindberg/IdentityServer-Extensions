@@ -220,41 +220,41 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 				switch(state)
 				{
 					case EntityState.Added:
-					{
-						if(!replacementFunction(entry))
 						{
-							items.IncrementAdds(type);
-							items.IncrementAfter(type);
-						}
+							if(!replacementFunction(entry))
+							{
+								items.IncrementAdds(type);
+								items.IncrementAfter(type);
+							}
 
-						break;
-					}
+							break;
+						}
 					case EntityState.Deleted:
-					{
-						if(!replacementFunction(entry))
 						{
-							items.DecrementAfter(type);
-							items.IncrementDeletes(type);
+							if(!replacementFunction(entry))
+							{
+								items.DecrementAfter(type);
+								items.IncrementDeletes(type);
+							}
+
+							break;
 						}
-
-						break;
-					}
 					case EntityState.Modified:
-					{
-						if(!replacementFunction(entry))
-							items.IncrementUpdates(type);
+						{
+							if(!replacementFunction(entry))
+								items.IncrementUpdates(type);
 
-						break;
-					}
+							break;
+						}
 					case EntityState.Unchanged:
-					{
-						replacementFunction(entry);
-						break;
-					}
+						{
+							replacementFunction(entry);
+							break;
+						}
 					default:
-					{
-						throw new NotSupportedException($"Entity-state {state} is not supported.");
-					}
+						{
+							throw new NotSupportedException($"Entity-state {state} is not supported.");
+						}
 				}
 			}
 		}

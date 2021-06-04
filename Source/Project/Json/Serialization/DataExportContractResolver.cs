@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using IdentityServer4.Models;
+using Duende.IdentityServer.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Rsk.Saml.Models;

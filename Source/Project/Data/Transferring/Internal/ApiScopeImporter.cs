@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.Interfaces;
+using Duende.IdentityServer.EntityFramework.Mappers;
 using HansKindberg.IdentityServer.Data.Extensions;
-using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ApiScopeEntity = IdentityServer4.EntityFramework.Entities.ApiScope;
-using ApiScopeModel = IdentityServer4.Models.ApiScope;
+using ApiScopeEntity = Duende.IdentityServer.EntityFramework.Entities.ApiScope;
+using ApiScopeModel = Duende.IdentityServer.Models.ApiScope;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 {

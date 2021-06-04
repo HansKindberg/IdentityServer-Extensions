@@ -55,6 +55,9 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.SqlServer
 				name: "ClientSecrets");
 
 			migrationBuilder.DropTable(
+				name: "IdentityProviders");
+
+			migrationBuilder.DropTable(
 				name: "IdentityResourceClaims");
 
 			migrationBuilder.DropTable(
@@ -87,6 +90,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.SqlServer
 					Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
 					AllowedAccessTokenSigningAlgorithms = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
 					ShowInDiscoveryDocument = table.Column<bool>(type: "bit", nullable: false),
+					RequireResourceIndicator = table.Column<bool>(type: "bit", nullable: false),
 					Created = table.Column<DateTime>(type: "datetime2", nullable: false),
 					Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
 					LastAccessed = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -169,6 +173,23 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.SqlServer
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_Clients", x => x.Id);
+				});
+
+			migrationBuilder.CreateTable(
+				name: "IdentityProviders",
+				columns: table => new
+				{
+					Id = table.Column<int>(type: "int", nullable: false)
+						.Annotation("SqlServer:Identity", "1, 1"),
+					Scheme = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+					DisplayName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+					Enabled = table.Column<bool>(type: "bit", nullable: false),
+					Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+					Properties = table.Column<string>(type: "nvarchar(max)", nullable: true)
+				},
+				constraints: table =>
+				{
+					table.PrimaryKey("PK_IdentityProviders", x => x.Id);
 				});
 
 			migrationBuilder.CreateTable(

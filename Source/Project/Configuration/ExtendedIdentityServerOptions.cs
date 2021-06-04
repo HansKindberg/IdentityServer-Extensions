@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Duende.IdentityServer.Configuration;
+using Duende.IdentityServer.EntityFramework.Options;
 using HansKindberg.IdentityServer.Extensions;
 using IdentityModel;
-using IdentityServer4.Configuration;
-using IdentityServer4.EntityFramework.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using RegionOrebroLan.Configuration;

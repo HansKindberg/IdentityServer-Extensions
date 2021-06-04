@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IdentityServer4.EntityFramework.Interfaces;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Application.Controllers;
+using Duende.IdentityServer.Extensions;
 using HansKindberg.IdentityServer;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
@@ -15,7 +16,6 @@ using HansKindberg.IdentityServer.Web.Extensions;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
 using HansKindberg.IdentityServer.Web.Routing;
-using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Localization;
@@ -193,6 +193,7 @@ namespace Application.Models.Views.Shared.Parts
 
 		#region Methods
 
+		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
 		protected internal virtual void AddDebugNavigationNode(NavigationNode navigation)
 		{
 			if(navigation == null)
@@ -328,7 +329,6 @@ namespace Application.Models.Views.Shared.Parts
 			return this.CreateRelativeUrl(this.HttpContext.Request.Path, queryString);
 		}
 
-		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 		protected internal virtual string GetCultureNavigationTooltip()
 		{
 			var informationArgument = this.RequestCultureFeature.Provider switch

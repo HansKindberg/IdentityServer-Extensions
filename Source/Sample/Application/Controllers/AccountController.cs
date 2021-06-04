@@ -3,15 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Models.Views.Account;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Web.Extensions;
-using IdentityServer4.Events;
-using IdentityServer4.Extensions;
-using IdentityServer4.Models;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +79,7 @@ namespace Application.Controllers
 
 				if(authenticationScheme != null)
 				{
-					model.FormsAuthenticationEnabled = model.FormsAuthenticationEnabled && string.Equals(authenticationScheme.Name, IdentityServer4.IdentityServerConstants.LocalIdentityProvider, StringComparison.OrdinalIgnoreCase);
+					model.FormsAuthenticationEnabled = model.FormsAuthenticationEnabled && string.Equals(authenticationScheme.Name, Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider, StringComparison.OrdinalIgnoreCase);
 
 					if(!model.FormsAuthenticationEnabled)
 						model.AuthenticationSchemes.Add(authenticationScheme);
@@ -202,6 +202,7 @@ namespace Application.Controllers
 		[FeatureGate(Feature.FormsAuthentication)]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated in another method.")]
 		public virtual async Task<IActionResult> SignIn(SignInForm form)
 		{
 			var authorizationRequest = await this.ResolveAndValidateAsync(form);
@@ -278,7 +279,7 @@ namespace Application.Controllers
 			{
 				var authenticationSchemeName = this.User.Claims.FindFirstIdentityProviderClaim()?.Value;
 
-				if(authenticationSchemeName != null && !string.Equals(authenticationSchemeName, IdentityServer4.IdentityServerConstants.LocalIdentityProvider, StringComparison.OrdinalIgnoreCase))
+				if(authenticationSchemeName != null && !string.Equals(authenticationSchemeName, Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider, StringComparison.OrdinalIgnoreCase))
 				{
 					var authenticationScheme = await this.Facade.AuthenticationSchemeLoader.GetAsync(authenticationSchemeName);
 

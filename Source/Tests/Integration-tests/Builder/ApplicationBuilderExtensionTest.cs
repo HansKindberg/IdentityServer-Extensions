@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using HansKindberg.IdentityServer.Builder;
 using HansKindberg.IdentityServer.Configuration;
-using IdentityServer4.EntityFramework.Interfaces;
 using IntegrationTests.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

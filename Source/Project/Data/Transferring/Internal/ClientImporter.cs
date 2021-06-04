@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.Interfaces;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Data.Extensions;
-using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.EntityFramework.Mappers;
-using IdentityServer4.Validation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ClientEntity = IdentityServer4.EntityFramework.Entities.Client;
-using ClientModel = IdentityServer4.Models.Client;
+using ClientEntity = Duende.IdentityServer.EntityFramework.Entities.Client;
+using ClientModel = Duende.IdentityServer.Models.Client;
 
 namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 {

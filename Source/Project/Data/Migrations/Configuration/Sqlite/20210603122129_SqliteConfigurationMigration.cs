@@ -55,6 +55,9 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				name: "ClientSecrets");
 
 			migrationBuilder.DropTable(
+				name: "IdentityProviders");
+
+			migrationBuilder.DropTable(
 				name: "IdentityResourceClaims");
 
 			migrationBuilder.DropTable(
@@ -87,6 +90,7 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 					Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true, collation: "NOCASE"),
 					AllowedAccessTokenSigningAlgorithms = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true, collation: "NOCASE"),
 					ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false),
+					RequireResourceIndicator = table.Column<bool>(type: "INTEGER", nullable: false),
 					Created = table.Column<DateTime>(type: "TEXT", nullable: false),
 					Updated = table.Column<DateTime>(type: "TEXT", nullable: true),
 					LastAccessed = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -169,6 +173,23 @@ namespace HansKindberg.IdentityServer.Data.Migrations.Configuration.Sqlite
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_Clients", x => x.Id);
+				});
+
+			migrationBuilder.CreateTable(
+				name: "IdentityProviders",
+				columns: table => new
+				{
+					Id = table.Column<int>(type: "INTEGER", nullable: false)
+						.Annotation("Sqlite:Autoincrement", true),
+					Scheme = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
+					DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true, collation: "NOCASE"),
+					Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
+					Type = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false, collation: "NOCASE"),
+					Properties = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
+				},
+				constraints: table =>
+				{
+					table.PrimaryKey("PK_IdentityProviders", x => x.Id);
 				});
 
 			migrationBuilder.CreateTable(

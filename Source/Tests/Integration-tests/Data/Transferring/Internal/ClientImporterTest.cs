@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Interfaces;
+using Duende.IdentityServer.Stores;
+using Duende.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.Data.Extensions;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.Transferring.Internal;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.Stores;
-using IdentityServer4.Validation;
 using IntegrationTests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClientModel = IdentityServer4.Models.Client;
-using SecretModel = IdentityServer4.Models.Secret;
+using ClientModel = Duende.IdentityServer.Models.Client;
+using SecretModel = Duende.IdentityServer.Models.Secret;
 
 namespace IntegrationTests.Data.Transferring.Internal
 {

@@ -1,7 +1,7 @@
 using System;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Options;
 using HansKindberg.IdentityServer.EntityFramework.Extensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 
 namespace HansKindberg.IdentityServer.Data

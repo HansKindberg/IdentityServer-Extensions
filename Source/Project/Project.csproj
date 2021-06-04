@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup Label="Initial">
 		<Company>Hans Kindberg - open source</Company>
-		<VersionPrefix>0.0.15</VersionPrefix>
+		<VersionPrefix>5.2.1</VersionPrefix>
 		<VersionPrereleaseName>alpha</VersionPrereleaseName>
 	</PropertyGroup>
 	<PropertyGroup Label="Assembly">
@@ -11,7 +11,7 @@
 		<Description>IdentityServer additions and extensions.</Description>
 		<FileVersion>$(VersionPrefix).0</FileVersion>
 		<RootNamespace>$(AssemblyName)</RootNamespace>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
 		<Version>$(VersionPrefix)</Version>
 		<Version Condition="$(VersionPrereleaseName) != ''">$(Version)-$(VersionPrereleaseName)</Version>
 	</PropertyGroup>
@@ -25,10 +25,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.0-alpha" />
-		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
-		<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
+		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.1" />
+		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.6">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -41,10 +41,10 @@
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
 		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.1-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.1.2" />
-		<PackageReference Include="Rsk.Saml.IdentityServer4.EntityFramework" Version="3.1.0" />
+		<PackageReference Include="Rsk.Saml.DuendeIdentityServer.EntityFramework" Version="5.0.0" />
 		<PackageReference Include="Rsk.WsFederation" Version="4.0.0" />
+		<PackageReference Include="Rsk.WsFederation.DuendeIdentityServer" Version="5.0.0" />
 		<PackageReference Include="Rsk.WsFederation.EntityFramework" Version="4.0.0" />
-		<PackageReference Include="Rsk.WsFederation.IdentityServer4" Version="4.1.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.0.1" />

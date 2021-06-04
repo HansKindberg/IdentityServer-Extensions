@@ -1,8 +1,8 @@
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.Web.Authorization;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;

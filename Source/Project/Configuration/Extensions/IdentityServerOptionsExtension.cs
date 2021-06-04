@@ -1,6 +1,6 @@
 using System;
+using Duende.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Web;
-using IdentityServer4.Configuration;
 
 namespace HansKindberg.IdentityServer.Configuration.Extensions
 {

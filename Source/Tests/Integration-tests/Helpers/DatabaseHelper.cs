@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using HansKindberg.IdentityServer.Identity.Data;
-using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

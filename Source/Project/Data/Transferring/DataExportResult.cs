@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Duende.IdentityServer.Models;
 using HansKindberg.IdentityServer.Identity.Models;
 using HansKindberg.IdentityServer.Json.Serialization;
-using IdentityServer4.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Rsk.Saml.Models;

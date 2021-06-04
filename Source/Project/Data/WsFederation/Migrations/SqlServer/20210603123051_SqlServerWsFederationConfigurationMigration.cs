@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
+namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.SqlServer
 {
-	public partial class SqliteWsFederationConfigurationMigration : Migration
+	public partial class SqlServerWsFederationConfigurationMigration : Migration
 	{
 		#region Methods
 
@@ -21,13 +21,13 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 				name: "RelyingParties",
 				columns: table => new
 				{
-					Id = table.Column<int>(type: "INTEGER", nullable: false)
-						.Annotation("Sqlite:Autoincrement", true),
-					Realm = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false, collation: "NOCASE"),
-					TokenType = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
-					SignatureAlgorithm = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
-					DigestAlgorithm = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE"),
-					SamlNameIdentifierFormat = table.Column<string>(type: "TEXT", nullable: true, collation: "NOCASE")
+					Id = table.Column<int>(type: "int", nullable: false)
+						.Annotation("SqlServer:Identity", "1, 1"),
+					Realm = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+					TokenType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+					SignatureAlgorithm = table.Column<string>(type: "nvarchar(max)", nullable: true),
+					DigestAlgorithm = table.Column<string>(type: "nvarchar(max)", nullable: true),
+					SamlNameIdentifierFormat = table.Column<string>(type: "nvarchar(max)", nullable: true)
 				},
 				constraints: table =>
 				{
@@ -38,11 +38,11 @@ namespace HansKindberg.IdentityServer.Data.WsFederation.Migrations.Sqlite
 				name: "RelyingPartyClaimMappings",
 				columns: table => new
 				{
-					Id = table.Column<int>(type: "INTEGER", nullable: false)
-						.Annotation("Sqlite:Autoincrement", true),
-					OriginalClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
-					NewClaimType = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false, collation: "NOCASE"),
-					RelyingPartyId = table.Column<int>(type: "INTEGER", nullable: false)
+					Id = table.Column<int>(type: "int", nullable: false)
+						.Annotation("SqlServer:Identity", "1, 1"),
+					OriginalClaimType = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+					NewClaimType = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+					RelyingPartyId = table.Column<int>(type: "int", nullable: false)
 				},
 				constraints: table =>
 				{
