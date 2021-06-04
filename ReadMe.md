@@ -4,6 +4,9 @@ Additions and extensions for [IdentityServer](https://github.com/DuendeSoftware/
 
 [![NuGet](https://img.shields.io/nuget/v/HansKindberg.IdentityServer.svg?label=NuGet)](https://www.nuget.org/packages/HansKindberg.IdentityServer)
 
+**License required for production**
+- https://duendesoftware.com/products/identityserver#pricing
+
 Additions/extensions to be able to setup a **configurable**, **globalizable** and **localizable** implementation of [IdentityServer](https://github.com/DuendeSoftware/IdentityServer/).
 
 The idea is to setup an IdentityServer-implementation like the included [sample](/Source/Sample/Application) and configure continous-release with substitution/transforms for Web.config & AppSettings.json or to copy the sample and use it as a template. The copy can then bee changed regarding configuration, style and translations.
