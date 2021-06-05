@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.EntityFramework.Interfaces;
 using Duende.IdentityServer.EntityFramework.Options;
 using HansKindberg.IdentityServer.Builder;
@@ -139,6 +140,62 @@ namespace IntegrationTests.DependencyInjection.Extensions
 					// ReSharper restore PossibleNullReferenceException
 				}
 			}, "ConfigurationStore");
+		}
+
+		[TestMethod]
+		public async Task AddIdentityServer_KeyManagement_Test()
+		{
+			await Task.CompletedTask;
+
+			using(var context = new Context(databaseProvider: DatabaseProvider.Sqlite))
+			{
+				context.ApplicationBuilder.UseIdentityServer();
+
+				using(var serviceScope = context.ServiceProvider.CreateScope())
+				{
+					var extendedIdentityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>();
+					Assert.AreEqual(0, extendedIdentityServerOptions.Value.KeyManagement.SigningAlgorithms.Count());
+
+					var identityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>();
+					Assert.AreEqual(0, identityServerOptions.Value.KeyManagement.SigningAlgorithms.Count());
+				}
+			}
+
+			var signingAlgorithmsPath = $"{ConfigurationKeys.IdentityServerPath}:{nameof(IdentityServerOptions.KeyManagement)}:{nameof(IdentityServerOptions.KeyManagement.SigningAlgorithms)}";
+			var additionalConfiguration = new Dictionary<string, string>
+			{
+				{$"{signingAlgorithmsPath}:0:Name", "RS256"},
+				{$"{signingAlgorithmsPath}:1:Name", "Test"},
+				{$"{signingAlgorithmsPath}:1:UseX509Certificate", "true"},
+			};
+
+			using(var context = new Context(additionalConfiguration: additionalConfiguration, databaseProvider: DatabaseProvider.Sqlite))
+			{
+				context.ApplicationBuilder.UseIdentityServer();
+
+				using(var serviceScope = context.ServiceProvider.CreateScope())
+				{
+					var extendedIdentityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>();
+					var signingAlgorithms = extendedIdentityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
+					Assert.AreEqual(2, signingAlgorithms.Length);
+					var signingAlgorithm = signingAlgorithms.ElementAt(0);
+					Assert.AreEqual("RS256", signingAlgorithm.Name);
+					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					signingAlgorithm = signingAlgorithms.ElementAt(1);
+					Assert.AreEqual("Test", signingAlgorithm.Name);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
+
+					var identityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>();
+					signingAlgorithms = identityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
+					Assert.AreEqual(2, signingAlgorithms.Length);
+					signingAlgorithm = signingAlgorithms.ElementAt(0);
+					Assert.AreEqual("RS256", signingAlgorithm.Name);
+					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					signingAlgorithm = signingAlgorithms.ElementAt(1);
+					Assert.AreEqual("Test", signingAlgorithm.Name);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
+				}
+			}
 		}
 
 		[TestMethod]

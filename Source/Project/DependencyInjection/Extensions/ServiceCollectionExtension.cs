@@ -495,12 +495,14 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.Configure<ExtendedIdentityServerOptions>(options =>
 			{
 				options.SetDefaults();
+				options.BindKeyManagementSigningAlgorithms(identityServerSection);
 				identityServerSection.Bind(options);
 			});
 
 			services.Configure<IdentityServerOptions>(options =>
 			{
 				options.SetDefaults();
+				options.BindKeyManagementSigningAlgorithms(identityServerSection);
 				identityServerSection.Bind(options);
 			});
 
