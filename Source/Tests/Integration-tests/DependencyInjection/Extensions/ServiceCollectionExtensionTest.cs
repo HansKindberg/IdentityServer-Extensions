@@ -154,19 +154,27 @@ namespace IntegrationTests.DependencyInjection.Extensions
 				using(var serviceScope = context.ServiceProvider.CreateScope())
 				{
 					var extendedIdentityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>();
-					Assert.AreEqual(0, extendedIdentityServerOptions.Value.KeyManagement.SigningAlgorithms.Count());
+					var signingAlgorithms = extendedIdentityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
+					Assert.AreEqual(1, signingAlgorithms.Length);
+					var signingAlgorithm = signingAlgorithms.ElementAt(0);
+					Assert.AreEqual("RS256", signingAlgorithm.Name);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 
 					var identityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>();
-					Assert.AreEqual(0, identityServerOptions.Value.KeyManagement.SigningAlgorithms.Count());
+					signingAlgorithms = identityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
+					Assert.AreEqual(1, signingAlgorithms.Length);
+					signingAlgorithm = signingAlgorithms.ElementAt(0);
+					Assert.AreEqual("RS256", signingAlgorithm.Name);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 				}
 			}
 
 			var signingAlgorithmsPath = $"{ConfigurationKeys.IdentityServerPath}:{nameof(IdentityServerOptions.KeyManagement)}:{nameof(IdentityServerOptions.KeyManagement.SigningAlgorithms)}";
 			var additionalConfiguration = new Dictionary<string, string>
 			{
-				{$"{signingAlgorithmsPath}:0:Name", "RS256"},
-				{$"{signingAlgorithmsPath}:1:Name", "Test"},
-				{$"{signingAlgorithmsPath}:1:UseX509Certificate", "true"},
+				{$"{signingAlgorithmsPath}:1:Name", "Test-1"},
+				{$"{signingAlgorithmsPath}:2:Name", "Test-2"},
+				{$"{signingAlgorithmsPath}:2:UseX509Certificate", "true"},
 			};
 
 			using(var context = new Context(additionalConfiguration: additionalConfiguration, databaseProvider: DatabaseProvider.Sqlite))
@@ -177,22 +185,28 @@ namespace IntegrationTests.DependencyInjection.Extensions
 				{
 					var extendedIdentityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>();
 					var signingAlgorithms = extendedIdentityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
-					Assert.AreEqual(2, signingAlgorithms.Length);
+					Assert.AreEqual(3, signingAlgorithms.Length);
 					var signingAlgorithm = signingAlgorithms.ElementAt(0);
 					Assert.AreEqual("RS256", signingAlgorithm.Name);
-					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 					signingAlgorithm = signingAlgorithms.ElementAt(1);
-					Assert.AreEqual("Test", signingAlgorithm.Name);
+					Assert.AreEqual("Test-1", signingAlgorithm.Name);
+					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					signingAlgorithm = signingAlgorithms.ElementAt(2);
+					Assert.AreEqual("Test-2", signingAlgorithm.Name);
 					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 
 					var identityServerOptions = serviceScope.ServiceProvider.GetRequiredService<IOptions<IdentityServerOptions>>();
 					signingAlgorithms = identityServerOptions.Value.KeyManagement.SigningAlgorithms.ToArray();
-					Assert.AreEqual(2, signingAlgorithms.Length);
+					Assert.AreEqual(3, signingAlgorithms.Length);
 					signingAlgorithm = signingAlgorithms.ElementAt(0);
 					Assert.AreEqual("RS256", signingAlgorithm.Name);
-					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 					signingAlgorithm = signingAlgorithms.ElementAt(1);
-					Assert.AreEqual("Test", signingAlgorithm.Name);
+					Assert.AreEqual("Test-1", signingAlgorithm.Name);
+					Assert.IsFalse(signingAlgorithm.UseX509Certificate);
+					signingAlgorithm = signingAlgorithms.ElementAt(2);
+					Assert.AreEqual("Test-2", signingAlgorithm.Name);
 					Assert.IsTrue(signingAlgorithm.UseX509Certificate);
 				}
 			}
