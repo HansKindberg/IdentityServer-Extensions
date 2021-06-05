@@ -12,7 +12,7 @@ namespace IntegrationTests.Helpers.Configuration.Extensions
 			if(configurationBuilder == null)
 				throw new ArgumentNullException(nameof(configurationBuilder));
 
-			return configurationBuilder.AddJsonFileInternal("AppSettings.json");
+			return configurationBuilder.AddJsonFileInternal("appsettings.json");
 		}
 
 		public static IConfigurationBuilder AddJsonFileForEnvironment(this IConfigurationBuilder configurationBuilder, string environmentName)
@@ -20,7 +20,7 @@ namespace IntegrationTests.Helpers.Configuration.Extensions
 			if(configurationBuilder == null)
 				throw new ArgumentNullException(nameof(configurationBuilder));
 
-			return configurationBuilder.AddJsonFileInternal($"AppSettings.{environmentName}.json");
+			return configurationBuilder.AddJsonFileInternal($"appsettings.{environmentName}.json");
 		}
 
 		private static IConfigurationBuilder AddJsonFileInternal(this IConfigurationBuilder configurationBuilder, string path)

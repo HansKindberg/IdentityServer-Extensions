@@ -21,7 +21,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		public virtual AccountOptions Account { get; set; } = new AccountOptions();
 
 		/// <summary>
-		/// The key can not contain colon, ":". Any colon should be url-encoded to "%3a". This is because keys can not contain colon, ":", in AppSettings.json.
+		/// The key can not contain colon, ":". Any colon should be url-encoded to "%3a". This is because keys can not contain colon, ":", in appsettings.json.
 		/// </summary>
 		public virtual IDictionary<string, string> ClaimTypeMap { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{

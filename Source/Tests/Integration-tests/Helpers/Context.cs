@@ -114,8 +114,8 @@ namespace IntegrationTests.Helpers
 		private IConfigurationBuilder CreateConfigurationBuilder()
 		{
 			return new ConfigurationBuilder()
-				.AddJsonFile("AppSettings.json", false, true)
-				.AddJsonFile($"AppSettings.{this._environmentName}.json", true, true)
+				.AddJsonFile("appsettings.json", false, true)
+				.AddJsonFile($"appsettings.{this._environmentName}.json", true, true)
 				.AddJsonFile(this._additionalJsonConfigurationRelativeFilePath ?? "e3398c8f-496f-4c71-b2a0-f7ffed03644a.json", true, false)
 				.AddInMemoryCollection(this.CreateDatabaseConfiguration())
 				.AddInMemoryCollection(FeatureConfigurationHelper.CreateConfiguration(this._features))
