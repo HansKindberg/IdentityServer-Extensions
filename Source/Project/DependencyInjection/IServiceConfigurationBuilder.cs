@@ -6,6 +6,7 @@ using Microsoft.FeatureManagement;
 using RegionOrebroLan;
 using RegionOrebroLan.DependencyInjection;
 using RegionOrebroLan.Security.Cryptography;
+using Serilog;
 
 namespace HansKindberg.IdentityServer.DependencyInjection
 {
@@ -21,6 +22,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection
 		IFeatureManager FeatureManager { get; }
 		IHostEnvironment HostEnvironment { get; }
 		IInstanceFactory InstanceFactory { get; }
+		ILogger Logger { get; }
 
 		#endregion
 	}
