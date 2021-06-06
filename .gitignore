@@ -369,7 +369,6 @@ Source/.Global/Signing/*
 !Source/.Global/Signing/StrongName.Development.snk
 
 Source/Sample/Application/Data/*
-!Source/Sample/Application/Data/Development-Signing-Certificate.pfx
 !Source/Sample/Application/Data/Development-Key-Protection-Certificate.pfx
 !Source/Sample/Application/Data/ReadMe.md
 !Source/Sample/Application/Data/Test-IdentityServer-Root-CA.cer
@@ -388,6 +387,5 @@ Source/Sample/Application/yarn.lock
 !Source/Tests/Integration-tests/Data/Transferring/Internal/Saml/Resources/SamlConfigurationImporter/*.pfx
 
 Source/Tests/Integration-tests/Test-data/*
-!Source/Tests/Integration-tests/Test-data/Development-Signing-Certificate.pfx
 !Source/Tests/Integration-tests/Test-data/Development-Key-Protection-Certificate.pfx
 !Source/Tests/Integration-tests/Test-data/ReadMe.md

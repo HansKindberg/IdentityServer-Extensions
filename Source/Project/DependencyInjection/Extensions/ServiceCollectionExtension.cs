@@ -259,13 +259,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 					options.ConfigureDbContext = optionsBuilder => optionsBuilderFunction(optionsBuilder);
 
 					serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.OperationalStore)}").Bind(options);
-				})
-				.AddSigningCredential(serviceConfigurationBuilder.GetCertificate(identityServerOptions.SigningCertificate));
-
-			foreach(var validationCertificate in identityServerOptions.ValidationCertificates)
-			{
-				identityServerBuilder.AddValidationKey(serviceConfigurationBuilder.GetCertificate(validationCertificate));
-			}
+				});
 
 			identityServerBuilder.AddIdentityServerPlugins<TSaml, TWsFederation>(optionsBuilderFunction, serviceConfigurationBuilder);
 
