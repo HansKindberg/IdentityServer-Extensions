@@ -1,0 +1,21 @@
+{
+	"IdentityProviders": [
+		{
+			"Properties": {
+				"First": "First-value",
+				"Second": "Second-value",
+				"Third": "Third-value"
+			},
+			"Scheme": "Scheme-1"
+		},
+		{
+			"Enabled": false,
+			"Properties": {
+				"First": "First-value",
+				"Second": "Second-value",
+				"Third": "Third-value"
+			},
+			"Scheme": "Scheme-2"
+		}
+	]
+}

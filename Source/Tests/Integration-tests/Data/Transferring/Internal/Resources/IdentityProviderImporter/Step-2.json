@@ -1,0 +1,8 @@
+{
+	"IdentityProviders": [
+		{
+			"DisplayName": "Scheme-display-name-1",
+			"Scheme": "Scheme-1"
+		}
+	]
+}

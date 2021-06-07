@@ -282,6 +282,7 @@ namespace Application.Controllers
 			model.ExistingData.Add(typeof(ClientRedirectUri).FriendlyName(), await this.ConfigurationDatabaseContext.ClientRedirectUris().CountAsync());
 			model.ExistingData.Add(typeof(ClientScope).FriendlyName(), await this.ConfigurationDatabaseContext.ClientScopes().CountAsync());
 			model.ExistingData.Add(typeof(ClientSecret).FriendlyName(), await this.ConfigurationDatabaseContext.ClientSecrets().CountAsync());
+			model.ExistingData.Add(typeof(IdentityProvider).FriendlyName(), await this.ConfigurationDatabaseContext.IdentityProviders.CountAsync());
 			model.ExistingData.Add(typeof(IdentityResource).FriendlyName(), await this.ConfigurationDatabaseContext.IdentityResources.CountAsync());
 			model.ExistingData.Add(typeof(IdentityResourceClaim).FriendlyName(), await this.ConfigurationDatabaseContext.IdentityResourceClaims().CountAsync());
 			model.ExistingData.Add(typeof(IdentityResourceProperty).FriendlyName(), await this.ConfigurationDatabaseContext.IdentityResourceProperties().CountAsync());

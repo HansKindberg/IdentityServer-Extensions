@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Rsk.Saml.Models;
 using Rsk.WsFederation.Models;
+using IdentityProvider = Duende.IdentityServer.Models.IdentityProvider;
 
 namespace HansKindberg.IdentityServer.Data.Transferring
 {
@@ -26,6 +27,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 		public virtual IEnumerable<ApiScope> ApiScopes => this.Instances.TryGetValue(typeof(ApiScope), out var apiScopes) ? apiScopes.OfType<ApiScope>() : Enumerable.Empty<ApiScope>();
 		public virtual IEnumerable<Client> Clients => this.Instances.TryGetValue(typeof(Client), out var clients) ? clients.OfType<Client>() : Enumerable.Empty<Client>();
 		protected internal virtual IContractResolver DefaultJsonContractResolver => _defaultJsonContractResolver;
+		public virtual IEnumerable<IdentityProvider> IdentityProviders => this.Instances.TryGetValue(typeof(IdentityProvider), out var identityProviders) ? identityProviders.OfType<IdentityProvider>() : Enumerable.Empty<IdentityProvider>();
 		public virtual IEnumerable<IdentityResource> IdentityResources => this.Instances.TryGetValue(typeof(IdentityResource), out var identityResources) ? identityResources.OfType<IdentityResource>() : Enumerable.Empty<IdentityResource>();
 
 		[JsonIgnore]

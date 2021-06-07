@@ -30,6 +30,7 @@ namespace IntegrationTests.Data.Transferring
 			Assert.AreEqual(6, await configurationDatabaseContext.ApiScopes.CountAsync());
 			Assert.AreEqual(2, await configurationDatabaseContext.Clients.CountAsync());
 			Assert.AreEqual(3, await configurationDatabaseContext.ClientCorsOrigins.CountAsync());
+			Assert.AreEqual(0, await configurationDatabaseContext.IdentityProviders.CountAsync());
 			Assert.AreEqual(2, await configurationDatabaseContext.IdentityResources.CountAsync());
 		}
 
@@ -42,6 +43,7 @@ namespace IntegrationTests.Data.Transferring
 			Assert.IsFalse(await configurationDatabaseContext.ApiScopes.AnyAsync());
 			Assert.IsFalse(await configurationDatabaseContext.Clients.AnyAsync());
 			Assert.IsFalse(await configurationDatabaseContext.ClientCorsOrigins.AnyAsync());
+			Assert.IsFalse(await configurationDatabaseContext.IdentityProviders.AnyAsync());
 			Assert.IsFalse(await configurationDatabaseContext.IdentityResources.AnyAsync());
 		}
 

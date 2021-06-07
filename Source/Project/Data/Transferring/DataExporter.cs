@@ -37,6 +37,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 			typeof(ApiResource),
 			typeof(ApiScope),
 			typeof(Client),
+			typeof(IdentityProvider),
 			typeof(IdentityResource)
 		};
 
@@ -191,6 +192,16 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 			result.Instances.Add(typeof(Client), clients.Select(client => client.ToModel()));
 		}
 
+		protected internal virtual async Task ExportIdentityProvidersAsync(IDataExportResult result)
+		{
+			if(result == null)
+				throw new ArgumentNullException(nameof(result));
+
+			await Task.CompletedTask;
+
+			result.Instances.Add(typeof(IdentityProvider), this.ConfigurationDatabaseContext.IdentityProviders.Select(identityProvider => identityProvider.ToModel()));
+		}
+
 		protected internal virtual async Task ExportIdentityResourcesAsync(IDataExportResult result)
 		{
 			if(result == null)
@@ -238,6 +249,9 @@ namespace HansKindberg.IdentityServer.Data.Transferring
 
 			if(types.Contains(typeof(Client)))
 				await this.ExportClientsAsync(result);
+
+			if(types.Contains(typeof(IdentityProvider)))
+				await this.ExportIdentityProvidersAsync(result);
 
 			if(types.Contains(typeof(IdentityResource)))
 				await this.ExportIdentityResourcesAsync(result);

@@ -1,0 +1,9 @@
+{
+	"IdentityProviders": [
+		{
+			"Enabled": false,
+			"Scheme": "Scheme-1",
+			"Type": "oidc"
+		}
+	]
+}

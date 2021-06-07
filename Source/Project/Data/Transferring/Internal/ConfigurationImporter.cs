@@ -41,6 +41,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 				new ApiResourceImporter(this.DatabaseContext, this.LoggerFactory),
 				new ApiScopeImporter(this.DatabaseContext, this.LoggerFactory),
 				new ClientImporter(this.ClientValidator, this.DatabaseContext, this.LoggerFactory),
+				new IdentityProviderImporter(this.DatabaseContext, this.LoggerFactory),
 				new IdentityResourceImporter(this.DatabaseContext, this.LoggerFactory)
 			};
 

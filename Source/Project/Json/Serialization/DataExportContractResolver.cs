@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Rsk.Saml.Models;
 using Rsk.WsFederation.Models;
+using IdentityProvider = Duende.IdentityServer.Models.IdentityProvider;
 
 namespace HansKindberg.IdentityServer.Json.Serialization
 {
@@ -43,6 +44,7 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 							this.PopulateDefaultValues<ApiScope>(defaultValues);
 							this.PopulateDefaultValues<Client>(defaultValues);
 							this.PopulateDefaultValues<ClientClaim>(defaultValues);
+							this.PopulateDefaultValues(defaultValues, new IdentityProvider(string.Empty) {Type = null});
 							this.PopulateDefaultValues<IdentityResource>(defaultValues);
 							this.PopulateDefaultValues<RelyingParty>(defaultValues);
 							this.PopulateDefaultValues<Secret>(defaultValues);
@@ -91,10 +93,17 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 
 		protected internal virtual void PopulateDefaultValues<T>(IDictionary<Tuple<Type, string>, object> defaultValues) where T : new()
 		{
+			this.PopulateDefaultValues(defaultValues, new T());
+		}
+
+		protected internal virtual void PopulateDefaultValues(IDictionary<Tuple<Type, string>, object> defaultValues, object instance)
+		{
 			if(defaultValues == null)
 				throw new ArgumentNullException(nameof(defaultValues));
 
-			var instance = new T();
+			if(instance == null)
+				throw new ArgumentNullException(nameof(instance));
+
 			var type = instance.GetType();
 
 			foreach(var property in type.GetProperties())
