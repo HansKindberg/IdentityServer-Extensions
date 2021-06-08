@@ -140,6 +140,10 @@
 						<heading>Test-certifikat (tumavtryck)</heading>
 						<information>Ett test-certifikat som valideras per tumavtryck.</information>
 					</Certificate-By-Thumbprint-Test>
+					<DuendeIdentityServerDemo>
+						<heading>Duende IdentityServer demo</heading>
+						<information>https://demo.duendesoftware.com/</information>
+					</DuendeIdentityServerDemo>
 					<Google>
 						<heading>Google</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
@@ -157,10 +161,10 @@
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</GrandIdBankIdSameDevice>
 					<heading>Logga in</heading>
-					<IdentityServerDemo>
-						<heading>IdentityServer demo</heading>
+					<IdentityServer4Demo>
+						<heading>IdentityServer4 demo</heading>
 						<information>https://demo.identityserver.io/</information>
-					</IdentityServerDemo>
+					</IdentityServer4Demo>
 					<information>Välj något av följande inloggnings-sätt.</information>
 					<Microsoft>
 						<heading>Microsoft</heading>
