@@ -112,6 +112,7 @@
 					<heading lookup="common.your-identity" />
 					<issuer>Issuer</issuer>
 					<original-issuer>Original issuer</original-issuer>
+					<properties>Properties</properties>
 					<user-name>User-name</user-name>
 					<value>Value</value>
 				</index>

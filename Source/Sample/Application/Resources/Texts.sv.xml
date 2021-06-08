@@ -112,6 +112,7 @@
 					<heading lookup="common.your-identity" />
 					<issuer>Utfärdare</issuer>
 					<original-issuer>Ursprunglig utfärdare</original-issuer>
+					<properties>Egenskaper</properties>
 					<user-name>Användar-namn</user-name>
 					<value>Värde</value>
 				</index>
