@@ -8,13 +8,6 @@
 		"windowsAuthentication": true
 	},
 	"profiles": {
-		"Docker": {
-			"commandName": "Docker",
-			"launchBrowser": true,
-			"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-			"publishAllPorts": true,
-			"useSSL": true
-		},
 		"IIS Express": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
@@ -65,7 +58,7 @@
 				"ApiScopes__6__Description": "A transaction",
 				"ApiScopes__6__DisplayName": "Transaction",
 				"ApiScopes__6__Name": "transaction",
-				"AppSettings_json": "{\"Authentication\": {\"CommonOptions\": {\"Default\": {\"ForwardSignOut\": \"idsrv\"}},\"Cookies\": {\"TicketStore\": {\"Options\": {\"CookieAuthenticationSchemes\": [\"Identity.Application\"]},\"Type\": \"RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Configuration.DistributedCacheOptions, RegionOrebroLan.Web.Authentication.Cookies\"}},\"SchemeRegistrations\": {\"Certificate\": {\"Interactive\": false,\"Options\": {\"Validator\": {\"AllowedCertificateKinds\": \"All\",\"Chained\": {\"RevocationMode\": \"NoCheck\"},\"SelfSigned\": {\"RevocationMode\": \"NoCheck\"}}},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.CertificateRegistrator, RegionOrebroLan.Web.Authentication\"},\"Google\": {\"CommonOptionsPaths\": [\"Authentication:CommonOptions:Default\"],\"DisplayName\": \"Google\",\"Icon\": \"google\",\"Options\": {\"Authority\": \"https://accounts.google.com/\",\"CallbackPath\": \"/signin-google\",\"ClientId\": \"260174815090-v4u9lb79btv3pbss9tk9qupvqq0voo7s.apps.googleusercontent.com\",\"Scope\": [\"email\"]},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.OpenIdConnectRegistrator, RegionOrebroLan.Web.Authentication\"},\"IdentityServerDemo\": {\"Icon\": \"identity-server\",\"Options\": {\"Authority\": \"https://demo.identityserver.io/\",\"CallbackPath\": \"/signin-idsrv\",\"ClientId\": \"login\",\"RemoteSignOutPath\": \"/signout-idsrv\",\"ResponseType\": \"id_token\",\"SaveTokens\": true,\"SignedOutCallbackPath\": \"/signout-callback-idsrv\",\"TokenValidationParameters\": {\"NameClaimType\": \"name\",\"RoleClaimType\": \"role\"}},\"SignOutSupport\": true,\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.OpenIdConnectRegistrator, RegionOrebroLan.Web.Authentication\"},\"Microsoft\": {\"CommonOptionsPaths\": [\"Authentication:CommonOptions:Default\"],\"Options\": {\"ClientId\": \"2dadf463-b32c-4602-9866-d5a08b2eb94f\",\"ClientSecret\": \"/O9Y3xO=@4bflHfh@Vd68tlpscYR]ZWL\"},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.MicrosoftAccountRegistrator, RegionOrebroLan.Web.Authentication\"},\"SithsCertificate\": {\"DisplayName\": \"SITHS-certificate\",\"Icon\": \"net-id\",\"Options\": {\"Validator\": {\"AllowedCertificateKinds\": \"Chained\",\"Chained\": {\"Matching\": {\"Criteria\": [{\"PropertyName\": \"Issuer\",\"ValuePattern\": \"CN=SITHS e-id*\"}]},\"RevocationMode\": \"NoCheck\",\"VerificationFlags\": \"AllowUnknownCertificateAuthority\"}}},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.CertificateRegistrator, RegionOrebroLan.Web.Authentication\"}}},\"FeatureManagement\": {\"CertificateForwarding\": true,\"DataDirectory\": true,\"DataSeeding\": true,\"DataTransfer\": true,\"Debug\": true,\"Development\": true,\"Diagnostics\": true,\"FormsAuthentication\": true,\"ForwardedHeaders\": true,\"Home\": true,\"SecurityHeaders\": true}}",
+				"AppSettings_json": "{\"Authentication\": {\"CommonOptions\": {\"Default\": {\"ForwardSignOut\": \"idsrv\"}},\"Cookies\": {\"TicketStore\": {\"Options\": {\"CookieAuthenticationSchemes\": [\"Identity.Application\"]},\"Type\": \"RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Configuration.DistributedCacheOptions, RegionOrebroLan.Web.Authentication.Cookies\"}},\"SchemeRegistrations\": {\"Certificate\": {\"Interactive\": false,\"Options\": {\"Validator\": {\"AllowedCertificateKinds\": \"All\",\"Chained\": {\"RevocationMode\": \"NoCheck\"},\"SelfSigned\": {\"RevocationMode\": \"NoCheck\"}}},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.CertificateRegistrator, RegionOrebroLan.Web.Authentication\"},\"Google\": {\"CommonOptionsPaths\": [\"Authentication:CommonOptions:Default\"],\"DisplayName\": \"Google\",\"Icon\": \"google\",\"Options\": {\"Authority\": \"https://accounts.google.com/\",\"CallbackPath\": \"/signin-google\",\"ClientId\": \"260174815090-v4u9lb79btv3pbss9tk9qupvqq0voo7s.apps.googleusercontent.com\",\"Scope\": [\"email\"]},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.OpenIdConnectRegistrator, RegionOrebroLan.Web.Authentication\"},\"IdentityServerDemo\": {\"Icon\": \"identity-server\",\"Options\": {\"Authority\": \"https://demo.identityserver.io/\",\"CallbackPath\": \"/signin-idsrv\",\"ClientId\": \"login\",\"RemoteSignOutPath\": \"/signout-idsrv\",\"ResponseType\": \"id_token\",\"SaveTokens\": true,\"SignedOutCallbackPath\": \"/signout-callback-idsrv\",\"TokenValidationParameters\": {\"NameClaimType\": \"name\",\"RoleClaimType\": \"role\"}},\"SignOutSupport\": true,\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.OpenIdConnectRegistrator, RegionOrebroLan.Web.Authentication\"},\"Microsoft\": {\"CommonOptionsPaths\": [\"Authentication:CommonOptions:Default\"],\"Options\": {\"ClientId\": \"2dadf463-b32c-4602-9866-d5a08b2eb94f\",\"ClientSecret\": \"/O9Y3xO=@4bflHfh@Vd68tlpscYR]ZWL\"},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.MicrosoftAccountRegistrator, RegionOrebroLan.Web.Authentication\"},\"SithsCertificate\": {\"DisplayName\": \"SITHS-certificate\",\"Icon\": \"net-id\",\"Options\": {\"Validator\": {\"AllowedCertificateKinds\": \"Chained\",\"Chained\": {\"Matching\": {\"Criteria\": [{\"PropertyName\": \"Issuer\",\"ValuePattern\": \"CN=SITHS e-id*\"}]},\"RevocationMode\": \"NoCheck\",\"VerificationFlags\": \"AllowUnknownCertificateAuthority\"}}},\"Type\": \"RegionOrebroLan.Web.Authentication.Configuration.Registration.CertificateRegistrator, RegionOrebroLan.Web.Authentication\"}}}}",
 				"APPSVC_RUN_ZIP": "FALSE",
 				"ASPNETCORE_URLS": "http://+:80",
 				"Authorization__MiddlewareEnabled": "false",
@@ -143,6 +136,18 @@
 				"DOCKER_ENABLE_CI": "true",
 				"DOTNET_RUNNING_IN_CONTAINER": "true",
 				"ExceptionHandling__DeveloperExceptionPage": "true",
+				"FeatureManagement__CertificateForwarding": "true",
+				"FeatureManagement__DataDirectory": "true",
+				"FeatureManagement__DataSeeding": "true",
+				"FeatureManagement__DataTransfer": "true",
+				"FeatureManagement__Debug": "true",
+				"FeatureManagement__Development": "true",
+				"FeatureManagement__Diagnostics": "true",
+				"FeatureManagement__DynamicAuthenticationProviders": "true",
+				"FeatureManagement__FormsAuthentication": "true",
+				"FeatureManagement__ForwardedHeaders": "true",
+				"FeatureManagement__Home": "true",
+				"FeatureManagement__SecurityHeaders": "true",
 				"ForwardedHeaders__ForwardedHeaders": "XForwardedFor, XForwardedProto",
 				"HOME": "/root",
 				"HOSTNAME": "168631c6ebe7",
@@ -181,12 +186,12 @@
 				"IdentityServer__InteractiveMutualTlsDomain": "",
 				"IdentityServer__MutualTls__DomainName": "",
 				"IdentityServer__MutualTls__Enabled": "true",
-				"IdentityServer__SigningCertificate__Options__Password": "password",
-				"IdentityServer__SigningCertificate__Options__Path": "Data/Development-Signing-Certificate.pfx",
-				"IdentityServer__SigningCertificate__Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan",
-				"IdentityServer__ValidationCertificates__0__Options__Password": "password",
-				"IdentityServer__ValidationCertificates__0__Options__Path": "Data/Development-Signing-Certificate.pfx",
-				"IdentityServer__ValidationCertificates__0__Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan",
+				"IdentityServer_DISABLED__SigningCertificate__Options__Password": "password",
+				"IdentityServer_DISABLED__SigningCertificate__Options__Path": "Data/Development-Signing-Certificate.pfx",
+				"IdentityServer_DISABLED__SigningCertificate__Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan",
+				"IdentityServer_DISABLED__ValidationCertificates__0__Options__Password": "password",
+				"IdentityServer_DISABLED__ValidationCertificates__0__Options__Path": "Data/Development-Signing-Certificate.pfx",
+				"IdentityServer_DISABLED__ValidationCertificates__0__Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan",
 				"Localization__AlphabeticalSorting": "true",
 				"Localization__FileResourcesDirectoryPath": "Resources",
 				"Localization__IncludeParentCultures": "true",
@@ -245,6 +250,13 @@
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true
+		},
+		"Docker": {
+			"commandName": "Docker",
+			"launchBrowser": true,
+			"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+			"publishAllPorts": true,
+			"useSSL": true
 		}
 	}
 }
