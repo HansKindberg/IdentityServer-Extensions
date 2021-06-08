@@ -13,6 +13,7 @@ using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.Data.Extensions;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.Transferring.Internal;
+using HansKindberg.IdentityServer.FeatureManagement;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,11 @@ namespace IntegrationTests.Data.Transferring.Internal
 			return await Task.FromResult(new ConfigurationImporter(serviceProvider.GetRequiredService<IClientConfigurationValidator>(), serviceProvider.GetRequiredService<IConfigurationDbContext>(), serviceProvider.GetRequiredService<ILoggerFactory>()));
 		}
 
+		protected internal virtual Context CreateContext(DatabaseProvider databaseProvider, bool dynamicAuthenticationProvidersFeatureEnabled)
+		{
+			return new Context(databaseProvider: databaseProvider, features: new Dictionary<Feature, bool> {{Feature.DynamicAuthenticationProviders, dynamicAuthenticationProvidersFeatureEnabled}});
+		}
+
 		protected internal virtual void FakeHttpContextIfNecessary(Context context)
 		{
 			if(context == null)
@@ -64,9 +70,15 @@ namespace IntegrationTests.Data.Transferring.Internal
 		}
 
 		[TestMethod]
+		public async Task ImportAsync_Sqlite_Changes_DynamicAuthenticationProvidersDisabled_Test()
+		{
+			await this.ImportAsyncChangesTest(DatabaseProvider.Sqlite, false);
+		}
+
+		[TestMethod]
 		public async Task ImportAsync_Sqlite_Changes_Test()
 		{
-			await this.ImportAsyncChangesTest(DatabaseProvider.Sqlite);
+			await this.ImportAsyncChangesTest(DatabaseProvider.Sqlite, true);
 		}
 
 		[TestMethod]
@@ -76,9 +88,15 @@ namespace IntegrationTests.Data.Transferring.Internal
 		}
 
 		[TestMethod]
+		public async Task ImportAsync_SqlServer_Changes_DynamicAuthenticationProvidersDisabled_Test()
+		{
+			await this.ImportAsyncChangesTest(DatabaseProvider.SqlServer, false);
+		}
+
+		[TestMethod]
 		public async Task ImportAsync_SqlServer_Changes_Test()
 		{
-			await this.ImportAsyncChangesTest(DatabaseProvider.SqlServer);
+			await this.ImportAsyncChangesTest(DatabaseProvider.SqlServer, true);
 		}
 
 		[TestMethod]
@@ -87,14 +105,14 @@ namespace IntegrationTests.Data.Transferring.Internal
 			await this.ImportAsyncScenarioTest(DatabaseProvider.SqlServer);
 		}
 
-		public async Task ImportAsyncChangesTest(DatabaseProvider databaseProvider)
+		public async Task ImportAsyncChangesTest(DatabaseProvider databaseProvider, bool dynamicAuthenticationProvidersFeatureEnabled)
 		{
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
 				context.ApplicationBuilder.UseIdentityServer();
 			}
 
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
 				Assert.IsFalse(await context.ServiceProvider.GetRequiredService<IConfigurationDbContext>().IdentityProviders.AnyAsync());
 			}
@@ -118,7 +136,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			};
 
 			// Save identity-providers.
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
 				var configurationImporter = await this.CreateConfigurationImporterAsync(context.ServiceProvider);
 
@@ -133,35 +151,38 @@ namespace IntegrationTests.Data.Transferring.Internal
 			}
 
 			// Test identity-provider properties.
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
-				this.FakeHttpContextIfNecessary(context);
-
-				var identityProviderStore = context.ServiceProvider.GetRequiredService<IIdentityProviderStore>();
-
-				var identityProviderNames = (await identityProviderStore.GetAllSchemeNamesAsync()).ToArray();
-				Assert.AreEqual(2, identityProviderNames.Length);
-
-				IdentityProvider identityProvider;
-
-				foreach(var identityProviderName in identityProviderNames)
+				if(dynamicAuthenticationProvidersFeatureEnabled)
 				{
-					identityProvider = await identityProviderStore.GetBySchemeAsync(identityProviderName.Scheme);
+					this.FakeHttpContextIfNecessary(context);
 
-					Assert.AreEqual(identityProviderName.DisplayName, identityProvider.DisplayName);
-					Assert.AreEqual(identityProviderName.Enabled, identityProvider.Enabled);
-					Assert.AreEqual(identityProviderName.Scheme, identityProvider.Scheme);
+					var identityProviderStore = context.ServiceProvider.GetRequiredService<IIdentityProviderStore>();
+
+					var identityProviderNames = (await identityProviderStore.GetAllSchemeNamesAsync()).ToArray();
+					Assert.AreEqual(2, identityProviderNames.Length);
+
+					IdentityProvider identityProvider;
+
+					foreach(var identityProviderName in identityProviderNames)
+					{
+						identityProvider = await identityProviderStore.GetBySchemeAsync(identityProviderName.Scheme);
+
+						Assert.AreEqual(identityProviderName.DisplayName, identityProvider.DisplayName);
+						Assert.AreEqual(identityProviderName.Enabled, identityProvider.Enabled);
+						Assert.AreEqual(identityProviderName.Scheme, identityProvider.Scheme);
+					}
+
+					identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-1");
+					Assert.AreEqual(2, identityProvider.Properties.Count);
+
+					identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-2");
+					Assert.AreEqual(0, identityProvider.Properties.Count);
 				}
-
-				identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-1");
-				Assert.AreEqual(2, identityProvider.Properties.Count);
-
-				identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-2");
-				Assert.AreEqual(0, identityProvider.Properties.Count);
 			}
 
 			// Save the same unchanged identity-providers again.
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
 				var configurationImporter = await this.CreateConfigurationImporterAsync(context.ServiceProvider);
 
@@ -181,7 +202,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			}
 
 			// Save changed identity-providers.
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
 				var configurationImporter = await this.CreateConfigurationImporterAsync(context.ServiceProvider);
 
@@ -196,31 +217,34 @@ namespace IntegrationTests.Data.Transferring.Internal
 			}
 
 			// Test identity-provider properties.
-			using(var context = new Context(databaseProvider: databaseProvider))
+			using(var context = this.CreateContext(databaseProvider, dynamicAuthenticationProvidersFeatureEnabled))
 			{
-				this.FakeHttpContextIfNecessary(context);
-
-				var identityProviderStore = context.ServiceProvider.GetRequiredService<IIdentityProviderStore>();
-
-				var identityProviderNames = (await identityProviderStore.GetAllSchemeNamesAsync()).ToArray();
-				Assert.AreEqual(2, identityProviderNames.Length);
-
-				IdentityProvider identityProvider;
-
-				foreach(var identityProviderName in identityProviderNames)
+				if(dynamicAuthenticationProvidersFeatureEnabled)
 				{
-					identityProvider = await identityProviderStore.GetBySchemeAsync(identityProviderName.Scheme);
+					this.FakeHttpContextIfNecessary(context);
 
-					Assert.AreEqual(identityProviderName.DisplayName, identityProvider.DisplayName);
-					Assert.AreEqual(identityProviderName.Enabled, identityProvider.Enabled);
-					Assert.AreEqual(identityProviderName.Scheme, identityProvider.Scheme);
+					var identityProviderStore = context.ServiceProvider.GetRequiredService<IIdentityProviderStore>();
+
+					var identityProviderNames = (await identityProviderStore.GetAllSchemeNamesAsync()).ToArray();
+					Assert.AreEqual(2, identityProviderNames.Length);
+
+					IdentityProvider identityProvider;
+
+					foreach(var identityProviderName in identityProviderNames)
+					{
+						identityProvider = await identityProviderStore.GetBySchemeAsync(identityProviderName.Scheme);
+
+						Assert.AreEqual(identityProviderName.DisplayName, identityProvider.DisplayName);
+						Assert.AreEqual(identityProviderName.Enabled, identityProvider.Enabled);
+						Assert.AreEqual(identityProviderName.Scheme, identityProvider.Scheme);
+					}
+
+					identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-1");
+					Assert.AreEqual(3, identityProvider.Properties.Count);
+
+					identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-2");
+					Assert.AreEqual(1, identityProvider.Properties.Count);
 				}
-
-				identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-1");
-				Assert.AreEqual(3, identityProvider.Properties.Count);
-
-				identityProvider = await identityProviderStore.GetBySchemeAsync("Scheme-2");
-				Assert.AreEqual(1, identityProvider.Properties.Count);
 			}
 		}
 

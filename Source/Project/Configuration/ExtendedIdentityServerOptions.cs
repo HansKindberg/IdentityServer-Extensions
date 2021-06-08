@@ -5,6 +5,7 @@ using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.EntityFramework.Options;
 using HansKindberg.IdentityServer.Extensions;
 using IdentityModel;
+using RegionOrebroLan.Configuration;
 using Rsk.Saml.Configuration;
 using Rsk.WsFederation.Configuration;
 
@@ -45,6 +46,8 @@ namespace HansKindberg.IdentityServer.Configuration
 		public virtual OperationalStoreOptions OperationalStore { get; set; } = new OperationalStoreOptions();
 		public virtual RedirectionOptions Redirection { get; set; } = new RedirectionOptions();
 		public virtual SamlIdpOptions Saml { get; set; } = new SamlIdpOptions();
+		public virtual DynamicOptions SigningCertificate { get; set; }
+		public virtual IList<DynamicOptions> ValidationCertificates { get; } = new List<DynamicOptions>();
 		public virtual WsFederationOptions WsFederation { get; set; } = new WsFederationOptions();
 
 		#endregion

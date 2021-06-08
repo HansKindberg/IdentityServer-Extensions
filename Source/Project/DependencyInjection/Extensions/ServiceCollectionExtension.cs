@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.EntityFramework.Interfaces;
+using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Builder;
 using HansKindberg.IdentityServer.ComponentModel;
 using HansKindberg.IdentityServer.Configuration;
@@ -260,6 +261,26 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 					serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.OperationalStore)}").Bind(options);
 				});
+
+			if(!serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.DynamicAuthenticationProviders))
+			{
+				// Remove some of the registered services.
+				for(var i = services.Count - 1; i >= 0; i--)
+				{
+					var serviceDescriptor = services[i];
+
+					if(serviceDescriptor.ServiceType == typeof(IIdentityProviderStore) && serviceDescriptor.Lifetime == ServiceLifetime.Transient)
+						services.RemoveAt(i);
+				}
+			}
+
+			if(identityServerOptions.SigningCertificate != null)
+				identityServerBuilder.AddSigningCredential(serviceConfigurationBuilder.GetCertificate(identityServerOptions.SigningCertificate));
+
+			foreach(var validationCertificate in identityServerOptions.ValidationCertificates)
+			{
+				identityServerBuilder.AddValidationKey(serviceConfigurationBuilder.GetCertificate(validationCertificate));
+			}
 
 			identityServerBuilder.AddIdentityServerPlugins<TSaml, TWsFederation>(optionsBuilderFunction, serviceConfigurationBuilder);
 

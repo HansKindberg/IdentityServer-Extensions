@@ -76,9 +76,120 @@ Solution behind it:
 
 - [External OAuth authentication providers](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins/)
 
-## 3 Development
+## 3 Features and configuration depending on Duende.IdentityServer license
 
-### 3.1 Migrations
+Some features/configuration depends on the Duende.IdentityServer license, https://duendesoftware.com/products/identityserver#pricing.
+
+### 3.1 Automatic key management
+
+If your Duende.IdentityServer license doesn't include the **Automatic key management**-feature you should disable it in appsettings.json:
+
+	{
+		"IdentityServer": {
+			"KeyManagement": {
+				"Enabled": false
+			},
+		}
+	}
+
+Configure for signing- and validation-certificates instead:
+
+#### 3.1.1 Production-example
+
+	{
+		"IdentityServer": {
+			"SigningCertificate": {
+				"Options": {
+					"Path": "CERT:\\LocalMachine\\My\\CN=IdentityServer-Signing-4"
+				},
+				"Type": "RegionOrebroLan.Security.Cryptography.Configuration.StoreResolverOptions, RegionOrebroLan"
+			},
+			"ValidationCertificates": [
+				{
+					"Options": {
+						"Path": "CERT:\\LocalMachine\\My\\CN=IdentityServer-Signing-1"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.StoreResolverOptions, RegionOrebroLan"
+				},
+				{
+					"Options": {
+						"Path": "CERT:\\LocalMachine\\My\\CN=IdentityServer-Signing-2"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.StoreResolverOptions, RegionOrebroLan"
+				},
+				{
+					"Options": {
+						"Path": "CERT:\\LocalMachine\\My\\CN=IdentityServer-Signing-3"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.StoreResolverOptions, RegionOrebroLan"
+				}
+			]
+		}
+	}
+
+#### 3.1.2 Development-example
+
+	{
+		"IdentityServer": {
+			"SigningCertificate": {
+				"Options": {
+					"Password": "password",
+					"Path": "Data/Development-Signing-Certificate-4.pfx"
+				},
+				"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+			},
+			"ValidationCertificates": [
+				{
+					"Options": {
+						"Password": "password",
+						"Path": "Data/Development-Signing-Certificate-1.pfx"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+				},
+				{
+					"Options": {
+						"Password": "password",
+						"Path": "Data/Development-Signing-Certificate-2.pfx"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+				},
+				{
+					"Options": {
+						"Password": "password",
+						"Path": "Data/Development-Signing-Certificate-3.pfx"
+					},
+					"Type": "RegionOrebroLan.Security.Cryptography.Configuration.FileResolverOptions, RegionOrebroLan"
+				}
+			]
+		}
+	}
+
+### 3.2 Dynamic Authentication Providers 
+
+If your Duende.IdentityServer license doesn't include the **Dynamic Authentication Providers**-feature you should disable it in appsettings.json:
+
+	{
+		"FeatureManagement": {
+			...
+			"DynamicAuthenticationProviders": false,
+			...
+		}
+	}
+
+or remove the line:
+
+	{
+		"FeatureManagement": {
+			...
+			// Remove the line below
+			"DynamicAuthenticationProviders": true,
+			...
+		}
+	}
+
+## 4 Development
+
+### 4.1 Migrations
 
 We might want to create/recreate migrations. If we can accept data-loss we can recreate the migrations otherwhise we will have to update them.
 
@@ -90,9 +201,9 @@ If you want more migration-information you can add the -Verbose parameter:
 
 **Important!** Before running the commands below you need to ensure the "Project"-project is set as startup-project. 
 
-#### 3.1.1 Configuration
+#### 4.1.1 Configuration
 
-##### 3.1.1.1 Create migrations
+##### 4.1.1.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteConfiguration -Force -Project Project;
@@ -104,16 +215,16 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerConfigurationMigration -Context SqlServerConfiguration -OutputDir Data/Migrations/Configuration/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.1.2 Update migrations
+##### 4.1.1.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteConfigurationMigrationUpdate -Context SqliteConfiguration -OutputDir Data/Migrations/Configuration/Sqlite -Project Project;
 	Add-Migration SqlServerConfigurationMigrationUpdate -Context SqlServerConfiguration -OutputDir Data/Migrations/Configuration/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.2 Identity
+#### 4.1.2 Identity
 
-##### 3.1.2.1 Create migrations
+##### 4.1.2.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteIdentity -Force -Project Project;
@@ -125,16 +236,16 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerIdentityMigration -Context SqlServerIdentity -OutputDir Identity/Data/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.2.2 Update migrations
+##### 4.1.2.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteIdentityMigrationUpdate -Context SqliteIdentity -OutputDir Identity/Data/Migrations/Sqlite -Project Project;
 	Add-Migration SqlServerIdentityMigrationUpdate -Context SqlServerIdentity -OutputDir Identity/Data/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.3 Operational (PersistedGrant)
+#### 4.1.3 Operational (PersistedGrant)
 
-##### 3.1.3.1 Create migrations
+##### 4.1.3.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteOperational -Force -Project Project;
@@ -146,18 +257,18 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerOperationalMigration -Context SqlServerOperational -OutputDir Data/Migrations/Operational/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.3.2 Update migrations
+##### 4.1.3.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteOperationalMigrationUpdate -Context SqliteOperational -OutputDir Data/Migrations/Operational/Sqlite -Project Project;
 	Add-Migration SqlServerOperationalMigrationUpdate -Context SqlServerOperational -OutputDir Data/Migrations/Operational/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-#### 3.1.4 Plugins
+#### 4.1.4 Plugins
 
-##### 3.1.4.1 SAML
+##### 4.1.4.1 SAML
 
-###### 3.1.4.1.1 Create migrations
+###### 4.1.4.1.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteSamlConfiguration -Force -Project Project;
@@ -169,16 +280,16 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerSamlConfigurationMigration -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-###### 3.1.4.1.2 Update migrations
+###### 4.1.4.1.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteSamlConfigurationMigrationUpdate -Context SqliteSamlConfiguration -OutputDir Data/Saml/Migrations/Sqlite -Project Project;
 	Add-Migration SqlServerSamlConfigurationMigrationUpdate -Context SqlServerSamlConfiguration -OutputDir Data/Saml/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-##### 3.1.4.2 WsFederation
+##### 4.1.4.2 WsFederation
 
-###### 3.1.4.2.1 Create migrations
+###### 4.1.4.2.1 Create migrations
 
 	Write-Host "Removing migrations...";
 	Remove-Migration -Context SqliteWsFederationConfiguration -Force -Project Project;
@@ -190,49 +301,49 @@ If you want more migration-information you can add the -Verbose parameter:
 	Add-Migration SqlServerWsFederationConfigurationMigration -Context SqlServerWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-###### 3.1.4.2.2 Update migrations
+###### 4.1.4.2.2 Update migrations
 
 	Write-Host "Updating migrations...";
 	Add-Migration SqliteWsFederationConfigurationMigrationUpdate -Context SqliteWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/Sqlite -Project Project;
 	Add-Migration SqlServerWsFederationConfigurationMigrationUpdate -Context SqlServerWsFederationConfiguration -OutputDir Data/WsFederation/Migrations/SqlServer -Project Project;
 	Write-Host "Finnished";
 
-## 4 Technicalities
+## 5 Technicalities
 
-### 4.1 Development-environment
+### 5.1 Development-environment
 This solution is built on:
 
 - Visual Studio Enterprise 2019
 - Windows 10
 
-### 4.2 NuGet
+### 5.2 NuGet
 The solution uses the following NuGet-packages:
 
 - [Project](/Source/Project/Project.csproj#L26)
 
-### 4.3 Documentation
+### 5.3 Documentation
 
 - [IdentityServer](https://docs.duendesoftware.com/)
 - [SAML 2.0 Integration with IdentityServer](https://www.identityserver.com/articles/saml-20-integration-with-identityserver4/)
 - [IdentityServer Saml 2.0 Component](https://www.identityserver.com/documentation/saml2p/)
 
-### 4.4 Examples
+### 5.4 Examples
 
 - [IdentityServer samples](https://github.com/RockSolidKnowledge/)
 
-### 4.5 Information
+### 5.5 Information
 
 - [IdentityServer.com](https://www.identityserver.com/)
 
-#### 4.5.1 Products
+#### 5.5.1 Products
 
 - [IdentityServer products](https://www.identityserver.com/products/)
 
-## 5 Notes
+## 6 Notes
 
 Various saved notes that appeared during development.
 
-### 5.1 Mutual TLS (client-certificate-authentication)
+### 6.1 Mutual TLS (client-certificate-authentication)
 
 - [Mutual TLS ? IdentityServer4 1.0.0 documentation](http://docs.identityserver.io/en/latest/topics/mtls.html)
 - [Transport Layer Security (TLS) registry settings](https://docs.microsoft.com/sv-se/windows-server/security/tls/tls-registry-settings/)
@@ -265,7 +376,7 @@ Values:
 - /connect/mtls/introspect
 - /connect/mtls/deviceauthorization
 
-### 5.2 Links
+### 6.2 Links
 
 - Example site with multiple authentication schemes: https://auth0.com/auth/login/
 - Icons/svg's: https://iconscout.com/

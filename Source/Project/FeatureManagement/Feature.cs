@@ -9,6 +9,7 @@ namespace HansKindberg.IdentityServer.FeatureManagement
 		Debug,
 		Development,
 		Diagnostics,
+		DynamicAuthenticationProviders,
 		FormsAuthentication,
 		ForwardedHeaders,
 		Home,
