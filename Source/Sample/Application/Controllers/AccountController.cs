@@ -75,7 +75,7 @@ namespace Application.Controllers
 
 			if(authorizationRequest?.IdP != null)
 			{
-				var authenticationScheme = await this.Facade.AuthenticationSchemeLoader.GetAsync(authorizationRequest.IdP);
+				var authenticationScheme = await this.Facade.AuthenticationSchemeRetriever.GetAsync(authorizationRequest.IdP);
 
 				if(authenticationScheme != null)
 				{
@@ -88,7 +88,7 @@ namespace Application.Controllers
 				}
 			}
 
-			var authenticationSchemes = (await this.Facade.AuthenticationSchemeLoader.ListAsync())
+			var authenticationSchemes = (await this.Facade.AuthenticationSchemeRetriever.ListAsync())
 				.Where(authenticationScheme => authenticationScheme.Interactive && authenticationScheme.Kind != AuthenticationSchemeKind.Cookie)
 				.OrderBy(authenticationScheme => authenticationScheme.Index)
 				.ThenBy(authenticationScheme => authenticationScheme.Name, StringComparer.OrdinalIgnoreCase);
@@ -281,7 +281,7 @@ namespace Application.Controllers
 
 				if(authenticationSchemeName != null && !string.Equals(authenticationSchemeName, Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider, StringComparison.OrdinalIgnoreCase))
 				{
-					var authenticationScheme = await this.Facade.AuthenticationSchemeLoader.GetAsync(authenticationSchemeName);
+					var authenticationScheme = await this.Facade.AuthenticationSchemeRetriever.GetAsync(authenticationSchemeName);
 
 					if(authenticationScheme != null && authenticationScheme.SignOutSupport)
 					{

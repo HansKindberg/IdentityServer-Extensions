@@ -237,7 +237,7 @@ namespace Application.Controllers
 			if(name == null)
 				throw new ArgumentNullException(nameof(name));
 
-			var authenticationScheme = await this.Facade.AuthenticationSchemeLoader.GetAsync(name);
+			var authenticationScheme = await this.Facade.AuthenticationSchemeRetriever.GetAsync(name);
 
 			if(authenticationScheme == null)
 				throw new InvalidOperationException($"The authentication-scheme \"{name}\" does not exist.");

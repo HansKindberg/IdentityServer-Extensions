@@ -2,6 +2,7 @@ using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Decoration;
 using Rsk.Saml.Services;
 
@@ -19,7 +19,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Properties
 
-		IAuthenticationSchemeLoader AuthenticationSchemeLoader { get; }
+		IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		IAuthorizationResolver AuthorizationResolver { get; }
 		IClientStore ClientStore { get; }
 		IDecorationLoader DecorationLoader { get; }

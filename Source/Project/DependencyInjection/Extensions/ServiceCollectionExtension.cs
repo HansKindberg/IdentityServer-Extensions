@@ -26,6 +26,7 @@ using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Json;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web;
+using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
 using HansKindberg.IdentityServer.Web.Configuration;
 using HansKindberg.IdentityServer.Web.Mvc.Filters;
@@ -487,6 +488,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 				options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
 			});
+
+			services.AddScoped<IAuthenticationSchemeRetriever, AuthenticationSchemeRetriever>();
 
 			success?.Invoke();
 

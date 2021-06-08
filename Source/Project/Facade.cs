@@ -5,6 +5,7 @@ using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Decoration;
 using Rsk.Saml.Services;
 
@@ -23,9 +23,9 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeLoader authenticationSchemeLoader, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider)
+		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider)
 		{
-			this.AuthenticationSchemeLoader = authenticationSchemeLoader ?? throw new ArgumentNullException(nameof(authenticationSchemeLoader));
+			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
 			this.ClientStore = clientStore ?? throw new ArgumentNullException(nameof(clientStore));
 			this.DecorationLoader = decorationLoader ?? throw new ArgumentNullException(nameof(decorationLoader));
@@ -51,7 +51,7 @@ namespace HansKindberg.IdentityServer
 
 		#region Properties
 
-		public virtual IAuthenticationSchemeLoader AuthenticationSchemeLoader { get; }
+		public virtual IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		public virtual IAuthorizationResolver AuthorizationResolver { get; }
 		public virtual IClientStore ClientStore { get; }
 		public virtual IDecorationLoader DecorationLoader { get; }
