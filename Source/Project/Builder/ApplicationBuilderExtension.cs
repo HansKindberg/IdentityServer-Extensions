@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Duende.IdentityServer.EntityFramework.Interfaces;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data.Transferring;
@@ -20,7 +19,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Caching.Distributed.Builder.Extensions;
 using RegionOrebroLan.DataProtection.Builder.Extensions;
-using RegionOrebroLan.Web.Authentication;
+using RegionOrebroLan.Web.Authentication.Configuration;
 
 namespace HansKindberg.IdentityServer.Builder
 {
@@ -33,14 +32,10 @@ namespace HansKindberg.IdentityServer.Builder
 			if(applicationBuilder == null)
 				throw new ArgumentNullException(nameof(applicationBuilder));
 
-			var windowsAuthenticationScheme = applicationBuilder.ApplicationServices.GetRequiredService<IAuthenticationSchemeLoader>().ListAsync().Result.FirstOrDefault(authenticationScheme => string.Equals(authenticationScheme.Name, IISServerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase));
+			var authenticationSchemeRegistrations = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedAuthenticationOptions>>().Value.SchemeRegistrations;
 
-			// ReSharper disable MergeIntoNegatedPattern
-
-			if(windowsAuthenticationScheme == null || !windowsAuthenticationScheme.Enabled)
+			if(!authenticationSchemeRegistrations.TryGetValue(IISServerDefaults.AuthenticationScheme, out var windowsAuthenticationOptions) || !windowsAuthenticationOptions.Enabled)
 				applicationBuilder.ApplicationServices.GetRequiredService<IAuthenticationSchemeProvider>().RemoveScheme(IISServerDefaults.AuthenticationScheme);
-
-			// ReSharper restore MergeIntoNegatedPattern
 
 			return applicationBuilder;
 		}
