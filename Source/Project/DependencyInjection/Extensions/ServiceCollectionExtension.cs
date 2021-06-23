@@ -50,6 +50,7 @@ using RegionOrebroLan.DataProtection.DependencyInjection.Extensions;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
+using RegionOrebroLan.Web.Authentication.OpenIdConnect.DependencyInjection.Extensions;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
 using Rsk.WsFederation.EntityFramework.DbContexts;
@@ -464,6 +465,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			services.AddIdentity(serviceConfiguration);
 			services.AddIdentityServer(serviceConfiguration);
+			services.AddOpenIdConnectClaimsRequest(configuration);
 			services.AddPathBasedLocalization(configuration);
 			services.AddRequestLocalization(serviceConfiguration);
 			services.AddSameSiteCookiePolicy();

@@ -40,6 +40,7 @@
 		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.8-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
 		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.1-alpha" />
+		<PackageReference Include="RegionOrebroLan.Web.Authentication.OpenIdConnect" Version="0.0.0-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.1.2" />
 		<PackageReference Include="Rsk.Saml.DuendeIdentityServer.EntityFramework" Version="5.0.0" />
 		<PackageReference Include="Rsk.WsFederation" Version="4.0.0" />
