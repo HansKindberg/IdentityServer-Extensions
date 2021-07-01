@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -13,6 +14,7 @@ using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
 using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
@@ -29,8 +31,11 @@ namespace Application.Controllers
 
 		#region Methods
 
+		[SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling")]
 		public virtual async Task<IActionResult> Callback()
 		{
+			this.Logger.LogDebugIfEnabled("Callback: starting...");
+
 			var authenticateResult = await this.HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
 			if(!authenticateResult.Succeeded)
@@ -40,6 +45,8 @@ namespace Application.Controllers
 
 			var authenticationScheme = authenticateResult.Properties.Items[AuthenticationKeys.Scheme];
 			await this.ValidateAuthenticationSchemeForClientAsync(authenticationScheme, returnUrl);
+
+			this.Logger.LogDebugIfEnabled($"Callback: authentication-sheme = \"{authenticationScheme}\", claims received = \"{string.Join(", ", authenticateResult.Principal.Claims.Select(claim => claim.Type))}\".");
 
 			var decorators = (await this.Facade.DecorationLoader.GetCallbackDecoratorsAsync(authenticationScheme)).ToArray();
 
@@ -52,9 +59,13 @@ namespace Application.Controllers
 			foreach(var decorator in decorators)
 			{
 				await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+
+				this.Logger.LogDebugIfEnabled($"Callback: {decorator.GetType().FullName}.DecorateAsync claims = \"{string.Join(", ", claims.Select(claim => claim.Type))}\".");
 			}
 
 			await this.ConvertToJwtClaimsAsync(claims);
+
+			this.Logger.LogDebugIfEnabled($"Callback: converted to jwt-claims = \"{string.Join(", ", claims.Select(claim => claim.Type))}\".");
 
 			var user = await this.ResolveUserAsync(authenticationScheme, claims);
 
