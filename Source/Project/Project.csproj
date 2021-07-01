@@ -2,7 +2,7 @@
 	<PropertyGroup Label="Initial">
 		<Company>Hans Kindberg - open source</Company>
 		<VersionPrefix>5.2.1</VersionPrefix>
-		<VersionPrereleaseName>beta</VersionPrereleaseName>
+		<VersionPrereleaseName>beta.2</VersionPrereleaseName>
 	</PropertyGroup>
 	<PropertyGroup Label="Assembly">
 		<AssemblyName>HansKindberg.IdentityServer</AssemblyName>
