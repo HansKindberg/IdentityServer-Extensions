@@ -7,6 +7,7 @@ using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Security.Claims;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
 using UserLoginEntity = Microsoft.AspNetCore.Identity.IdentityUserLogin<string>;
@@ -21,8 +22,9 @@ namespace HansKindberg.IdentityServer.Identity
 	{
 		#region Constructors
 
-		public IdentityFacade(SignInManager<UserEntity> signInManager, UserManager userManager)
+		public IdentityFacade(ILoggerFactory loggerFactory, SignInManager<UserEntity> signInManager, UserManager userManager)
 		{
+			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 			this.SignInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
 			this.UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
 		}
@@ -32,6 +34,7 @@ namespace HansKindberg.IdentityServer.Identity
 		#region Properties
 
 		public virtual IdentityContext DatabaseContext => this.UserManager.DatabaseContext;
+		protected internal virtual ILogger Logger { get; }
 		protected internal virtual SignInManager<UserEntity> SignInManager { get; }
 		protected internal virtual UserManager UserManager { get; }
 		public virtual IQueryable<UserEntity> Users => this.UserManager.Users;
