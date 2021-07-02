@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
@@ -24,7 +25,7 @@ namespace UnitTests.Identity
 			var userManager = new Mock<UserManager>(userStore, null, null, null, null, null, null, null, null).Object;
 			var signInManager = new Mock<SignInManager<UserEntity>>(userManager, httpContextAccessor, userClaimsPrincipalFactory, null, null, null, null).Object;
 
-			return await Task.FromResult(new IdentityFacade(signInManager, userManager));
+			return await Task.FromResult(new IdentityFacade(Mock.Of<ILoggerFactory>(), signInManager, userManager));
 		}
 
 		[TestMethod]

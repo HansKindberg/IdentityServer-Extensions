@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.IdentityServer.Identity.Data;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RegionOrebroLan.Security.Claims;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
@@ -108,7 +110,7 @@ namespace IntegrationTests.Identity
 
 		protected internal virtual async Task<IdentityFacade> CreateIdentityFacadeAsync(IServiceProvider serviceProvider)
 		{
-			return await Task.FromResult(new IdentityFacade(serviceProvider.GetRequiredService<SignInManager<UserEntity>>(), serviceProvider.GetRequiredService<UserManager>()));
+			return await Task.FromResult(new IdentityFacade(serviceProvider.GetRequiredService<ILoggerFactory>(), serviceProvider.GetRequiredService<SignInManager<UserEntity>>(), serviceProvider.GetRequiredService<UserManager>()));
 		}
 
 		protected internal virtual async Task GetUserLoginsAsync_IfTheParameterIsAnIdThatNoUserExistsFor_ShouldReturnAnEmptyCollection(DatabaseProvider databaseProvider)
@@ -237,6 +239,99 @@ namespace IntegrationTests.Identity
 			}
 		}
 
+		protected internal virtual async Task ResolveUserAsync_IfTheUserAlreadyExistsAndTheDatabaseClaimsHaveBeenExplicitlyChanged_ShouldCorrectClaims(DatabaseProvider databaseProvider)
+		{
+			var claims = new ClaimBuilderCollection
+			{
+				new ClaimBuilder
+				{
+					Type = "First-type",
+					Value = "First-value"
+				},
+				new ClaimBuilder
+				{
+					Type = "Second-type",
+					Value = "Second-value"
+				},
+				new ClaimBuilder
+				{
+					Type = "Third-type",
+					Value = "Third-value"
+				}
+			};
+			const string provider = "Provider";
+			const string userIdentifier = "User-identifier";
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
+				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
+				var user = await identityFacade.ResolveUserAsync(claims, provider, userIdentifier);
+				Assert.IsNotNull(user);
+			}
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				var identityContext = serviceProvider.GetRequiredService<IdentityContext>();
+				Assert.IsNotNull(identityContext);
+				Assert.AreEqual(3, identityContext.UserClaims.Count());
+				Assert.AreEqual("First-type", (await identityContext.UserClaims.FindAsync(1)).ClaimType);
+				Assert.AreEqual("First-value", (await identityContext.UserClaims.FindAsync(1)).ClaimValue);
+				Assert.AreEqual("Second-type", (await identityContext.UserClaims.FindAsync(2)).ClaimType);
+				Assert.AreEqual("Second-value", (await identityContext.UserClaims.FindAsync(2)).ClaimValue);
+				Assert.AreEqual("Third-type", (await identityContext.UserClaims.FindAsync(3)).ClaimType);
+				Assert.AreEqual("Third-value", (await identityContext.UserClaims.FindAsync(3)).ClaimValue);
+			}
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				var identityContext = serviceProvider.GetRequiredService<IdentityContext>();
+				var thirdClaim = await identityContext.UserClaims.FindAsync(3);
+				thirdClaim.ClaimType = "Second-type";
+				thirdClaim.ClaimValue = "Second-value";
+				Assert.AreEqual(1, await identityContext.SaveChangesAsync());
+			}
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				var identityContext = serviceProvider.GetRequiredService<IdentityContext>();
+				Assert.IsNotNull(identityContext);
+				Assert.AreEqual(3, identityContext.UserClaims.Count());
+				Assert.AreEqual("First-type", (await identityContext.UserClaims.FindAsync(1)).ClaimType);
+				Assert.AreEqual("First-value", (await identityContext.UserClaims.FindAsync(1)).ClaimValue);
+				Assert.AreEqual("Second-type", (await identityContext.UserClaims.FindAsync(2)).ClaimType);
+				Assert.AreEqual("Second-value", (await identityContext.UserClaims.FindAsync(2)).ClaimValue);
+				Assert.AreEqual("Second-type", (await identityContext.UserClaims.FindAsync(3)).ClaimType);
+				Assert.AreEqual("Second-value", (await identityContext.UserClaims.FindAsync(3)).ClaimValue);
+			}
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
+				var user = await identityFacade.ResolveUserAsync(claims, provider, userIdentifier);
+				Assert.IsNotNull(user);
+			}
+
+			using(var context = new Context(databaseProvider: databaseProvider))
+			{
+				var serviceProvider = context.ServiceProvider;
+				var identityContext = serviceProvider.GetRequiredService<IdentityContext>();
+				Assert.IsNotNull(identityContext);
+				Assert.AreEqual(3, identityContext.UserClaims.Count());
+				Assert.AreEqual("First-type", (await identityContext.UserClaims.FindAsync(1)).ClaimType);
+				Assert.AreEqual("First-value", (await identityContext.UserClaims.FindAsync(1)).ClaimValue);
+				Assert.AreEqual("Second-type", (await identityContext.UserClaims.FindAsync(2)).ClaimType);
+				Assert.AreEqual("Second-value", (await identityContext.UserClaims.FindAsync(2)).ClaimValue);
+				Assert.AreEqual("Third-type", (await identityContext.UserClaims.FindAsync(3)).ClaimType);
+				Assert.AreEqual("Third-value", (await identityContext.UserClaims.FindAsync(3)).ClaimValue);
+			}
+		}
+
 		[TestMethod]
 		public async Task ResolveUserAsync_Sqlite_IfTheUserAlreadyExists_ShouldUpdateClaims()
 		{
@@ -244,9 +339,21 @@ namespace IntegrationTests.Identity
 		}
 
 		[TestMethod]
+		public async Task ResolveUserAsync_Sqlite_IfTheUserAlreadyExistsAndTheDatabaseClaimsHaveBeenExplicitlyChanged_ShouldCorrectClaims()
+		{
+			await this.ResolveUserAsync_IfTheUserAlreadyExistsAndTheDatabaseClaimsHaveBeenExplicitlyChanged_ShouldCorrectClaims(DatabaseProvider.Sqlite);
+		}
+
+		[TestMethod]
 		public async Task ResolveUserAsync_SqlServer_IfTheUserAlreadyExists_ShouldUpdateClaims()
 		{
 			await this.ResolveUserAsync_IfTheUserAlreadyExists_ShouldUpdateClaims(DatabaseProvider.SqlServer);
+		}
+
+		[TestMethod]
+		public async Task ResolveUserAsync_SqlServer_IfTheUserAlreadyExistsAndTheDatabaseClaimsHaveBeenExplicitlyChanged_ShouldCorrectClaims()
+		{
+			await this.ResolveUserAsync_IfTheUserAlreadyExistsAndTheDatabaseClaimsHaveBeenExplicitlyChanged_ShouldCorrectClaims(DatabaseProvider.SqlServer);
 		}
 
 		protected internal virtual async Task SaveUserAsync_IfDatabaseContextSaveChangesIsCalled_ShouldPersistTheUserToTheDatabase(DatabaseProvider databaseProvider)

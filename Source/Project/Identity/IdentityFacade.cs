@@ -8,6 +8,7 @@ using HansKindberg.IdentityServer.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
 using UserLoginEntity = Microsoft.AspNetCore.Identity.IdentityUserLogin<string>;
@@ -164,7 +165,7 @@ namespace HansKindberg.IdentityServer.Identity
 						throw new InvalidOperationException($"Could not add login for user: {await this.CreateErrorMessageAsync(identityResult)}");
 				}
 
-				await this.SaveClaimsAsync(claims, user, userClaims);
+				await this.SaveClaimsAsync(claims, user);
 
 				return user;
 			}
@@ -174,49 +175,76 @@ namespace HansKindberg.IdentityServer.Identity
 			}
 		}
 
-		protected internal virtual async Task SaveClaimsAsync(IClaimBuilderCollection claims, UserEntity user, IList<Claim> userClaims)
+		protected internal virtual async Task SaveClaimsAsync(IClaimBuilderCollection claims, UserEntity user)
 		{
+			var logPrefix = $"{this.GetType().FullName}.{nameof(this.SaveClaimsAsync)}:";
+			this.Logger.LogDebugIfEnabled($"{logPrefix} user-id = {user?.Id.ToStringRepresentation()}, starting...");
+
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
 
 			if(user == null)
 				throw new ArgumentNullException(nameof(user));
 
-			if(userClaims == null)
-				throw new ArgumentNullException(nameof(userClaims));
-
 			try
 			{
-				for(var i = 0; i < userClaims.Count; i++)
+				var comparer = StringComparer.Ordinal;
+				var sortedClaims = new ClaimBuilderCollection();
+
+				foreach(var claim in claims.OrderBy(claim => claim.Type, comparer).ThenBy(claim => claim.Value, comparer))
 				{
-					if(claims.Count < i + 1)
-						break;
-
-					var identityResult = await this.UserManager.ReplaceClaimAsync(user, userClaims[i], claims[i].Build());
-
-					if(!identityResult.Succeeded)
-						throw new InvalidOperationException($"Could not replace claim for user: {await this.CreateErrorMessageAsync(identityResult)}");
+					sortedClaims.Add(new ClaimBuilder {Type = claim.Type, Value = claim.Value});
 				}
 
-				var claimsToRemove = userClaims.Skip(claims.Count).ToArray();
+				var i = 0;
+				var userClaimsToRemove = new List<IdentityUserClaim<string>>();
 
-				if(claimsToRemove.Any())
+				foreach(var userClaim in this.DatabaseContext.UserClaims.Where(claim => claim.UserId == user.Id).OrderBy(claim => claim.Id))
 				{
-					var identityResult = await this.UserManager.RemoveClaimsAsync(user, claimsToRemove);
+					if(sortedClaims.Count < i + 1)
+					{
+						userClaimsToRemove.Add(userClaim);
+					}
+					else
+					{
+						var claim = sortedClaims[i];
+						const StringComparison comparison = StringComparison.OrdinalIgnoreCase;
 
-					if(!identityResult.Succeeded)
-						throw new InvalidOperationException($"Could not remove claims for user: {await this.CreateErrorMessageAsync(identityResult)}");
+						if(!string.Equals(claim.Type, userClaim.ClaimType, comparison) || !string.Equals(claim.Value, userClaim.ClaimValue, comparison))
+						{
+							this.Logger.LogDebugIfEnabled($"{logPrefix} changing claim with id {userClaim.Id.ToStringRepresentation()} from type {userClaim.ClaimType.ToStringRepresentation()} to type {claim.Type.ToStringRepresentation()} and from value {userClaim.ClaimValue.ToStringRepresentation()} to value {claim.Value.ToStringRepresentation()}.");
+
+							userClaim.ClaimType = claim.Type;
+							userClaim.ClaimValue = claim.Value;
+						}
+					}
+
+					i++;
 				}
 
-				var claimsToAdd = claims.Skip(userClaims.Count).Select(claim => claim.Build()).ToArray();
-
-				if(claimsToAdd.Any())
+				if(userClaimsToRemove.Any())
 				{
-					var identityResult = await this.UserManager.AddClaimsAsync(user, claimsToAdd);
-
-					if(!identityResult.Succeeded)
-						throw new InvalidOperationException($"Could not add claims for user: {await this.CreateErrorMessageAsync(identityResult)}");
+					this.Logger.LogDebugIfEnabled($"{logPrefix} removing {userClaimsToRemove.Count} claims with id's: {string.Join(", ", userClaimsToRemove.Select(userClaim => userClaim.Id))}");
+					this.DatabaseContext.UserClaims.RemoveRange(userClaimsToRemove);
 				}
+				else if(sortedClaims.Count > i)
+				{
+					foreach(var claim in sortedClaims.Skip(i))
+					{
+						var claimToAdd = new IdentityUserClaim<string>
+						{
+							ClaimType = claim.Type,
+							ClaimValue = claim.Value,
+							UserId = user.Id
+						};
+
+						this.Logger.LogDebugIfEnabled($"{logPrefix} adding claim with type {claim.Type.ToStringRepresentation()} and value {claim.Value.ToStringRepresentation()}.");
+						await this.DatabaseContext.UserClaims.AddAsync(claimToAdd);
+					}
+				}
+
+				var savedChanges = await this.DatabaseContext.SaveChangesAsync();
+				this.Logger.LogDebugIfEnabled($"{logPrefix} saved changes = {savedChanges}");
 			}
 			catch(Exception exception)
 			{
