@@ -2,7 +2,7 @@
 	<PropertyGroup Label="Initial">
 		<Company>Hans Kindberg - open source</Company>
 		<VersionPrefix>5.2.1</VersionPrefix>
-		<VersionPrereleaseName>beta.3</VersionPrereleaseName>
+		<VersionPrereleaseName>beta.4</VersionPrereleaseName>
 	</PropertyGroup>
 	<PropertyGroup Label="Assembly">
 		<AssemblyName>HansKindberg.IdentityServer</AssemblyName>
@@ -24,7 +24,7 @@
 		<PackageTags></PackageTags>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.0-alpha" />
+		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
 		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.1" />
 		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
