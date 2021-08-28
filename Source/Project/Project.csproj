@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup Label="Initial">
 		<Company>Hans Kindberg - open source</Company>
-		<VersionPrefix>5.2.1</VersionPrefix>
-		<VersionPrereleaseName>beta.4</VersionPrereleaseName>
+		<VersionPrefix>5.2.2</VersionPrefix>
+		<VersionPrereleaseName>alpha</VersionPrereleaseName>
 	</PropertyGroup>
 	<PropertyGroup Label="Assembly">
 		<AssemblyName>HansKindberg.IdentityServer</AssemblyName>
