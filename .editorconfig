@@ -537,3 +537,8 @@ dotnet_diagnostic.RS1023.severity = error
 dotnet_diagnostic.RS1024.severity = error
 dotnet_diagnostic.RS1025.severity = error
 dotnet_diagnostic.RS1026.severity = error
+
+# Temporary to handle the following issues:
+# https://github.com/dotnet/roslyn/issues/55014
+# https://github.com/edumserrano/dot-net-sdk-extensions/issues/73
+dotnet_diagnostic.IDE0130.severity = none
