@@ -25,14 +25,14 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
-		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.2" />
-		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.3" />
+		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(PackageReferenceVersion)" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.3.0" />
+		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.4.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
 		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.1-alpha" />
 		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.9-alpha" />
@@ -47,7 +47,7 @@
 		<PackageReference Include="Rsk.WsFederation.DuendeIdentityServer" Version="5.0.0" />
 		<PackageReference Include="Rsk.WsFederation.EntityFramework" Version="4.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-		<PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.0.1" />
 	</ItemGroup>
 	<Target Name="HandleAssemblyOriginatorKeyFile" BeforeTargets="BeforeBuild" Condition="$(SignAssembly) AND !Exists('$(AssemblyOriginatorKeyFile)')">
