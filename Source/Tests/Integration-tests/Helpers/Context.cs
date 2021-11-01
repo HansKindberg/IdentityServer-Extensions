@@ -53,7 +53,7 @@ namespace IntegrationTests.Helpers
 			this._environmentName = environmentName;
 			this._features = features ?? new Dictionary<Feature, bool>();
 			this._fileProvider = new PhysicalFileProvider(this._contentRootPath);
-			this._loggerFactory = new LoggerFactory(new[] {new DebugLoggerProvider()});
+			this._loggerFactory = new LoggerFactory(new[] { new DebugLoggerProvider() });
 		}
 
 		#endregion

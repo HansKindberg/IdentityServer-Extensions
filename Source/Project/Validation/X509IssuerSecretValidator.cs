@@ -46,7 +46,7 @@ namespace HansKindberg.IdentityServer.Validation
 		[SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
 		public virtual Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
 		{
-			var fail = Task.FromResult(new SecretValidationResult {Success = false});
+			var fail = Task.FromResult(new SecretValidationResult { Success = false });
 
 			if(parsedSecret == null || parsedSecret.Type != IdentityServerConstants.ParsedSecretTypes.X509Certificate)
 			{
@@ -83,7 +83,7 @@ namespace HansKindberg.IdentityServer.Validation
 				{
 					var values = new Dictionary<string, string>
 					{
-						{"x5t#S256", certificate.Thumbprint}
+						{ "x5t#S256", certificate.Thumbprint }
 					};
 
 					var confirmation = JsonConvert.SerializeObject(values);

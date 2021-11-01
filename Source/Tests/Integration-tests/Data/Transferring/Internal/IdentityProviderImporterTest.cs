@@ -56,7 +56,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 		protected internal virtual Context CreateContext(DatabaseProvider databaseProvider, bool dynamicAuthenticationProvidersFeatureEnabled)
 		{
-			return new Context(databaseProvider: databaseProvider, features: new Dictionary<Feature, bool> {{Feature.DynamicAuthenticationProviders, dynamicAuthenticationProvidersFeatureEnabled}});
+			return new Context(databaseProvider: databaseProvider, features: new Dictionary<Feature, bool> { { Feature.DynamicAuthenticationProviders, dynamicAuthenticationProvidersFeatureEnabled } });
 		}
 
 		protected internal virtual void FakeHttpContextIfNecessary(Context context)
@@ -66,7 +66,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 			var httpContextAccessor = context.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
 
-			httpContextAccessor.HttpContext ??= new DefaultHttpContext {RequestServices = context.ServiceProvider};
+			httpContextAccessor.HttpContext ??= new DefaultHttpContext { RequestServices = context.ServiceProvider };
 		}
 
 		[TestMethod]
@@ -124,8 +124,8 @@ namespace IntegrationTests.Data.Transferring.Internal
 				{
 					Properties =
 					{
-						{"First-property", "First-property-value"},
-						{"Second-property", "Second-property-value"}
+						{ "First-property", "First-property-value" },
+						{ "Second-property", "Second-property-value" }
 					},
 					Scheme = "Scheme-1"
 				},
@@ -250,7 +250,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 		protected internal virtual async Task ImportAsyncScenarioTest(DatabaseProvider databaseProvider)
 		{
-			var importOptions = new ImportOptions {DeleteAllOthers = true};
+			var importOptions = new ImportOptions { DeleteAllOthers = true };
 
 			using(var context = new Context(databaseProvider: databaseProvider))
 			{

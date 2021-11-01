@@ -70,7 +70,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(IdentityProviderEntity)}.ToHashSet(),
+				new[] { typeof(IdentityProviderEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is IdentityProviderEntity identityProvider)

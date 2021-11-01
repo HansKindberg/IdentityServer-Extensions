@@ -63,7 +63,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(ApiScopeEntity)}.ToHashSet(),
+				new[] { typeof(ApiScopeEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is ApiScopeEntity apiScope)
@@ -78,7 +78,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				parent.Relations,
-				new[] {typeof(ApiScopeClaim), typeof(ApiScopeProperty)}.ToHashSet()
+				new[] { typeof(ApiScopeClaim), typeof(ApiScopeProperty) }.ToHashSet()
 			);
 
 			await this.PopulateRelationDeletesAsync<ApiScopeClaim>(await this.DatabaseContext.ApiScopeClaims().Where(apiScopeClaim => deletedApiScopeIds.Contains(apiScopeClaim.ScopeId)).CountAsync(), parent.Relations);

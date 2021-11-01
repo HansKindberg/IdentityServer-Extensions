@@ -110,7 +110,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(ClientEntity)}.ToHashSet(),
+				new[] { typeof(ClientEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is ClientEntity client)

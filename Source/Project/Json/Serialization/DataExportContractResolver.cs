@@ -44,7 +44,7 @@ namespace HansKindberg.IdentityServer.Json.Serialization
 							this.PopulateDefaultValues<ApiScope>(defaultValues);
 							this.PopulateDefaultValues<Client>(defaultValues);
 							this.PopulateDefaultValues<ClientClaim>(defaultValues);
-							this.PopulateDefaultValues(defaultValues, new IdentityProvider(string.Empty) {Type = null});
+							this.PopulateDefaultValues(defaultValues, new IdentityProvider(string.Empty) { Type = null });
 							this.PopulateDefaultValues<IdentityResource>(defaultValues);
 							this.PopulateDefaultValues<RelyingParty>(defaultValues);
 							this.PopulateDefaultValues<Secret>(defaultValues);

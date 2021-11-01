@@ -39,7 +39,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 
 			var expectedDataDirectoryPath = Path.Combine(Global.ProjectDirectoryPath, "Test-data");
 
-			using(var context = new Context(databaseProvider: DatabaseProvider.Sqlite, features: new Dictionary<Feature, bool> {{Feature.DataDirectory, false}}))
+			using(var context = new Context(databaseProvider: DatabaseProvider.Sqlite, features: new Dictionary<Feature, bool> { { Feature.DataDirectory, false } }))
 			{
 				var serviceProvider = context.ServiceProvider;
 
@@ -172,9 +172,9 @@ namespace IntegrationTests.DependencyInjection.Extensions
 			var signingAlgorithmsPath = $"{ConfigurationKeys.IdentityServerPath}:{nameof(IdentityServerOptions.KeyManagement)}:{nameof(IdentityServerOptions.KeyManagement.SigningAlgorithms)}";
 			var additionalConfiguration = new Dictionary<string, string>
 			{
-				{$"{signingAlgorithmsPath}:1:Name", "Test-1"},
-				{$"{signingAlgorithmsPath}:2:Name", "Test-2"},
-				{$"{signingAlgorithmsPath}:2:UseX509Certificate", "true"},
+				{ $"{signingAlgorithmsPath}:1:Name", "Test-1" },
+				{ $"{signingAlgorithmsPath}:2:Name", "Test-2" },
+				{ $"{signingAlgorithmsPath}:2:UseX509Certificate", "true" },
 			};
 
 			using(var context = new Context(additionalConfiguration: additionalConfiguration, databaseProvider: DatabaseProvider.Sqlite))

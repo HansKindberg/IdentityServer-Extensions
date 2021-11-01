@@ -50,7 +50,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 		protected internal virtual async Task ImportAsyncScenarioTest(DatabaseProvider databaseProvider)
 		{
-			var importOptions = new ImportOptions {DeleteAllOthers = true};
+			var importOptions = new ImportOptions { DeleteAllOthers = true };
 
 			using(var context = new Context(databaseProvider: databaseProvider))
 			{
@@ -64,9 +64,9 @@ namespace IntegrationTests.Data.Transferring.Internal
 					{
 						new ClientModel
 						{
-							AllowedGrantTypes = new[] {"a", "b", "c"}.ToList(),
+							AllowedGrantTypes = new[] { "a", "b", "c" }.ToList(),
 							ClientId = "client-1",
-							ClientSecrets = new[] {new SecretModel("a"), new SecretModel("b"), new SecretModel("c")}.ToList(),
+							ClientSecrets = new[] { new SecretModel("a"), new SecretModel("b"), new SecretModel("c") }.ToList(),
 							Description = "client-1-description"
 						}
 					},
@@ -81,9 +81,9 @@ namespace IntegrationTests.Data.Transferring.Internal
 					{
 						new ClientModel
 						{
-							AllowedGrantTypes = new[] {"a", "b", "c"}.ToList(),
+							AllowedGrantTypes = new[] { "a", "b", "c" }.ToList(),
 							ClientId = "client-1",
-							ClientSecrets = new[] {new SecretModel("a"), new SecretModel("b"), new SecretModel("c")}.ToList(),
+							ClientSecrets = new[] { new SecretModel("a"), new SecretModel("b"), new SecretModel("c") }.ToList(),
 							Description = "client-1-description"
 						}
 					},
@@ -98,9 +98,9 @@ namespace IntegrationTests.Data.Transferring.Internal
 					{
 						new ClientModel
 						{
-							AllowedGrantTypes = new[] {"a"}.ToList(),
+							AllowedGrantTypes = new[] { "a" }.ToList(),
 							ClientId = "client-1",
-							ClientSecrets = new[] {new SecretModel("a")}.ToList(),
+							ClientSecrets = new[] { new SecretModel("a") }.ToList(),
 							Description = "client-1-description"
 						}
 					},

@@ -21,7 +21,7 @@ namespace IntegrationTests.Helpers
 
 		public static IList<KeyValuePair<string, string>> CreateConfiguration(Feature feature, bool enabled)
 		{
-			return CreateConfiguration(new Dictionary<Feature, bool> {{feature, enabled}});
+			return CreateConfiguration(new Dictionary<Feature, bool> { { feature, enabled } });
 		}
 
 		#endregion

@@ -191,7 +191,7 @@ namespace Application.Controllers
 			{
 				var authenticationScheme = model.AuthenticationSchemes.First();
 
-				return this.RedirectToAction(authenticationScheme.Kind.ToString(), "Authenticate", new {authenticationScheme = authenticationScheme.Name, returnUrl});
+				return this.RedirectToAction(authenticationScheme.Kind.ToString(), "Authenticate", new { authenticationScheme = authenticationScheme.Name, returnUrl });
 			}
 			// ReSharper restore InvertIf
 
@@ -298,9 +298,9 @@ namespace Application.Controllers
 			// ReSharper disable InvertIf
 			if(externalSignOutScheme != null)
 			{
-				var redirectUrl = this.Url.Action("SignOut", new {signOutId = form.Id});
+				var redirectUrl = this.Url.Action("SignOut", new { signOutId = form.Id });
 
-				return this.SignOut(new AuthenticationProperties {RedirectUri = redirectUrl}, externalSignOutScheme);
+				return this.SignOut(new AuthenticationProperties { RedirectUri = redirectUrl }, externalSignOutScheme);
 			}
 			// ReSharper restore InvertIf
 

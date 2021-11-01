@@ -434,7 +434,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			JsonConvert.DefaultSettings = () => new JsonSerializerSettings
 			{
-				Converters = new List<JsonConverter> {new JsonCertificateConverter()}
+				Converters = new List<JsonConverter> { new JsonCertificateConverter() }
 			};
 			TypeDescriptor.AddAttributes(typeof(X509Certificate2), new TypeConverterAttribute(typeof(CertificateConverter)));
 

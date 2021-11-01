@@ -25,9 +25,9 @@ namespace IntegrationTests.Configuration
 			var configurationBuilder = new ConfigurationBuilder();
 			configurationBuilder.AddInMemoryCollection(new Dictionary<string, string>
 			{
-				{$"{defaultClaimMappingPath}:First-key", "First-value"},
-				{$"{defaultClaimMappingPath}:Second-key", "Second-value"},
-				{$"{defaultClaimMappingPath}:Third-key", "Third-value"}
+				{ $"{defaultClaimMappingPath}:First-key", "First-value" },
+				{ $"{defaultClaimMappingPath}:Second-key", "Second-value" },
+				{ $"{defaultClaimMappingPath}:Third-key", "Third-value" }
 			});
 			var configuration = configurationBuilder.Build();
 

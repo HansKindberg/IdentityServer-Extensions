@@ -24,4 +24,4 @@
 }
 <p>@Localizer.GetString("description")</p>
 <partial name="ValidationSummary" />
-<partial model="@Model.Form" name="~/Views/Consent/Form.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{ViewDataKeys.PersistenceEnabled, Model.PersistenceEnabled}})" />
+<partial model="@Model.Form" name="~/Views/Consent/Form.cshtml" view-data="@(new ViewDataDictionary(ViewData) { { ViewDataKeys.PersistenceEnabled, Model.PersistenceEnabled } })" />

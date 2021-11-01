@@ -56,7 +56,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 
 			return (entityRelations, importRelationItemToMatch) =>
 			{
-				foreach(var comparison in new[] {StringComparison.Ordinal, StringComparison.OrdinalIgnoreCase})
+				foreach(var comparison in new[] { StringComparison.Ordinal, StringComparison.OrdinalIgnoreCase })
 				{
 					var matchedEntityRelationItem = entityRelations.FirstOrDefault(item => string.Equals(equalityComparePropertyFunction(item), equalityComparePropertyFunction(importRelationItemToMatch), comparison));
 

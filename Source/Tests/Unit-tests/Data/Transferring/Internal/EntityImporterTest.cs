@@ -19,7 +19,7 @@ namespace UnitTests.Data.Transferring.Internal
 		{
 			await Task.CompletedTask;
 
-			var entityImporterMock = new Mock<EntityImporter<object, object>>(Mock.Of<ILoggerFactory>()) {CallBase = true};
+			var entityImporterMock = new Mock<EntityImporter<object, object>>(Mock.Of<ILoggerFactory>()) { CallBase = true };
 
 			return entityImporterMock.Object;
 		}
@@ -123,7 +123,7 @@ namespace UnitTests.Data.Transferring.Internal
 
 					throw new InvalidOperationException("Invalid test-instance");
 				},
-				new Dictionary<object, object> {{entity, import}}
+				new Dictionary<object, object> { { entity, import } }
 			);
 
 			Assert.AreEqual(4, entityRelations.Count);
@@ -254,7 +254,7 @@ namespace UnitTests.Data.Transferring.Internal
 
 					throw new InvalidOperationException("Invalid test-instance");
 				},
-				new Dictionary<object, object> {{entity, import}}
+				new Dictionary<object, object> { { entity, import } }
 			);
 
 			Assert.AreEqual(4, entityRelations.Count);

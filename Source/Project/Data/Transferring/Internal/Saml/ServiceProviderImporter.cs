@@ -18,7 +18,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal.Saml
 	{
 		#region Fields
 
-		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] {"Id"}.ToHashSet(StringComparer.OrdinalIgnoreCase);
+		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] { "Id" }.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 		#endregion
 
@@ -79,7 +79,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal.Saml
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(ServiceProviderEntity)}.ToHashSet(),
+				new[] { typeof(ServiceProviderEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is ServiceProviderEntity serviceProvider)

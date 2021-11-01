@@ -28,7 +28,7 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 	{
 		#region Fields
 
-		private static readonly IDictionary<Feature, bool> _features = new Dictionary<Feature, bool> {{Feature.WsFederation, true}};
+		private static readonly IDictionary<Feature, bool> _features = new Dictionary<Feature, bool> { { Feature.WsFederation, true } };
 
 		#endregion
 
@@ -118,9 +118,9 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 				{
 					ClaimMapping = new Dictionary<string, string>
 					{
-						{"Key-1", "Value-1"},
-						{"Key-2", "Value-2"},
-						{"Key-3", "Value-3"}
+						{ "Key-1", "Value-1" },
+						{ "Key-2", "Value-2" },
+						{ "Key-3", "Value-3" }
 					},
 					Realm = "Relying-party-1",
 					TokenType = "Token-type"
@@ -129,8 +129,8 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 				{
 					ClaimMapping = new Dictionary<string, string>
 					{
-						{"Key-1", "Value-1"},
-						{"Key-2", "Value-2"}
+						{ "Key-1", "Value-1" },
+						{ "Key-2", "Value-2" }
 					},
 					Realm = "Relying-party-2"
 				},
@@ -255,7 +255,7 @@ namespace IntegrationTests.Data.Transferring.Internal.WsFederation
 
 		protected internal virtual async Task ImportAsyncScenarioTest(DatabaseProvider databaseProvider)
 		{
-			var importOptions = new ImportOptions {DeleteAllOthers = true};
+			var importOptions = new ImportOptions { DeleteAllOthers = true };
 
 			using(var context = await this.CreateContextAsync(databaseProvider))
 			{

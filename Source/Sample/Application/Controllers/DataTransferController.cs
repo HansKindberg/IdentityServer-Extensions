@@ -227,13 +227,13 @@ namespace Application.Controllers
 
 			var configuration = await this.CreateConfigurationAsync();
 
-			var model = new ImportViewModel {Form = form};
+			var model = new ImportViewModel { Form = form };
 
 			if(this.ModelState.IsValid)
 			{
 				try
 				{
-					var result = await this.DataImporter.ImportAsync(configuration, new ImportOptions {DeleteAllOthers = form.DeleteAllOthers, VerifyOnly = form.VerifyOnly});
+					var result = await this.DataImporter.ImportAsync(configuration, new ImportOptions { DeleteAllOthers = form.DeleteAllOthers, VerifyOnly = form.VerifyOnly });
 
 					if(result.Errors.Any())
 					{

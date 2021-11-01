@@ -26,7 +26,7 @@ namespace UnitTests.Data.Transferring.Internal
 		{
 			await Task.CompletedTask;
 
-			var partialImporterMock = new Mock<PartialImporter<T>>(new NullLoggerFactory()) {CallBase = true};
+			var partialImporterMock = new Mock<PartialImporter<T>>(new NullLoggerFactory()) { CallBase = true };
 
 			partialImporterMock.Setup(partialImporter => partialImporter.ModelIdentifierName).Returns(modelIdentifierName);
 			partialImporterMock.Setup(partialImporter => partialImporter.ModelIdentifierSelector).Returns(modelIdentifierSelector);
@@ -42,8 +42,8 @@ namespace UnitTests.Data.Transferring.Internal
 
 			var clients = new List<Client>
 			{
-				new Client {ClientId = clientId},
-				new Client {ClientId = clientId}
+				new Client { ClientId = clientId },
+				new Client { ClientId = clientId }
 			};
 			var result = new DataImportResult();
 			await partialImporter.FilterOutDuplicateModelsAsync(clients, result);
@@ -53,9 +53,9 @@ namespace UnitTests.Data.Transferring.Internal
 
 			clients = new List<Client>
 			{
-				new Client {ClientId = clientId},
-				new Client {ClientId = clientId},
-				new Client {ClientId = clientId}
+				new Client { ClientId = clientId },
+				new Client { ClientId = clientId },
+				new Client { ClientId = clientId }
 			};
 			result = new DataImportResult();
 			await partialImporter.FilterOutDuplicateModelsAsync(clients, result);
@@ -69,7 +69,7 @@ namespace UnitTests.Data.Transferring.Internal
 		{
 			var clients = new List<Client>
 			{
-				new Client {ClientId = string.Empty}
+				new Client { ClientId = string.Empty }
 			};
 			var partialImporter = await this.CreatePartialImporterAsync();
 			var result = new DataImportResult();
@@ -84,7 +84,7 @@ namespace UnitTests.Data.Transferring.Internal
 		{
 			var clients = new List<Client>
 			{
-				new Client {ClientId = null}
+				new Client { ClientId = null }
 			};
 			var partialImporter = await this.CreatePartialImporterAsync();
 			var result = new DataImportResult();
@@ -99,7 +99,7 @@ namespace UnitTests.Data.Transferring.Internal
 		{
 			var clients = new List<Client>
 			{
-				new Client {ClientId = "    "}
+				new Client { ClientId = "    " }
 			};
 			var partialImporter = await this.CreatePartialImporterAsync();
 			var result = new DataImportResult();

@@ -71,16 +71,16 @@ namespace UnitTests.FeatureManagement
 		[TestMethod]
 		public async Task IsEnabledAsync_Test()
 		{
-			var alwaysDisabledFeatures = new[] {null, string.Empty, "   ", "NonExistentFeature"};
+			var alwaysDisabledFeatures = new[] { null, string.Empty, "   ", "NonExistentFeature" };
 
 			var configurationFeatureManager = new ConfigurationFeatureManager(await this.CreateConfigurationAsync());
-			foreach(var feature in alwaysDisabledFeatures.Concat(new[] {nameof(Feature.CertificateForwarding)}))
+			foreach(var feature in alwaysDisabledFeatures.Concat(new[] { nameof(Feature.CertificateForwarding) }))
 			{
 				await this.IsEnabledAsyncTest(configurationFeatureManager, false, feature);
 			}
 
 			configurationFeatureManager = new ConfigurationFeatureManager(await this.CreateConfigurationAsync(await this.CreateConfigurationSectionsAsync(false, nameof(Feature.CertificateForwarding), "NonExistentFeature")));
-			foreach(var feature in alwaysDisabledFeatures.Concat(new[] {nameof(Feature.CertificateForwarding)}))
+			foreach(var feature in alwaysDisabledFeatures.Concat(new[] { nameof(Feature.CertificateForwarding) }))
 			{
 				await this.IsEnabledAsyncTest(configurationFeatureManager, false, feature);
 			}

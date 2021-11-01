@@ -49,9 +49,9 @@ namespace IntegrationTests.Json.Serialization
 			{
 				ClaimsMapping = new Dictionary<string, string>
 				{
-					{"Key-1", "Value-1"},
-					{"Key-2", "Value-2"},
-					{"Key-3", "Value-3"}
+					{ "Key-1", "Value-1" },
+					{ "Key-2", "Value-2" },
+					{ "Key-3", "Value-3" }
 				}
 			};
 			json = JsonConvert.SerializeObject(serviceProvider, this.JsonSerializerSettings);

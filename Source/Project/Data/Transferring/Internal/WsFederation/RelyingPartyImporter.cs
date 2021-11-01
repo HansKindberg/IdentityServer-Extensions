@@ -18,7 +18,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal.WsFederation
 	{
 		#region Fields
 
-		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] {"Id"}.ToHashSet(StringComparer.OrdinalIgnoreCase);
+		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] { "Id" }.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 		#endregion
 
@@ -74,7 +74,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal.WsFederation
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(RelyingPartyEntity)}.ToHashSet(),
+				new[] { typeof(RelyingPartyEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is RelyingPartyEntity relyingParty)

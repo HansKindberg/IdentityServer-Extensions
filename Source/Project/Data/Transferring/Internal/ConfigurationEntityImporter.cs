@@ -11,7 +11,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 	{
 		#region Fields
 
-		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] {"Created", "Id", "LastAccessed", "Updated"}.ToHashSet(StringComparer.OrdinalIgnoreCase);
+		private static readonly ISet<string> _propertiesToExcludeFromUpdate = new[] { "Created", "Id", "LastAccessed", "Updated" }.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 		#endregion
 

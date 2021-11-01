@@ -67,7 +67,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(ApiResourceEntity)}.ToHashSet(),
+				new[] { typeof(ApiResourceEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is ApiResourceEntity apiResource)
@@ -82,7 +82,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				parent.Relations,
-				new[] {typeof(ApiResourceClaim), typeof(ApiResourceProperty), typeof(ApiResourceScope), typeof(ApiResourceSecret)}.ToHashSet()
+				new[] { typeof(ApiResourceClaim), typeof(ApiResourceProperty), typeof(ApiResourceScope), typeof(ApiResourceSecret) }.ToHashSet()
 			);
 
 			await this.PopulateRelationDeletesAsync<ApiResourceClaim>(await this.DatabaseContext.ApiResourceClaims().Where(apiResourceClaim => deletedApiResourceIds.Contains(apiResourceClaim.ApiResourceId)).CountAsync(), parent.Relations);

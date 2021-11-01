@@ -84,7 +84,7 @@ namespace IntegrationTests.Json.Serialization
 
 			client = new Client
 			{
-				AllowedCorsOrigins = new HashSet<string>(new[] {"http://origin-a", "http://origin-b", "http://origin-c"}, StringComparer.OrdinalIgnoreCase),
+				AllowedCorsOrigins = new HashSet<string>(new[] { "http://origin-a", "http://origin-b", "http://origin-c" }, StringComparer.OrdinalIgnoreCase),
 				ClientId = "client",
 				Description = "Description",
 				LogoUri = "http://logo-uri/"
@@ -131,7 +131,7 @@ namespace IntegrationTests.Json.Serialization
 				},
 				ClaimsMapping = new Dictionary<string, string>
 				{
-					{"Key-1", "Value-1"}
+					{ "Key-1", "Value-1" }
 				},
 				SingleLogoutServices =
 				{

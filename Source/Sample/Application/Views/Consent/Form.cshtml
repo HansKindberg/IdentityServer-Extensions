@@ -19,7 +19,7 @@
 				<ul class="list-group">
 					@foreach(var identityResource in Model.IdentityResources.OrderBy(identityResource => !identityResource.Required))
 					{
-						<partial model="@identityResource" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{"Form-Input-Name", nameof(Model.ConsentedIdentityResources)}})" />
+						<partial model="@identityResource" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) { { "Form-Input-Name", nameof(Model.ConsentedIdentityResources) } })" />
 					}
 				</ul>
 			</div>
@@ -38,7 +38,7 @@
 				<ul class="list-group">
 					@foreach(var apiScope in Model.ApiScopes)
 					{
-						<partial model="@apiScope" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) {{"Form-Input-Name", nameof(Model.ConsentedApiScopes)}})" />
+						<partial model="@apiScope" name="~/Views/Consent/Scope.cshtml" view-data="@(new ViewDataDictionary(ViewData) { { "Form-Input-Name", nameof(Model.ConsentedApiScopes) } })" />
 					}
 				</ul>
 			</div>

@@ -1,7 +1,7 @@
 ﻿@model ScopeViewModel
 @if(Model != null)
 {
-	var inputName = (string) ViewData["Form-Input-Name"];
+	var inputName = (string)ViewData["Form-Input-Name"];
 	<li class="list-group-item form-check">
 		<input checked="@(Model.Checked || Model.Required)" disabled="@Model.Required" id="@inputName.ToLowerInvariant()-@Model.Name" name="@inputName" type="checkbox" value="@Model.Name" />
 		@if(Model.Required)

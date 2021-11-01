@@ -7,7 +7,7 @@ namespace HansKindberg.IdentityServer.Web.Mvc.Filters.Configuration
 	{
 		#region Fields
 
-		private static readonly ISet<string> _defaultPaths = new HashSet<string>(new[] {"/BankIdAuthentication/Login"}, StringComparer.OrdinalIgnoreCase);
+		private static readonly ISet<string> _defaultPaths = new HashSet<string>(new[] { "/BankIdAuthentication/Login" }, StringComparer.OrdinalIgnoreCase);
 
 		#endregion
 

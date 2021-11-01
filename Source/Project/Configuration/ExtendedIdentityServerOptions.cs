@@ -22,17 +22,17 @@ namespace HansKindberg.IdentityServer.Configuration
 		/// </summary>
 		public virtual IDictionary<string, string> ClaimTypeMap { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ClaimTypes.Email.UrlEncodeColon(), JwtClaimTypes.Email},
-			{"http%3a//schemas.microsoft.com/identity/claims/identityprovider", JwtClaimTypes.IdentityProvider},
-			{ClaimTypes.Name.UrlEncodeColon(), JwtClaimTypes.Name},
-			{ClaimTypes.NameIdentifier.UrlEncodeColon(), JwtClaimTypes.Subject},
-			{ClaimTypes.PrimarySid.UrlEncodeColon(), "primarysid"},
-			{ClaimTypes.SerialNumber.UrlEncodeColon(), "certserialnumber"},
-			{"http%3a//schemas.microsoft.com/2012/12/certificatecontext/field/subject", "certsubject"},
-			{ClaimTypes.Thumbprint.UrlEncodeColon(), "certthumbprint"},
-			{ClaimTypes.Upn.UrlEncodeColon(), "upn"},
-			{ClaimTypes.WindowsAccountName.UrlEncodeColon(), "winaccountname"},
-			{ClaimTypes.X500DistinguishedName.UrlEncodeColon(), "certsubject"}
+			{ ClaimTypes.Email.UrlEncodeColon(), JwtClaimTypes.Email },
+			{ "http%3a//schemas.microsoft.com/identity/claims/identityprovider", JwtClaimTypes.IdentityProvider },
+			{ ClaimTypes.Name.UrlEncodeColon(), JwtClaimTypes.Name },
+			{ ClaimTypes.NameIdentifier.UrlEncodeColon(), JwtClaimTypes.Subject },
+			{ ClaimTypes.PrimarySid.UrlEncodeColon(), "primarysid" },
+			{ ClaimTypes.SerialNumber.UrlEncodeColon(), "certserialnumber" },
+			{ "http%3a//schemas.microsoft.com/2012/12/certificatecontext/field/subject", "certsubject" },
+			{ ClaimTypes.Thumbprint.UrlEncodeColon(), "certthumbprint" },
+			{ ClaimTypes.Upn.UrlEncodeColon(), "upn" },
+			{ ClaimTypes.WindowsAccountName.UrlEncodeColon(), "winaccountname" },
+			{ ClaimTypes.X500DistinguishedName.UrlEncodeColon(), "certsubject" }
 		};
 
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();

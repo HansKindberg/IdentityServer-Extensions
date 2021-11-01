@@ -48,7 +48,7 @@ namespace IntegrationTests.Identity
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 
 				const string id = "32348cf4-1e8e-4a97-a185-b52cdd70b996";
-				await identityFacade.UserManager.CreateAsync(new UserEntity {Id = id, UserName = "Test"});
+				await identityFacade.UserManager.CreateAsync(new UserEntity { Id = id, UserName = "Test" });
 				await identityFacade.DatabaseContext.SaveChangesAsync();
 				Assert.IsNotNull(await identityFacade.UserManager.FindByIdAsync(id));
 				Assert.IsNotNull(await identityFacade.UserManager.FindByIdAsync(id.ToLowerInvariant()));
@@ -211,7 +211,7 @@ namespace IntegrationTests.Identity
 				Assert.IsNotNull(userClaims);
 				Assert.AreEqual(4, userClaims.Count);
 
-				claims.Add(new ClaimBuilder {Type = "2", Value = "1"});
+				claims.Add(new ClaimBuilder { Type = "2", Value = "1" });
 				user = await identityFacade.ResolveUserAsync(claims, provider, subject);
 				userClaims = await identityFacade.UserManager.GetClaimsAsync(user);
 				Assert.IsNotNull(userClaims);
@@ -364,7 +364,7 @@ namespace IntegrationTests.Identity
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
-				var identityResult = await identityFacade.SaveUserAsync(new UserModel {Password = "P@ssword12", UserName = "Test"});
+				var identityResult = await identityFacade.SaveUserAsync(new UserModel { Password = "P@ssword12", UserName = "Test" });
 				Assert.IsTrue(identityResult.Succeeded);
 				Assert.AreEqual(0, await identityFacade.DatabaseContext.Users.CountAsync());
 				Assert.IsNull(await identityFacade.GetUserAsync("Test"));
@@ -384,7 +384,7 @@ namespace IntegrationTests.Identity
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
-				var identityResult = await identityFacade.SaveUserAsync(new UserModel {Password = "P@ssword12", UserName = "Test"});
+				var identityResult = await identityFacade.SaveUserAsync(new UserModel { Password = "P@ssword12", UserName = "Test" });
 				Assert.IsTrue(identityResult.Succeeded);
 				Assert.AreEqual(0, await identityFacade.DatabaseContext.Users.CountAsync());
 				Assert.IsNull(await identityFacade.GetUserAsync("Test"));
@@ -427,7 +427,7 @@ namespace IntegrationTests.Identity
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = oldId, UserName = "Test"};
+				var user = new UserEntity { Id = oldId, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				var claims = new List<Claim>
 				{
@@ -449,7 +449,7 @@ namespace IntegrationTests.Identity
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 				Assert.IsFalse(identityFacade.UserManager.Store.AutoSaveChanges);
 
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(1, identityFacade.DatabaseContext.ChangeTracker.Entries().Count(entry => entry.State == EntityState.Added));
 				Assert.AreEqual(1, identityFacade.DatabaseContext.ChangeTracker.Entries().Count(entry => entry.State == EntityState.Deleted));
@@ -471,7 +471,7 @@ namespace IntegrationTests.Identity
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {UserName = "Test"};
+				var user = new UserEntity { UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				await identityFacade.UserManager.AddLoginAsync(user, new UserLoginInfo("Provider-1", "User-identifier-1", "Provider-1"));
 			}
@@ -483,7 +483,7 @@ namespace IntegrationTests.Identity
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 				Assert.IsFalse(identityFacade.UserManager.Store.AutoSaveChanges);
 
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(0, await identityFacade.DatabaseContext.SaveChangesAsync());
 			}
@@ -509,7 +509,7 @@ namespace IntegrationTests.Identity
 				const string id = "32348cf4-1e8e-4a97-a185-b52cdd70b996";
 				const string provider = "Provider-1";
 				const string userIdentifier = "User-identifier-1";
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = id, Provider = provider, UserIdentifier = userIdentifier});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = id, Provider = provider, UserIdentifier = userIdentifier });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(2, await identityFacade.DatabaseContext.SaveChangesAsync());
 
@@ -526,7 +526,7 @@ namespace IntegrationTests.Identity
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 				var identityFacade = await this.CreateIdentityFacadeAsync(serviceProvider);
 
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(2, await identityFacade.DatabaseContext.SaveChangesAsync());
 
@@ -551,7 +551,7 @@ namespace IntegrationTests.Identity
 				// Prepare
 				var autoSaveChanges = identityFacade.UserManager.Store.AutoSaveChanges;
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = id, UserName = "Test"};
+				var user = new UserEntity { Id = id, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				var claims = new List<Claim>
 				{
@@ -568,7 +568,7 @@ namespace IntegrationTests.Identity
 				Assert.IsNotNull(await identityFacade.UserManager.FindByLoginAsync("Provider-1", "User-identifier-1"));
 
 				const string newId = "89648c35-08c1-4113-bf09-bdf5b06cece5";
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(6, await identityFacade.DatabaseContext.SaveChangesAsync());
 
@@ -592,7 +592,7 @@ namespace IntegrationTests.Identity
 				// Prepare
 				var autoSaveChanges = identityFacade.UserManager.Store.AutoSaveChanges;
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = id, UserName = "Test"};
+				var user = new UserEntity { Id = id, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				var claims = new List<Claim>
 				{
@@ -611,7 +611,7 @@ namespace IntegrationTests.Identity
 				Assert.IsNotNull(await identityFacade.UserManager.FindByLoginAsync("Provider-2", "User-identifier-2"));
 
 				const string newId = "89648c35-08c1-4113-bf09-bdf5b06cece5";
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(6, await identityFacade.DatabaseContext.SaveChangesAsync());
 
@@ -638,7 +638,7 @@ namespace IntegrationTests.Identity
 				// Prepare
 				var autoSaveChanges = identityFacade.UserManager.Store.AutoSaveChanges;
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = id, UserName = "Test"};
+				var user = new UserEntity { Id = id, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				var claims = new List<Claim>
 				{
@@ -655,7 +655,7 @@ namespace IntegrationTests.Identity
 				Assert.IsNotNull(await identityFacade.UserManager.FindByLoginAsync("Provider-1", "User-identifier-1"));
 
 				const string newId = "89648c35-08c1-4113-bf09-bdf5b06cece5";
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = newId, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(6, await identityFacade.DatabaseContext.SaveChangesAsync());
 
@@ -680,7 +680,7 @@ namespace IntegrationTests.Identity
 				// Prepare
 				var autoSaveChanges = identityFacade.UserManager.Store.AutoSaveChanges;
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = id, UserName = "Test"};
+				var user = new UserEntity { Id = id, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user, "P@ssword12");
 				identityFacade.UserManager.Store.AutoSaveChanges = autoSaveChanges;
 
@@ -690,7 +690,7 @@ namespace IntegrationTests.Identity
 
 				try
 				{
-					await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+					await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 					Assert.Fail("Should have thrown an exception");
 				}
 				catch(Exception exception)
@@ -828,7 +828,7 @@ namespace IntegrationTests.Identity
 				// Prepare
 				var autoSaveChanges = identityFacade.UserManager.Store.AutoSaveChanges;
 				identityFacade.UserManager.Store.AutoSaveChanges = true;
-				var user = new UserEntity {Id = id, UserName = "Test"};
+				var user = new UserEntity { Id = id, UserName = "Test" };
 				await identityFacade.UserManager.CreateAsync(user);
 				var claims = new List<Claim>
 				{
@@ -844,7 +844,7 @@ namespace IntegrationTests.Identity
 				Assert.AreEqual(3, (await identityFacade.UserManager.GetClaimsAsync(user)).Count);
 				Assert.IsNotNull(await identityFacade.UserManager.FindByLoginAsync("Provider-1", "User-identifier-1"));
 
-				await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.AreEqual(5, identityFacade.DatabaseContext.ChangeTracker.Entries().Count(entry => entry.State == EntityState.Unchanged));
 
 				Assert.IsNotNull(await identityFacade.UserManager.FindByIdAsync(id));
@@ -864,7 +864,7 @@ namespace IntegrationTests.Identity
 				const string id = "32348cf4-1e8e-4a97-a185-b52cdd70b996";
 				Assert.IsNull(await identityFacade.UserManager.FindByIdAsync(id));
 
-				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel {Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1"});
+				var result = await identityFacade.SaveUserLoginAsync(new UserLoginModel { Id = id, Provider = "Provider-1", UserIdentifier = "User-identifier-1" });
 				Assert.IsTrue(result.Succeeded);
 				Assert.AreEqual(2, await identityFacade.DatabaseContext.SaveChangesAsync());
 

@@ -63,7 +63,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				result.Items,
-				new[] {typeof(IdentityResourceEntity)}.ToHashSet(),
+				new[] { typeof(IdentityResourceEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is IdentityResourceEntity identityResource)
@@ -78,7 +78,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker(),
 				parent.Relations,
-				new[] {typeof(IdentityResourceClaim), typeof(IdentityResourceProperty)}.ToHashSet()
+				new[] { typeof(IdentityResourceClaim), typeof(IdentityResourceProperty) }.ToHashSet()
 			);
 
 			await this.PopulateRelationDeletesAsync<IdentityResourceClaim>(await this.DatabaseContext.IdentityResourceClaims().Where(identityResourceClaim => deletedIdentityResourceIds.Contains(identityResourceClaim.IdentityResourceId)).CountAsync(), parent.Relations);

@@ -31,7 +31,7 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 	{
 		#region Fields
 
-		private static readonly IDictionary<Feature, bool> _features = new Dictionary<Feature, bool> {{Feature.Saml, true}};
+		private static readonly IDictionary<Feature, bool> _features = new Dictionary<Feature, bool> { { Feature.Saml, true } };
 
 		#endregion
 
@@ -154,9 +154,9 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 					},
 					ClaimsMapping = new Dictionary<string, string>
 					{
-						{"Key-1", "Value-1"},
-						{"Key-2", "Value-2"},
-						{"Key-3", "Value-3"}
+						{ "Key-1", "Value-1" },
+						{ "Key-2", "Value-2" },
+						{ "Key-3", "Value-3" }
 					},
 					EntityId = "Service-provider-1",
 					EncryptionCertificate = await this.GetCertificateAsync(1, true),
@@ -393,9 +393,9 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 			firstServiceProvider.ClaimsMapping.Clear();
 			firstServiceProvider.ClaimsMapping = new Dictionary<string, string>
 			{
-				{"Key-21", "Value-21"},
-				{"Key-22", "Value-22"},
-				{"Key-23", "Value-23"}
+				{ "Key-21", "Value-21" },
+				{ "Key-22", "Value-22" },
+				{ "Key-23", "Value-23" }
 			};
 			firstServiceProvider.SigningCertificates.Clear();
 			firstServiceProvider.SigningCertificates.AddRange(new[]
@@ -462,7 +462,7 @@ namespace IntegrationTests.Data.Transferring.Internal.Saml
 
 		protected internal virtual async Task ImportAsyncScenarioTest(DatabaseProvider databaseProvider)
 		{
-			var importOptions = new ImportOptions {DeleteAllOthers = true};
+			var importOptions = new ImportOptions { DeleteAllOthers = true };
 
 			using(var context = await this.CreateContextAsync(databaseProvider))
 			{

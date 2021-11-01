@@ -57,7 +57,7 @@ namespace Application.Controllers
 			this.HttpContext.Response.Headers["Location"] = string.Empty;
 			this.HttpContext.Response.StatusCode = 200;
 
-			return await Task.FromResult(this.View("Redirect", new RedirectViewModel {RedirectUrl = redirectUrl, SecondsBeforeRedirect = secondsBeforeRedirect}));
+			return await Task.FromResult(this.View("Redirect", new RedirectViewModel { RedirectUrl = redirectUrl, SecondsBeforeRedirect = secondsBeforeRedirect }));
 		}
 
 		protected internal virtual string ResolveAndValidateReturnUrl(string returnUrl)

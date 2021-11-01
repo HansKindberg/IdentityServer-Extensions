@@ -55,7 +55,7 @@ namespace Application.Controllers
 				this.HttpContext.Response.Cookies.Append(
 					CookieRequestCultureProvider.DefaultCookieName,
 					CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(form.Culture, form.UiCulture)),
-					new CookieOptions {MaxAge = TimeSpan.FromDays(365)}
+					new CookieOptions { MaxAge = TimeSpan.FromDays(365) }
 				);
 			}
 

@@ -57,9 +57,9 @@ namespace HansKindberg.IdentityServer.ComponentModel
 			{
 				if(destinationType == typeof(InstanceDescriptor))
 				{
-					var constructor = typeof(X509Certificate2).GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new[] {typeof(byte[])}, null);
+					var constructor = typeof(X509Certificate2).GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(byte[]) }, null);
 
-					return new InstanceDescriptor(constructor, new object[] {certificate.GetRawCertData()});
+					return new InstanceDescriptor(constructor, new object[] { certificate.GetRawCertData() });
 				}
 
 				if(destinationType == typeof(string))

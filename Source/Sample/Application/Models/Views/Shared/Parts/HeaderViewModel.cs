@@ -103,10 +103,10 @@ namespace Application.Models.Views.Shared.Parts
 					if(!this.HttpContext.SignedOut() && this.Facade.AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, this.HttpContext.User).Result)
 					{
 						if(this.Facade.FeatureManager.IsEnabled(Feature.DataTransfer))
-							this.AddNavigationNode(new[] {nameof(DataTransferController.Index), nameof(DataTransferController.Export), nameof(DataTransferController.Import)}, nameof(Feature.DataTransfer), navigation);
+							this.AddNavigationNode(new[] { nameof(DataTransferController.Index), nameof(DataTransferController.Export), nameof(DataTransferController.Import) }, nameof(Feature.DataTransfer), navigation);
 
 						if(this.Facade.FeatureManager.IsEnabled(Feature.Diagnostics))
-							this.AddNavigationNode(new[] {nameof(DiagnosticsController.Index), nameof(DiagnosticsController.AuthenticationScheme), nameof(DiagnosticsController.Configuration), nameof(DiagnosticsController.Cookies), nameof(DiagnosticsController.DataProtection), nameof(DiagnosticsController.EnvironmentVariables), nameof(DiagnosticsController.Options), nameof(DiagnosticsController.RequestHeaders), nameof(DiagnosticsController.ResponseHeaders)}, nameof(Feature.Diagnostics), navigation);
+							this.AddNavigationNode(new[] { nameof(DiagnosticsController.Index), nameof(DiagnosticsController.AuthenticationScheme), nameof(DiagnosticsController.Configuration), nameof(DiagnosticsController.Cookies), nameof(DiagnosticsController.DataProtection), nameof(DiagnosticsController.EnvironmentVariables), nameof(DiagnosticsController.Options), nameof(DiagnosticsController.RequestHeaders), nameof(DiagnosticsController.ResponseHeaders) }, nameof(Feature.Diagnostics), navigation);
 
 						if(this.Facade.FeatureManager.IsEnabled(Feature.Debug))
 							this.AddDebugNavigationNode(navigation);

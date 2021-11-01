@@ -142,7 +142,7 @@ namespace IntegrationTests.Data.Transferring
 
 					var dataImporter = (DataImporter)serviceScope.ServiceProvider.GetRequiredService<IDataImporter>();
 
-					var result = await dataImporter.ImportAsync(configuration, new ImportOptions {VerifyOnly = verifyOnly});
+					var result = await dataImporter.ImportAsync(configuration, new ImportOptions { VerifyOnly = verifyOnly });
 
 					Assert.AreEqual(0, result.SavedChanges);
 
@@ -173,7 +173,7 @@ namespace IntegrationTests.Data.Transferring
 
 					var dataImporter = (DataImporter)serviceScope.ServiceProvider.GetRequiredService<IDataImporter>();
 
-					var result = await dataImporter.ImportAsync(configuration, new ImportOptions {VerifyOnly = true});
+					var result = await dataImporter.ImportAsync(configuration, new ImportOptions { VerifyOnly = true });
 
 					Assert.AreEqual(2, result.Errors.Count);
 					Assert.AreEqual("Client \"client-1\": no allowed grant type specified", result.Errors[0]);
@@ -191,7 +191,7 @@ namespace IntegrationTests.Data.Transferring
 				await DatabaseHelper.MigrateDatabaseAsync(serviceProvider);
 
 				// Step 1
-				foreach(var options in new[] {new ImportOptions(), new ImportOptions {VerifyOnly = true}})
+				foreach(var options in new[] { new ImportOptions(), new ImportOptions { VerifyOnly = true } })
 				{
 					using(var serviceScope = serviceProvider.CreateScope())
 					{
@@ -213,7 +213,7 @@ namespace IntegrationTests.Data.Transferring
 				}
 
 				// Step 2
-				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
+				foreach(var options in new[] { new ImportOptions { VerifyOnly = true }, new ImportOptions() })
 				{
 					using(var serviceScope = serviceProvider.CreateScope())
 					{
@@ -230,7 +230,7 @@ namespace IntegrationTests.Data.Transferring
 				}
 
 				// Step 3
-				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
+				foreach(var options in new[] { new ImportOptions { VerifyOnly = true }, new ImportOptions() })
 				{
 					using(var serviceScope = serviceProvider.CreateScope())
 					{
@@ -270,7 +270,7 @@ namespace IntegrationTests.Data.Transferring
 				}
 
 				// Step 4
-				foreach(var options in new[] {new ImportOptions {VerifyOnly = true}, new ImportOptions()})
+				foreach(var options in new[] { new ImportOptions { VerifyOnly = true }, new ImportOptions() })
 				{
 					using(var serviceScope = serviceProvider.CreateScope())
 					{
@@ -287,7 +287,7 @@ namespace IntegrationTests.Data.Transferring
 				}
 
 				// Step 5
-				foreach(var options in new[] {new ImportOptions {DeleteAllOthers = true, VerifyOnly = true}, new ImportOptions {DeleteAllOthers = true}})
+				foreach(var options in new[] { new ImportOptions { DeleteAllOthers = true, VerifyOnly = true }, new ImportOptions { DeleteAllOthers = true } })
 				{
 					using(var serviceScope = serviceProvider.CreateScope())
 					{

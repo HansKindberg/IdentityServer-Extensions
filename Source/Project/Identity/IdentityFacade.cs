@@ -94,7 +94,7 @@ namespace HansKindberg.IdentityServer.Identity
 
 			if(loginUser == null)
 			{
-				loginUser = new UserEntity {Id = userLogin.Id ?? Guid.NewGuid().ToString(), UserName = Guid.NewGuid().ToString()};
+				loginUser = new UserEntity { Id = userLogin.Id ?? Guid.NewGuid().ToString(), UserName = Guid.NewGuid().ToString() };
 				loginUser.NormalizedUserName = loginUser.UserName.ToUpperInvariant();
 				await this.DatabaseContext.Users.AddAsync(loginUser);
 			}
@@ -121,7 +121,7 @@ namespace HansKindberg.IdentityServer.Identity
 
 		public virtual async Task<IEnumerable<UserLoginInfo>> GetUserLoginsAsync(string id)
 		{
-			return await this.UserManager.GetLoginsAsync(new UserEntity {Id = id});
+			return await this.UserManager.GetLoginsAsync(new UserEntity { Id = id });
 		}
 
 		public virtual async Task<UserEntity> ResolveUserAsync(IClaimBuilderCollection claims, string provider, string userIdentifier)
@@ -193,7 +193,7 @@ namespace HansKindberg.IdentityServer.Identity
 
 				foreach(var claim in claims.OrderBy(claim => claim.Type, comparer).ThenBy(claim => claim.Value, comparer))
 				{
-					sortedClaims.Add(new ClaimBuilder {Type = claim.Type, Value = claim.Value});
+					sortedClaims.Add(new ClaimBuilder { Type = claim.Type, Value = claim.Value });
 				}
 
 				var i = 0;
@@ -345,7 +345,7 @@ namespace HansKindberg.IdentityServer.Identity
 					this.DatabaseContext.UserClaims.RemoveRange(this.DatabaseContext.UserClaims.Where(item => item.UserId == loginUser.Id));
 					this.DatabaseContext.UserLogins.RemoveRange(this.DatabaseContext.UserLogins.Where(item => item.UserId == loginUser.Id));
 
-					await this.DatabaseContext.UserLogins.AddAsync(new UserLoginEntity {LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = loginUser.Id});
+					await this.DatabaseContext.UserLogins.AddAsync(new UserLoginEntity { LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = loginUser.Id });
 				}
 
 				if(!allowMultipleLoginsForUser && userLogin.Id != null)
@@ -383,7 +383,7 @@ namespace HansKindberg.IdentityServer.Identity
 			UserLoginEntity userLoginEntity = null;
 
 			if(userLogin != null)
-				userLoginEntity = new UserLoginEntity {LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = userLogin.Id};
+				userLoginEntity = new UserLoginEntity { LoginProvider = userLogin.Provider, ProviderDisplayName = userLogin.Provider, ProviderKey = userLogin.UserIdentifier, UserId = userLogin.Id };
 
 			return await Task.FromResult(userLoginEntity);
 		}
@@ -394,7 +394,7 @@ namespace HansKindberg.IdentityServer.Identity
 
 			if(user != null)
 			{
-				userEntity = new UserEntity {Email = user.Email, EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email), UserName = user.UserName};
+				userEntity = new UserEntity { Email = user.Email, EmailConfirmed = !string.IsNullOrWhiteSpace(user.Email), UserName = user.UserName };
 
 				if(user.Id != null)
 					userEntity.Id = user.Id;
@@ -409,10 +409,10 @@ namespace HansKindberg.IdentityServer.Identity
 				throw new ArgumentNullException(nameof(user));
 
 			if(string.IsNullOrWhiteSpace(user.UserName))
-				return IdentityResult.Failed(new IdentityError {Description = "The user-name can not be null, empty or whitespaces only."});
+				return IdentityResult.Failed(new IdentityError { Description = "The user-name can not be null, empty or whitespaces only." });
 
 			if(user.Password == null)
-				return IdentityResult.Failed(new IdentityError {Description = $"The password for user \"{user.UserName}\" can not be null."});
+				return IdentityResult.Failed(new IdentityError { Description = $"The password for user \"{user.UserName}\" can not be null." });
 
 			var userEntity = await this.UserModelToUserEntityAsync(user);
 
@@ -427,7 +427,7 @@ namespace HansKindberg.IdentityServer.Identity
 			}
 
 			if(passwordValidationErrors.Any())
-				return IdentityResult.Failed(new IdentityError {Description = $"The password \"{user.Password}\" for user \"{user.UserName}\" is invalid. {string.Join(" ", passwordValidationErrors.Select(identityError => identityError.Description))}"});
+				return IdentityResult.Failed(new IdentityError { Description = $"The password \"{user.Password}\" for user \"{user.UserName}\" is invalid. {string.Join(" ", passwordValidationErrors.Select(identityError => identityError.Description))}" });
 
 			return IdentityResult.Success;
 		}

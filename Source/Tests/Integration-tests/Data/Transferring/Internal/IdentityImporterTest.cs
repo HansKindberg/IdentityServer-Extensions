@@ -306,7 +306,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 
 		protected internal virtual async Task ImportAsyncScenarioTest(DatabaseProvider databaseProvider)
 		{
-			var importOptions = new ImportOptions {DeleteAllOthers = true};
+			var importOptions = new ImportOptions { DeleteAllOthers = true };
 
 			using(var context = new Context(databaseProvider: databaseProvider))
 			{

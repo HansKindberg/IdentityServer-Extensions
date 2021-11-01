@@ -161,7 +161,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker,
 				result.Items,
-				new[] {typeof(UserLoginEntity)}.ToHashSet(),
+				new[] { typeof(UserLoginEntity) }.ToHashSet(),
 				entry =>
 				{
 					if(entry.State == EntityState.Deleted && entry.Entity is UserLoginEntity userLogin)
@@ -176,7 +176,7 @@ namespace HansKindberg.IdentityServer.Data.Transferring.Internal
 			await this.PopulateResultAsync(
 				this.DatabaseContext.ChangeTracker,
 				parent.Relations,
-				new[] {typeof(UserEntity)}.ToHashSet()
+				new[] { typeof(UserEntity) }.ToHashSet()
 			);
 
 			await this.PopulateRelationDeletesAsync<UserEntity>(await this.DatabaseContext.Users.Where(user => deletedUserLoginIds.Contains(user.Id)).CountAsync(), parent.Relations);
