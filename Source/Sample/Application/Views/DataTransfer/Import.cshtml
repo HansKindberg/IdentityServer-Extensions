@@ -42,7 +42,7 @@
 					@if(item.Relations.Any())
 					{
 						<li>
-							<button aria-controls="collapse-@identifier" aria-expanded="false" class="btn btn-outline-secondary btn-collapse" data-target="#collapse-@identifier" data-toggle="collapse" type="button">
+							<button aria-controls="collapse-@identifier" aria-expanded="false" class="btn btn-outline-secondary btn-collapse" data-bs-target="#collapse-@identifier" data-bs-toggle="collapse" type="button">
 								@Localizer.GetString("Relations")
 							</button>
 							<div class="collapse" id="collapse-@identifier">

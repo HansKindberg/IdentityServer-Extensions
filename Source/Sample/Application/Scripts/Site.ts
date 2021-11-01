@@ -1,12 +1,5 @@
-import $ from "jquery";
 import "bootstrap";
 import "svgxuse";
-
-$(() => {
-	const modalButton = $("button[data-toggle='modal']");
-	modalButton.click();
-	modalButton.remove();
-});
 
 document.addEventListener("DOMContentLoaded", () => {
 	const automaticRedirectAttributeName = "data-automatic-redirect";
@@ -26,5 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
 				window.location.href = url;
 			}, seconds * 1000);
 		}
+	}
+
+	const modalButton = document.querySelector("button[data-bs-toggle='modal']") as HTMLButtonElement;
+
+	if (modalButton) {
+		modalButton.click();
+		modalButton.remove();
 	}
 });

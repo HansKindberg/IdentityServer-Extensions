@@ -1,6 +1,6 @@
 ﻿@model ExportForm
 <form asp-action="Export" asp-controller="DataTransfer" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]" class="border p-3">
-	<div class="form-group">
+	<div class="mb-3">
 		<h2 class="h5">@Localizer.GetString("Types")</h2>
 		<div class="form-check">
 			@foreach(var item in Model.TypeList)
@@ -12,7 +12,7 @@
 		</div>
 		<small class="form-text text-muted">@ViewData.ModelMetadata.Properties[nameof(Model.Types)].Description</small>
 	</div>
-	<div class="text-right">
+	<div class="text-end">
 		<button class="btn btn-primary" type="submit">
 			<svg class="size-1-point-4-rem" role="presentation">
 				<use xlink:href="/Style/Icons/sprite.svg#box-arrow-right" />

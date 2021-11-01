@@ -16,7 +16,7 @@
 						{
 							<img alt="@Localizer.GetString("client-logo-alternative-text")" src="@grant.Client.LogoUri" />
 						}
-						<div class="text-right">
+						<div class="text-end">
 							<form asp-action="Revoke" class="d-inline">
 								<input name="@nameof(grant.Client.ClientId)" type="hidden" value="@grant.Client.ClientId">
 								<button class="btn btn-danger" type="submit">@Localizer.GetString("Revoke")</button>

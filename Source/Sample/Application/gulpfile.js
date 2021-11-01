@@ -1,4 +1,5 @@
-/// <!--<binding BeforeBuild="default" Clean="clean" ProjectOpened="watch" />-->
+// /// <binding BeforeBuild="default" Clean="clean" ProjectOpened="watch" />
+// If you want to bind to Visual Studio events, remove the leading "// " above.
 "use strict";
 {
 	const del = require("del");
@@ -12,18 +13,16 @@
 	const rollupNodeResolver = require("@rollup/plugin-node-resolve");
 	const rollupTerser = require("rollup-plugin-terser");
 	const rollupTypescript = require("@rollup/plugin-typescript");
-	const sass = require("gulp-sass");
+	const sass = require("gulp-sass")(require("node-sass"));
 	const svgSrite = require("gulp-svg-sprite");
 	const sourcemaps = require("gulp-sourcemaps");
-
-	sass.compiler = require("node-sass");
 
 	const destinationRootDirectoryName = "wwwroot";
 	const iconsDirectoryName = "Icons";
 	const imagesDirectoryName = "Images";
 	const scriptsDirectoryName = "Scripts";
 	const styleDirectoryName = "Style";
-	
+
 	const iconsSourceDirectory = path.join(styleDirectoryName, iconsDirectoryName);
 	const imagesDestinationDirectory = path.join(destinationRootDirectoryName, styleDirectoryName, imagesDirectoryName);
 	const imagesSourceDirectory = path.join(styleDirectoryName, imagesDirectoryName);
@@ -36,7 +35,6 @@
 	async function buildScriptBundle() {
 		console.log("Building script-bundle...");
 
-		//deleteIfExists(scriptsDestinationDirectory);
 		del(replaceBackSlashWithForwardSlash(path.join(scriptsDestinationDirectory, "**/*.js")));
 
 		var bundleName = "Site.js";
@@ -56,7 +54,7 @@
 		deleteIfExists(spriteDestinationDirectory);
 
 		const spriteFileName = "sprite.svg";
-		
+
 		return gulp.src(replaceBackSlashWithForwardSlash(path.join(iconsSourceDirectory, "**/*.svg")))
 			.pipe(plumber())
 			.pipe(svgSrite({
@@ -69,7 +67,7 @@
 				}
 			}))
 			.on("error",
-				function(error) {
+				function (error) {
 					if (!error)
 						return;
 
@@ -102,12 +100,12 @@
 
 		const scriptsExcludePattern = "!" + replaceBackSlashWithForwardSlash(path.join(scriptsDestinationDirectory, excludePattern));
 		const scriptsPattern = replaceBackSlashWithForwardSlash(path.join(scriptsDestinationDirectory, pattern));
-		console.log(`Cleaning script-files...`);
+		console.log("Cleaning script-files...");
 		del.sync([scriptsPattern, scriptsExcludePattern]);
 
 		const styleExcludePattern = "!" + replaceBackSlashWithForwardSlash(path.join(styleDestinationDirectory, excludePattern));
 		const stylePattern = replaceBackSlashWithForwardSlash(path.join(styleDestinationDirectory, pattern));
-		console.log(`Cleaning style-files...`);
+		console.log("Cleaning style-files...");
 		del.sync([stylePattern, styleExcludePattern]);
 
 		done();
@@ -118,7 +116,7 @@
 
 		deleteIfExists(imagesDestinationDirectory);
 
-		return gulp.src(path.join(imagesSourceDirectory, "**/*"))
+		return gulp.src([path.join(imagesSourceDirectory, "**/*"), `!${path.join(imagesSourceDirectory, "ReadMe.md")}`])
 			.pipe(gulp.dest(destinationRootDirectoryName));
 	}
 
@@ -166,10 +164,9 @@
 		};
 	}
 
-	function deleteIfExists(pathToDelete)
-	{
+	function deleteIfExists(pathToDelete) {
 		if (fileSystem.existsSync(pathToDelete))
-			del.sync(pathToDelete, {force: true});
+			del.sync(pathToDelete, { force: true });
 	}
 
 	function replaceBackSlashWithForwardSlash(value) {
@@ -208,8 +205,8 @@
 		const patterns = [
 			replaceBackSlashWithForwardSlash(path.join(scriptsSourceDirectory, "**/*.js")),
 			replaceBackSlashWithForwardSlash(path.join(scriptsSourceDirectory, "**/*.ts"))
-		]; 
-		
+		];
+
 		gulp.watch(patterns, buildScriptBundle);
 	}
 
@@ -229,7 +226,7 @@
 	gulp.task("build-style-sheets", buildStyleSheets);
 
 	gulp.task("clean", gulp.series(clean));
-	
+
 	gulp.task("copy-images", gulp.series(copyImages, watchImages));
 
 	gulp.task("default", gulp.parallel(buildScriptBundle, buildSprite, buildStyleSheets, copyImages));

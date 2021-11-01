@@ -2,7 +2,7 @@
 <feature name="@nameof(Feature.Debug)">
 	@if(AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, User).Result && Context.Request.Query[QueryStringKeys.Debug].IsTrue())
 	{
-		<button class="btn btn-primary" data-target="#debug-information-modal" data-toggle="modal" type="button">
+		<button class="btn btn-primary" data-bs-target="#debug-information-modal" data-bs-toggle="modal" type="button">
 			@Localizer.GetString("Heading")
 		</button>
 		<div aria-hidden="true" aria-labelledby="debug-information-modal-label" class="modal fade" id="debug-information-modal" role="dialog" tabindex="-1">
@@ -10,9 +10,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="h5 modal-title" id="debug-information-modal-label">@Localizer.GetString("Heading")</h1>
-						<button aria-label="@Localizer.GetString("Close")" class="close" data-dismiss="modal" type="button">
-							<span aria-hidden="true">&times;</span>
-						</button>
+						<button aria-label="@Localizer.GetString("Close")" class="btn-close" data-bs-dismiss="modal" type="button">&times;</button>
 					</div>
 					<div class="modal-body">
 						<div class="card alert-info">

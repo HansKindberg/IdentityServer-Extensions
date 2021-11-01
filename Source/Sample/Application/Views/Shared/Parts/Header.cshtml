@@ -1,107 +1,109 @@
 ﻿@model HeaderViewModel
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	@if(Model.Navigation.Url != null)
-	{
-		@:<a class="navbar-brand" href="@Model.Navigation.Url">
-	}
-	<img alt="Logo" src="/Style/Images/logo-32x32.png" />
-	@if(Model.Navigation.Url != null)
-	{
-		@:</a>
-	}
-	@if(Model.EnvironmentName != null)
-	{
-		<span class="text-white mr-2">@Model.EnvironmentName</span>
-	}
-	<button aria-controls="navigation" aria-expanded="false" aria-label="@Localizer.GetString("toggle-navigation")" class="navbar-toggler" data-target="#navigation" data-toggle="collapse" type="button">
-		<svg class="size-1-point-4-rem" role="presentation">
-			<use xlink:href="/Style/Icons/sprite.svg#list" />
-		</svg>
-	</button>
-	<div class="collapse navbar-collapse" id="navigation">
-		@if(Model.Navigation.Children.Any())
+<header>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		@if(Model.Navigation.Url != null)
 		{
-			<ul class="navbar-nav">
-				@foreach(var child in Model.Navigation.Children)
+			@:<a class="navbar-brand" href="@Model.Navigation.Url">
+		}
+		<img alt="Logo" src="/Style/Images/logo-32x32.png" />
+		@if(Model.Navigation.Url != null)
+		{
+			@:</a>
+		}
+		@if(Model.EnvironmentName != null)
+		{
+			<span class="text-white me-2">@Model.EnvironmentName</span>
+		}
+		<button aria-controls="navigation" aria-expanded="false" aria-label="@Localizer.GetString("toggle-navigation")" class="navbar-toggler" data-bs-target="#navigation" data-bs-toggle="collapse" type="button">
+			<svg class="size-1-point-4-rem" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#list" />
+			</svg>
+		</button>
+		<div class="collapse navbar-collapse" id="navigation">
+			@if(Model.Navigation.Children.Any())
+			{
+				<ul class="navbar-nav">
+					@foreach(var child in Model.Navigation.Children)
+					{
+						if(child.Url == null)
+						{
+							var id = Guid.NewGuid().ToString();
+							<li class="nav-item dropdown@(child.Active ? " active" : string.Empty)">
+								<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="@id" title="@child.Tooltip">
+									@child.Text
+								</a>
+								<div class="dropdown-menu" aria-labelledby="@id">
+									@foreach(var grandChild in child.Children)
+									{
+										<a class="dropdown-item@(grandChild.Active ? " active" : string.Empty)" href="@grandChild.Url" title="@grandChild.Tooltip">@grandChild.Text</a>
+									}
+								</div>
+							</li>
+						}
+						else
+						{
+							<li class="nav-item@(child.Active ? " active" : string.Empty)">
+								<a class="nav-link" href="@child.Url" title="@child.Tooltip">@child.Text</a>
+							</li>
+						}
+					}
+				</ul>
+			}
+			<ul class="navbar-nav ms-auto">
+				@if(User.Identity.IsAuthenticated && !Context.SignedOut())
 				{
-					if(child.Url == null)
-					{
-						var id = Guid.NewGuid().ToString();
-						<li class="nav-item dropdown@(child.Active ? " active" : string.Empty)">
-							<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="@id" title="@child.Tooltip">
-								@child.Text
-							</a>
-							<div class="dropdown-menu" aria-labelledby="@id">
-								@foreach(var grandChild in child.Children)
-								{
-									<a class="dropdown-item@(grandChild.Active ? " active" : string.Empty)" href="@grandChild.Url" title="@grandChild.Tooltip">@grandChild.Text</a>
-								}
-							</div>
-						</li>
-					}
-					else
-					{
-						<li class="nav-item@(child.Active ? " active" : string.Empty)">
-							<a class="nav-link" href="@child.Url" title="@child.Tooltip">@child.Text</a>
-						</li>
-					}
+					<li class="nav-item dropdown active">
+						<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="identity-dropdown">
+							<svg class="size-1-point-2-rem" role="presentation">
+								<use xlink:href="/Style/Icons/sprite.svg#person" />
+							</svg>
+							@User.Identity.Name
+						</a>
+						<div aria-labelledby="identity-dropdown" class="dropdown-menu">
+							<a class="dropdown-item" href="@Model.GetUrl("Account")">@Localizer.GetString("your-identity")</a>
+							<a class="dropdown-item" href="@Model.GetUrl("SignOut", "Account")">@Localizer.GetString("sign-out")</a>
+						</div>
+					</li>
+				}
+				@if(Model.UiCultureNavigation != null)
+				{
+					<li class="nav-item dropdown@(Model.UiCultureNavigation.Active ? " active" : string.Empty)">
+						<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="ui-culture-selector" title="@Model.UiCultureNavigation.Tooltip">
+							@Model.UiCultureNavigation.Text
+						</a>
+						<div aria-labelledby="ui-culture-selector" class="dropdown-menu right">
+							@foreach(var item in Model.UiCultureNavigation.Children)
+							{
+								<a class="dropdown-item@(item.Active ? " active" : string.Empty)" href="@item.Url" title="@item.Tooltip">@item.Text</a>
+							}
+						</div>
+					</li>
 				}
 			</ul>
-		}
-		<ul class="navbar-nav ml-auto">
-			@if(User.Identity.IsAuthenticated && !Context.SignedOut())
-			{
-				<li class="nav-item dropdown active">
-					<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="identity-dropdown">
-						<svg class="size-1-point-2-rem" role="presentation">
-							<use xlink:href="/Style/Icons/sprite.svg#person" />
-						</svg>
-						@User.Identity.Name
-					</a>
-					<div aria-labelledby="identity-dropdown" class="dropdown-menu">
-						<a class="dropdown-item" href="@Model.GetUrl("Account")">@Localizer.GetString("your-identity")</a>
-						<a class="dropdown-item" href="@Model.GetUrl("SignOut", "Account")">@Localizer.GetString("sign-out")</a>
-					</div>
-				</li>
-			}
 			@if(Model.UiCultureNavigation != null)
 			{
-				<li class="nav-item dropdown@(Model.UiCultureNavigation.Active ? " active" : string.Empty)">
-					<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="ui-culture-selector" title="@Model.UiCultureNavigation.Tooltip">
-						@Model.UiCultureNavigation.Text
-					</a>
-					<div aria-labelledby="ui-culture-selector" class="dropdown-menu right">
-						@foreach(var item in Model.UiCultureNavigation.Children)
-						{
-							<a class="dropdown-item@(item.Active ? " active" : string.Empty)" href="@item.Url" title="@item.Tooltip">@item.Text</a>
-						}
-					</div>
-				</li>
-			}
-		</ul>
-		@if(Model.UiCultureNavigation != null)
-		{
-			<form asp-action="Save" asp-controller="CultureCookie" class="d-inline">
-				<input name="Culture" type="hidden" value="@Model.Culture" />
-				<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
-				<input name="UiCulture" type="hidden" value="@Model.UiCulture" />
-				<button class="bg-white btn btn-outline-success cookie-button" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
-					<svg class="size-1-point-4-rem text-success" role="presentation">
-						<use xlink:href="/Style/Icons/sprite.svg#check" />
-					</svg>
-				</button>
-			</form>
-			@if(Model.CultureCookieValue != null)
-			{
-				<form asp-action="Delete" asp-controller="CultureCookie" class="d-inline">
+				<form asp-action="Save" asp-controller="CultureCookie" class="d-inline">
+					<input name="Culture" type="hidden" value="@Model.Culture" />
 					<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
-					<button class="bg-white btn btn-outline-danger cookie-button ml-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
-						<svg class="size-1-point-4-rem text-danger" role="presentation">
-							<use xlink:href="/Style/Icons/sprite.svg#x" />
+					<input name="UiCulture" type="hidden" value="@Model.UiCulture" />
+					<button class="bg-white btn btn-outline-success cookie-button" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
+						<svg class="size-1-point-4-rem text-success" role="presentation">
+							<use xlink:href="/Style/Icons/sprite.svg#check" />
 						</svg>
 					</button>
 				</form>
+				@if(Model.CultureCookieValue != null)
+				{
+					<form asp-action="Delete" asp-controller="CultureCookie" class="d-inline">
+						<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
+						<button class="bg-white btn btn-outline-danger cookie-button ms-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
+							<svg class="size-1-point-4-rem text-danger" role="presentation">
+								<use xlink:href="/Style/Icons/sprite.svg#x" />
+							</svg>
+						</button>
+					</form>
+				}
 			}
-		}
-	</div>
-</nav>
+		</div>
+	</nav>
+</header>
