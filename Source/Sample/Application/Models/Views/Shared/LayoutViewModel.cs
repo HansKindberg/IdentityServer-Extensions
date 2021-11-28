@@ -26,7 +26,7 @@ namespace Application.Models.Views.Shared
 
 		#region Properties
 
-		protected internal virtual IFacade Facade { get; }
+		public virtual IFacade Facade { get; }
 		public virtual HeaderViewModel Header => this._header ??= new HeaderViewModel(this.Facade);
 		public virtual CultureInfo UiCulture => this._uiCulture ??= this.Facade.HttpContextAccessor.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture;
 

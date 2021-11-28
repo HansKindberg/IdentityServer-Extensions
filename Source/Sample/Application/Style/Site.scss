@@ -46,6 +46,10 @@
 body {
 	/*background-image: linear-gradient(315deg, #d8eacb 0.04%, #d5eaff 100%);*/
 	margin-top: 75px;
+
+	&.host-information {
+		margin-top: 101px;
+	}
 }
 
 form {

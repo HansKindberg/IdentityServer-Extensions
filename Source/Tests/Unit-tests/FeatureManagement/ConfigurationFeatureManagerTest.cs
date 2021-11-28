@@ -49,7 +49,7 @@ namespace UnitTests.FeatureManagement
 				featureNames.Add(featureName);
 			}
 
-			Assert.AreEqual(16, featureNames.Count);
+			Assert.AreEqual(17, featureNames.Count);
 			Assert.AreEqual(nameof(Feature.CertificateForwarding), featureNames[0]);
 			Assert.AreEqual(nameof(Feature.DataDirectory), featureNames[1]);
 			Assert.AreEqual(nameof(Feature.DataSeeding), featureNames[2]);
@@ -61,11 +61,12 @@ namespace UnitTests.FeatureManagement
 			Assert.AreEqual(nameof(Feature.FormsAuthentication), featureNames[8]);
 			Assert.AreEqual(nameof(Feature.ForwardedHeaders), featureNames[9]);
 			Assert.AreEqual(nameof(Feature.Home), featureNames[10]);
-			Assert.AreEqual(nameof(Feature.Hsts), featureNames[11]);
-			Assert.AreEqual(nameof(Feature.HttpsRedirection), featureNames[12]);
-			Assert.AreEqual(nameof(Feature.Saml), featureNames[13]);
-			Assert.AreEqual(nameof(Feature.SecurityHeaders), featureNames[14]);
-			Assert.AreEqual(nameof(Feature.WsFederation), featureNames[15]);
+			Assert.AreEqual(nameof(Feature.HostInformation), featureNames[11]);
+			Assert.AreEqual(nameof(Feature.Hsts), featureNames[12]);
+			Assert.AreEqual(nameof(Feature.HttpsRedirection), featureNames[13]);
+			Assert.AreEqual(nameof(Feature.Saml), featureNames[14]);
+			Assert.AreEqual(nameof(Feature.SecurityHeaders), featureNames[15]);
+			Assert.AreEqual(nameof(Feature.WsFederation), featureNames[16]);
 		}
 
 		[TestMethod]

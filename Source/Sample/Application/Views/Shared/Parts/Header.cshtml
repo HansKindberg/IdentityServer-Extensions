@@ -1,6 +1,11 @@
 ﻿@model HeaderViewModel
-<header>
-	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<header class="fixed-top">
+	<feature name="@nameof(Feature.HostInformation)">
+		<div class="alert alert-info m-0 p-0 rounded-0 text-center">
+			@Environment.MachineName
+		</div>
+	</feature>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
 		@if(Model.Navigation.Url != null)
 		{
 			@:<a class="navbar-brand" href="@Model.Navigation.Url">

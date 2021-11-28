@@ -30,7 +30,7 @@
 			@RenderSection("AdditionalStyle")
 		}
 	</head>
-	<body>
+	<body class="@(LayoutModel.Facade.FeatureManager.IsEnabled(Feature.HostInformation) ? "host-information" : null)">
 		<partial model="@LayoutModel.Header" name="~/Views/Shared/Parts/Header.cshtml" />
 		<main class="container-md mb-4" role="main">
 			<feature name="@nameof(Feature.Debug)">
