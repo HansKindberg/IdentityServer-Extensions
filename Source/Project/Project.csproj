@@ -48,6 +48,7 @@
 		<PackageReference Include="Rsk.WsFederation.EntityFramework" Version="4.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+		<PackageReference Include="Serilog.Sinks.Fluentd" Version="0.4.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.0" />
 	</ItemGroup>
 	<Target Name="HandleAssemblyOriginatorKeyFile" BeforeTargets="BeforeBuild" Condition="$(SignAssembly) AND !Exists('$(AssemblyOriginatorKeyFile)')">
