@@ -281,7 +281,14 @@ namespace IntegrationTests.Data.Transferring
 						var result = await dataImporter.ImportAsync(configuration, options);
 
 						Assert.AreEqual(1, result.Errors.Count);
-						Assert.AreEqual("Username 'User-1' is already taken.", result.Errors[0]);
+
+#if NET5_0_OR_GREATER
+						const string userNameText = "Username";
+#else
+						const string userNameText = "User name";
+#endif
+						Assert.AreEqual($"{userNameText} 'User-1' is already taken.", result.Errors[0]);
+
 						Assert.AreEqual(0, result.SavedChanges);
 					}
 				}
