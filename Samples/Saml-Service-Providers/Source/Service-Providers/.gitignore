@@ -1,0 +1,6 @@
+Service-Provider-[23]/wwwroot/*
+Service-Provider-[23]/Controllers/*
+Service-Provider-[23]/Models/*
+Service-Provider-[23]/Views/*
+Service-Provider-[23]/appsettings.json
+Service-Provider-[23]/*.cs

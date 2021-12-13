@@ -1,0 +1,16 @@
+<Project>
+	<Target Name="AddFiles" BeforeTargets="PrepareForBuild" Condition=" $(ApplicationCopy) == 'true' ">
+		<Message Importance="high" Text="Adding files ..." />
+		<ItemGroup>
+			<FileToExclude Include="../Service-Provider-1/bin/**" />
+			<FileToExclude Include="../Service-Provider-1/obj/**" />
+			<FileToExclude Include="../Service-Provider-1/Properties/**" />
+			<FileToExclude Include="../Service-Provider-1/Application.*" />
+			<FileToExclude Include="../Service-Provider-1/appsettings.Development.json" />
+		</ItemGroup>
+		<ItemGroup>
+			<File Include="../Service-Provider-1/**" Exclude="@(FileToExclude)" />
+		</ItemGroup>
+		<Copy DestinationFiles="@(File->'%(RecursiveDir)%(Filename)%(Extension)')" SourceFiles="@(File)" />
+	</Target>
+</Project>

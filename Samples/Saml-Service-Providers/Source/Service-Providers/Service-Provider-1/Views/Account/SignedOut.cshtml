@@ -1,0 +1,12 @@
+﻿@{ ViewData["Name"] = "Signed out"; }
+@model SignedOutViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			@ViewBag.Name
+		</h1>
+	</div>
+	<div class="card-body">
+		You are now signed out@(Model.Locally ? " locally" : null).
+	</div>
+</div>

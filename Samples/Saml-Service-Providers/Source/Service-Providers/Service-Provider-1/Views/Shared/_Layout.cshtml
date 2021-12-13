@@ -1,0 +1,58 @@
+﻿@inject IConfiguration _configuration
+@{ var siteName = _configuration.GetValue<string>("SiteName"); }
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@ViewData["Name"] - @siteName</title>
+		<link asp-append-version="true" href="~/Style/bootstrap.min.css" rel="stylesheet" />
+		<link asp-append-version="true" href="~/Style/Site.css" rel="stylesheet" />
+	</head>
+	<body>
+		<header class="fixed-top">
+			<div class="alert alert-info m-0 p-0 rounded-0 text-center">
+				@siteName
+			</div>
+			<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="/">@siteName</a>
+					<button aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navigation" data-bs-toggle="collapse" type="button">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navigation">
+						<ul class="navbar-nav ms-auto">
+							@{ var returnUrl = Context.Request.Path.StartsWithSegments("/Account/SignedOut", StringComparison.OrdinalIgnoreCase) ? "/" : Context.Request.Path + Context.Request.QueryString; }
+							@if(User.Identity is {IsAuthenticated: true })
+							{
+								<li class="nav-item dropdown active">
+									<a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="identity-dropdown">
+										@User.Identity.Name
+									</a>
+									<div aria-labelledby="identity-dropdown" class="dropdown-menu dropdown-menu-end">
+										<a asp-action="Index" asp-controller="Account" class="dropdown-item@(Html.IsActive("Index", "Account") ? " active" : null)">Your identity</a>
+										<a asp-action="SignIn" asp-controller="Account" asp-route-forceAuthentication="true" asp-route-returnUrl="@returnUrl" class="dropdown-item">Force authentication</a>
+										<a asp-action="SignOut" asp-controller="Account" class="dropdown-item">Sign out (SLO)</a>
+										<a asp-action="SignOut" asp-controller="Account" asp-route-locally="true" class="dropdown-item">Sign out (locally)</a>
+									</div>
+								</li>
+							}
+							else
+							{
+								<li class="nav-item">
+									<a asp-action="SignIn" asp-controller="Account" asp-route-returnUrl="@returnUrl" class="nav-link active">Sign in</a>
+								</li>
+							}
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<div class="container">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+		<script asp-append-version="true" src="~/Scripts/bootstrap.min.js"></script>
+	</body>
+</html>

@@ -1,0 +1,10 @@
+<Project>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>7e279972-d306-47e0-9733-0aa136c8f73a</UserSecretsId>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.12" />
+		<PackageReference Include="Rsk.Saml" Version="4.3.0" />
+	</ItemGroup>
+</Project>

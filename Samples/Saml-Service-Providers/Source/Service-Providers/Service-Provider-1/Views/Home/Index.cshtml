@@ -1,0 +1,6 @@
+﻿@{ ViewData["Name"] = "Home"; }
+@inject IConfiguration _configuration
+<div class="text-center">
+	<h1 class="display-4">@(_configuration.GetValue<string>("SiteName"))</h1>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet massa arcu. Morbi sollicitudin justo a mauris tempus, quis consequat nibh maximus. Nunc rutrum velit id urna egestas rutrum. Vivamus luctus massa diam, at posuere arcu pretium a. Nullam nec maximus lacus. Suspendisse nec sapien porta, tristique ex eu, semper leo. Duis vitae hendrerit dui. Vivamus tristique magna id maximus tincidunt. Nullam hendrerit risus at elit fringilla, quis euismod odio fringilla. Quisque aliquet metus orci, vitae blandit tortor accumsan at. Nulla facilisi. Integer ullamcorper vel lacus id dapibus. Nulla tempor arcu a malesuada congue. Fusce consequat diam a arcu tristique, in finibus sem accumsan. Nam eget nisl neque.</p>
+</div>
