@@ -45,15 +45,34 @@ namespace Application.Controllers
 		{
 			var signOutRequest = await this.Facade.Interaction.GetLogoutContextAsync(signOutId);
 
-			return new SignedOutViewModel
+			var model = new SignedOutViewModel
 			{
 				AutomaticRedirect = this.Facade.IdentityServer.CurrentValue.Account.AutomaticRedirectAfterSignOut,
 				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
 				IframeUrl = signOutRequest?.SignOutIFrameUrl,
 				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
-				SamlIframeUrl = signOutRequest != null ? await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, new SamlLogoutRequest(signOutRequest)) : null,
 				SecondsBeforeRedirect = this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect
 			};
+
+			// ReSharper disable InvertIf
+			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
+			{
+				if(signOutRequest != null)
+					model.SamlIframeUrl = await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, new SamlLogoutRequest(signOutRequest));
+
+				var samlRequestId = await this.GetSamlRequestIdAsync();
+
+				if(samlRequestId != null)
+				{
+					var redirectUrl = await this.Facade.SamlInteraction.GetLogoutCompletionUrl(samlRequestId);
+
+					if(redirectUrl != null)
+						model.RedirectUrl = redirectUrl;
+				}
+			}
+			// ReSharper restore InvertIf
+
+			return model;
 		}
 
 		protected internal virtual async Task<SignInViewModel> CreateSignInViewModelAsync(string returnUrl)
@@ -162,6 +181,13 @@ namespace Application.Controllers
 			}
 
 			return model;
+		}
+
+		protected internal virtual async Task<string> GetSamlRequestIdAsync()
+		{
+			var requestIdParameter = this.Facade.IdentityServer.CurrentValue.Saml.UserInteraction.RequestIdParameter;
+
+			return await Task.FromResult(this.HttpContext.Request.Query[requestIdParameter]);
 		}
 
 		public virtual async Task<IActionResult> Index()
