@@ -20,6 +20,7 @@ using Microsoft.FeatureManagement.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
+using Rsk.Saml.DuendeIdentityServer.Services.Models;
 
 namespace Application.Controllers
 {
@@ -50,6 +51,7 @@ namespace Application.Controllers
 				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
 				IframeUrl = signOutRequest?.SignOutIFrameUrl,
 				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
+				SamlIframeUrl = signOutRequest != null ? await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, new SamlLogoutRequest(signOutRequest)) : null,
 				SecondsBeforeRedirect = this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect
 			};
 		}
