@@ -24,6 +24,7 @@ using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Json;
+using HansKindberg.IdentityServer.Saml.Generators;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authentication;
@@ -51,6 +52,7 @@ using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.OpenIdConnect.DependencyInjection.Extensions;
+using Rsk.Saml.Generators;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
 using Rsk.WsFederation.EntityFramework.DbContexts;
@@ -312,6 +314,11 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 						serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
+
+				// To handle ForceAuthentication
+				identityServerBuilder.Services.RemoveAll<ISaml2SingleSignOnInteractionGenerator>();
+				identityServerBuilder.Services.AddTransient<Rsk.Saml.DuendeIdentityServer.Generators.Saml2SingleSignOnInteractionGenerator>();
+				identityServerBuilder.Services.AddTransient<ISaml2SingleSignOnInteractionGenerator, Saml2SingleSignOnInteractionGenerator>();
 
 				identityServerBuilder.Services.TryAddSingleton<ISamlPluginBuilder, SamlPluginBuilder>();
 			}
