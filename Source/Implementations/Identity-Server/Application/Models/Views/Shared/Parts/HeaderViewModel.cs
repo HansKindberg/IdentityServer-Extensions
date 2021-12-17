@@ -81,6 +81,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 		}
 
 		protected internal virtual IFacade Facade { get; }
+		public virtual bool HomeEnabled => this.Facade.FeatureManager.IsEnabled(Feature.Home);
 		protected internal virtual HttpContext HttpContext { get; }
 		protected internal virtual IStringLocalizer Localizer { get; }
 
