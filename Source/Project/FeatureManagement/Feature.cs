@@ -13,9 +13,9 @@ namespace HansKindberg.IdentityServer.FeatureManagement
 		FormsAuthentication,
 		ForwardedHeaders,
 		Home,
+		HostInformation,
 		Hsts,
 		HttpsRedirection,
-		HostInformation,
 		Saml,
 		SecurityHeaders,
 		WsFederation
