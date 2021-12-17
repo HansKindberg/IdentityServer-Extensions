@@ -58,9 +58,11 @@ using Rsk.Saml.Configuration;
 using Rsk.Saml.Generators;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
+using Rsk.Saml.Validation;
 using Rsk.WsFederation.Configuration;
 using Rsk.WsFederation.EntityFramework.DbContexts;
 using Rsk.WsFederation.EntityFramework.Stores;
+using Saml2SingleSignOnRequestValidator = HansKindberg.IdentityServer.Saml.Validation.Saml2SingleSignOnRequestValidator;
 
 namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 {
@@ -328,6 +330,9 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				identityServerBuilder.Services.RemoveAll<ISaml2SingleSignOnInteractionGenerator>();
 				identityServerBuilder.Services.AddTransient<Rsk.Saml.DuendeIdentityServer.Generators.Saml2SingleSignOnInteractionGenerator>();
 				identityServerBuilder.Services.AddTransient<ISaml2SingleSignOnInteractionGenerator, Saml2SingleSignOnInteractionGenerator>();
+				identityServerBuilder.Services.RemoveAll<ISaml2SingleSignOnRequestValidator>();
+				identityServerBuilder.Services.AddTransient<Rsk.Saml.Validation.Saml2SingleSignOnRequestValidator>();
+				identityServerBuilder.Services.AddTransient<ISaml2SingleSignOnRequestValidator, Saml2SingleSignOnRequestValidator>();
 
 				identityServerBuilder.Services.TryAddSingleton<ISamlPluginBuilder, SamlPluginBuilder>();
 			}
