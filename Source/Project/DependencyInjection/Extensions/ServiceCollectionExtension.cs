@@ -24,14 +24,16 @@ using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Json;
+using HansKindberg.IdentityServer.Saml.Configuration;
+using HansKindberg.IdentityServer.Saml.Configuration.Extensions;
 using HansKindberg.IdentityServer.Saml.Generators;
 using HansKindberg.IdentityServer.Validation;
-using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
 using HansKindberg.IdentityServer.Web.Configuration;
 using HansKindberg.IdentityServer.Web.Mvc.Filters;
 using HansKindberg.IdentityServer.Web.Mvc.Filters.Configuration;
+using HansKindberg.IdentityServer.WsFederation.Configuration.Extensions;
 using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -52,9 +54,11 @@ using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.OpenIdConnect.DependencyInjection.Extensions;
+using Rsk.Saml.Configuration;
 using Rsk.Saml.Generators;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
+using Rsk.WsFederation.Configuration;
 using Rsk.WsFederation.EntityFramework.DbContexts;
 using Rsk.WsFederation.EntityFramework.Stores;
 
@@ -304,14 +308,19 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.Saml))
 			{
+				var samlIdpOptionsSection = serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}");
+
+				// This is for this extension-library. The Rsk-libraries uses SamlIdpOptions registered as a singleton.
+				identityServerBuilder.Services.ConfigureIdentityServerSamlPlugin(samlIdpOptionsSection);
+
 				identityServerBuilder.Services.AddDbContext<TSaml>(optionsBuilder => optionsBuilderFunction(optionsBuilder));
 				identityServerBuilder.Services.AddScoped<ISamlConfigurationDbContext>(serviceProvider => serviceProvider.GetRequiredService<TSaml>());
 
 				identityServerBuilder.AddSamlPlugin(options =>
 					{
-						options.UseLegacyRsaEncryption = false;
-						options.UserInteraction.RequestIdParameter = QueryStringKeys.SamlRequestId;
-						serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}").Bind(options);
+						// We need this because SamlIdpOptions is registered as a singleton.
+						options.SetDefaults();
+						samlIdpOptionsSection.Bind(options);
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
 
@@ -326,12 +335,19 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			// ReSharper disable InvertIf
 			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.WsFederation))
 			{
+				var wsFederationOptionsSection = serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.WsFederation)}");
+
+				// This is for this extension-library. The Rsk-libraries uses WsFederationOptions registered as a singleton.
+				identityServerBuilder.Services.ConfigureIdentityServerWsFederationPlugin(wsFederationOptionsSection);
+
 				identityServerBuilder.Services.AddDbContext<TWsFederation>(optionsBuilder => optionsBuilderFunction(optionsBuilder));
 				identityServerBuilder.Services.AddScoped<IWsFederationConfigurationDbContext>(serviceProvider => serviceProvider.GetRequiredService<TWsFederation>());
 
 				identityServerBuilder.AddWsFederationPlugin(options =>
 					{
-						serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.WsFederation)}").Bind(options);
+						// We need this because WsFederationOptions is registered as a singleton.
+						options.SetDefaults();
+						wsFederationOptionsSection.Bind(options);
 					})
 					.AddRelyingPartyStore<RelyingPartyStore>();
 
@@ -522,6 +538,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.Configure<ExtendedIdentityServerOptions>(options =>
 			{
 				options.SetDefaults();
+				options.Saml.SetDefaults();
+				options.WsFederation.SetDefaults();
 				options.BindKeyManagementSigningAlgorithms(identityServerSection);
 				identityServerSection.Bind(options);
 			});
@@ -534,6 +552,42 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			});
 
 			return identityServerOptions;
+		}
+
+		private static void ConfigureIdentityServerSamlPlugin(this IServiceCollection services, IConfigurationSection samlIdpOptionsSection)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			if(samlIdpOptionsSection == null)
+				throw new ArgumentNullException(nameof(samlIdpOptionsSection));
+
+			services.Configure<ExtendedSamlIdpOptions>(options =>
+			{
+				options.SetDefaults();
+				samlIdpOptionsSection.Bind(options);
+			});
+
+			services.Configure<SamlIdpOptions>(options =>
+			{
+				options.SetDefaults();
+				samlIdpOptionsSection.Bind(options);
+			});
+		}
+
+		private static void ConfigureIdentityServerWsFederationPlugin(this IServiceCollection services, IConfigurationSection wsFederationOptionsSection)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			if(wsFederationOptionsSection == null)
+				throw new ArgumentNullException(nameof(wsFederationOptionsSection));
+
+			services.Configure<WsFederationOptions>(options =>
+			{
+				options.SetDefaults();
+				wsFederationOptionsSection.Bind(options);
+			});
 		}
 
 		/// <summary>

@@ -14,6 +14,7 @@ using HansKindberg.IdentityServer.Data;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
+using HansKindberg.IdentityServer.Saml.Configuration;
 using HansKindberg.IdentityServer.Web.Localization;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RegionOrebroLan;
+using Rsk.Saml.Configuration;
 
 namespace IntegrationTests.DependencyInjection.Extensions
 {
@@ -232,6 +234,21 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		}
 
 		[TestMethod]
+		public async Task AddIdentityServer_SamlOptions_Test()
+		{
+			using(var context = new Context(features: new Dictionary<Feature, bool> { { Feature.Saml, true } }))
+			{
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<SamlIdpOptions>());
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.Saml);
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.Saml);
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedSamlIdpOptions>>().Value);
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedSamlIdpOptions>>().CurrentValue);
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<SamlIdpOptions>>().Value);
+				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<SamlIdpOptions>>().CurrentValue);
+			}
+		}
+
+		[TestMethod]
 		public async Task AddIdentityServer_Test()
 		{
 			await Task.CompletedTask;
@@ -249,6 +266,17 @@ namespace IntegrationTests.DependencyInjection.Extensions
 					Assert.IsFalse(persistedGrantDbContext.PersistedGrants.Any());
 				}
 			}
+		}
+
+		protected internal virtual async Task AddIdentityServerSamlOptionsTest(SamlIdpOptions options)
+		{
+			if(options == null)
+				throw new ArgumentNullException(nameof(options));
+
+			await Task.CompletedTask;
+
+			Assert.IsFalse(options.UseLegacyRsaEncryption);
+			Assert.AreEqual("SamlRequestId", options.UserInteraction.RequestIdParameter);
 		}
 
 		protected internal virtual async Task AddIdentityServerTest(Action<Context> assertAction, string configurationFileName)
