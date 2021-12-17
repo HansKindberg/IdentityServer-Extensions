@@ -9,7 +9,7 @@ Additions and extensions for [IdentityServer](https://github.com/DuendeSoftware/
 
 Additions/extensions to be able to setup a **configurable**, **globalizable** and **localizable** implementation of [IdentityServer](https://github.com/DuendeSoftware/IdentityServer/).
 
-The idea is to setup an IdentityServer-implementation like the included [sample](/Source/Sample/Application) and configure continous-release with substitution/transforms for Web.config & appsettings.json or to copy the sample and use it as a template. The copy can then bee changed regarding configuration, style and translations.
+The idea is to setup an IdentityServer-implementation like the included [implementation](/Source/Implementations/Identity-Server/Application) and configure continous-release with substitution/transforms for Web.config & appsettings.json or to copy the sample and use it as a template. The copy can then bee changed regarding configuration, style and translations.
 
 IdentityServer:
 
@@ -20,7 +20,7 @@ IdentityServer:
 ## 1 Features
 
 - [Feature.cs](/Source/Project/FeatureManagement/Feature.cs)
-- [Example](/Source/Sample/Application/appsettings.Development.json#L397)
+- [Example](/Source/Implementations/Identity-Server/Application/appsettings.Development.json#L397)
 
 ## 2 Configuration
 
@@ -29,19 +29,19 @@ See above.
 
 ### 2.2 Globalization
 
-- [Example](/Source/Sample/Application/appsettings.Development.json#L495)
+- [Example](/Source/Implementations/Identity-Server/Application/appsettings.Development.json#L495)
 
 ### 2.3 Localization
 
 - [Path-based localization](https://github.com/RegionOrebroLan/.NET-Localization-Extensions#1-path-based-localization)
-- [Example](/Source/Sample/Application/Resources)
+- [Example](/Source/Implementations/Identity-Server/Application/Resources)
 
 ### 2.4 Authentication-schemes
 
 #### 2.4.1 Example
 
-- [Authentication](/Source/Sample/Application/appsettings.Development.json#L64)
-- [Scheme-registrations](/Source/Sample/Application/appsettings.Development.json#L113)
+- [Authentication](/Source/Implementations/Identity-Server/Application/appsettings.Development.json#L64)
+- [Scheme-registrations](/Source/Implementations/Identity-Server/Application/appsettings.Development.json#L113)
 
 Solution behind it:
 
@@ -58,7 +58,7 @@ Solution behind it:
 
 - [Google external login setup in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins/)
 - https://console.developers.google.com/
-- [Example](/Source/Sample/Application/appsettings.Development.json#L171)
+- [Example](/Source/Implementations/Identity-Server/Application/appsettings.Development.json#L171)
 
 ##### 2.4.2.3 Microsoft
 
