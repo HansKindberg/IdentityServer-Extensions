@@ -8,7 +8,7 @@ namespace HansKindberg.IdentityServer.Application
 
 		public static int Main(string[] args)
 		{
-			return Host.Run<Startup>("Hans Kindberg - IdentityServer sample application", args);
+			return Host.Run<Startup>("Hans Kindberg - Identity-Server", args);
 		}
 
 		#endregion
