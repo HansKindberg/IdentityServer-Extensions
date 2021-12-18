@@ -77,7 +77,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.IdentityProvider, user.ProviderUserId, user.SubjectId, user.DisplayName, true, authorizationRequest?.Client.ClientId));
 
 			if(authorizationRequest != null && authorizationRequest.IsNativeClient())
-				return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect);
+				return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
 
 			return this.Redirect(returnUrl);
 		}

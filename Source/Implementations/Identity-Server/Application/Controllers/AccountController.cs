@@ -46,11 +46,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var model = new SignedOutViewModel
 			{
-				AutomaticRedirect = this.Facade.IdentityServer.CurrentValue.Account.AutomaticRedirectAfterSignOut,
+				AutomaticRedirect = this.Facade.IdentityServer.CurrentValue.SignOut.AutomaticRedirectAfterSignOut,
 				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
 				IframeUrl = signOutRequest?.SignOutIFrameUrl,
 				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
-				SecondsBeforeRedirect = this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect
+				SecondsBeforeRedirect = this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut
 			};
 
 			// ReSharper disable InvertIf
@@ -87,8 +87,8 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				},
 				FormsAuthentication =
 				{
-					Duration = this.Facade.IdentityServer.CurrentValue.Account.FormsAuthentication.Duration,
-					Persistent = this.Facade.IdentityServer.CurrentValue.Account.FormsAuthentication.Persistent
+					AllowPersistent = this.Facade.IdentityServer.CurrentValue.FormsAuthentication.AllowPersistent,
+					Duration = this.Facade.IdentityServer.CurrentValue.FormsAuthentication.Duration
 				},
 				FormsAuthenticationEnabled = this.Facade.FeatureManager.IsEnabled(Feature.FormsAuthentication)
 			};
@@ -160,7 +160,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		{
 			var model = new SignOutViewModel
 			{
-				Confirm = this.Facade.IdentityServer.CurrentValue.Account.ConfirmSignOut,
+				Confirm = this.Facade.IdentityServer.CurrentValue.SignOut.ConfirmSignOut,
 				Form =
 				{
 					Id = signOutId
@@ -199,7 +199,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
-			form.Persistent = form.Persistent && this.Facade.IdentityServer.CurrentValue.Account.FormsAuthentication.Persistent;
+			form.Persistent = form.Persistent && this.Facade.IdentityServer.CurrentValue.FormsAuthentication.AllowPersistent;
 			form.ReturnUrl = this.ResolveAndValidateReturnUrl(form.ReturnUrl);
 
 			return await this.ValidateFormsAuthenticationForClientAsync(form);
@@ -242,7 +242,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await this.Facade.Interaction.DenyAuthorizationAsync(authorizationRequest, AuthorizationError.AccessDenied);
 
 					if(authorizationRequest.IsNativeClient())
-						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect);
+						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
 				}
 				// ReSharper restore InvertIf
 
@@ -263,7 +263,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: authorizationRequest?.Client.ClientId));
 
 					if(authorizationRequest != null && authorizationRequest.IsNativeClient())
-						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect);
+						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
 
 					return this.Redirect(form.ReturnUrl);
 				}

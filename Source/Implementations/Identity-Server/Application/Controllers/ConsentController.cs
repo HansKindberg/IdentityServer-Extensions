@@ -58,7 +58,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			await this.Facade.Interaction.GrantConsentAsync(authorizationRequest, consentResponse);
 
-			return authorizationRequest.IsNativeClient() ? await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.Redirection.SecondsBeforeRedirect) : this.Redirect(form.ReturnUrl);
+			return authorizationRequest.IsNativeClient() ? await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut) : this.Redirect(form.ReturnUrl);
 		}
 
 		#endregion

@@ -93,9 +93,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var model = new ConsentViewModel
 			{
+				AllowPersistent = authorizationRequest.Client.AllowRememberConsent,
 				Client = authorizationRequest.Client,
-				Form = await this.CreateConsentFormAsync(authorizationRequest, postedForm, returnUrl),
-				PersistenceEnabled = authorizationRequest.Client.AllowRememberConsent
+				Form = await this.CreateConsentFormAsync(authorizationRequest, postedForm, returnUrl)
 			};
 
 			return await Task.FromResult(model);

@@ -1,7 +1,7 @@
 ﻿@model SignInForm
 @{
 	var hint = Localizer.GetString("Hint");
-	var persistenceEnabled = ViewData[ViewDataKeys.PersistenceEnabled] as bool? ?? false;
+	var allowPersistent = ViewData[ViewDataKeys.AllowPersistent] as bool? ?? false;
 }
 <form asp-action="SignIn" asp-controller="Account" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]">
 	<input asp-for="ReturnUrl" type="hidden" />
@@ -13,7 +13,7 @@
 		<label asp-for="Password"></label>
 		<input asp-for="Password" autocomplete="off" class="form-control" />
 	</div>
-	@if(persistenceEnabled)
+	@if(allowPersistent)
 	{
 		<div class="mb-3">
 			<div class="form-check">

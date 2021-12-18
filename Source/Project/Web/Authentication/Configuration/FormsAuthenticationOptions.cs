@@ -6,8 +6,8 @@ namespace HansKindberg.IdentityServer.Web.Authentication.Configuration
 	{
 		#region Properties
 
+		public virtual bool AllowPersistent { get; set; } = true;
 		public virtual TimeSpan Duration { get; set; } = TimeSpan.FromDays(30);
-		public virtual bool Persistent { get; set; } = true;
 
 		#endregion
 	}

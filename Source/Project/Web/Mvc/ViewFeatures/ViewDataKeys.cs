@@ -4,7 +4,7 @@ namespace HansKindberg.IdentityServer.Web.Mvc.ViewFeatures
 	{
 		#region Fields
 
-		public const string PersistenceEnabled = "PersistenceEnabled";
+		public const string AllowPersistent = "AllowPersistent";
 
 		#endregion
 	}

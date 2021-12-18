@@ -1,6 +1,6 @@
 ﻿@model ConsentForm
 @{
-	var persistenceEnabled = ViewData[ViewDataKeys.PersistenceEnabled] as bool? ?? false;
+	var allowPersistent = ViewData[ViewDataKeys.AllowPersistent] as bool? ?? false;
 }
 @if(Model != null)
 {
@@ -52,7 +52,7 @@
 			</label>
 			<input autofocus="autofocus" asp-for="Description" class="form-control" />
 		</div>
-		@if(persistenceEnabled)
+		@if(allowPersistent)
 		{
 			<div class="mb-4 form-check">
 				<input asp-for="Persistent" class="form-check-input" />

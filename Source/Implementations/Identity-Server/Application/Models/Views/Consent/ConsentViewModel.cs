@@ -12,6 +12,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Consent
 
 		#region Properties
 
+		public virtual bool AllowPersistent { get; set; }
 		public virtual Client Client { get; set; }
 
 		public virtual ConsentForm Form
@@ -19,8 +20,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Consent
 			get => this._form ??= new ConsentForm();
 			set => this._form = value;
 		}
-
-		public virtual bool PersistenceEnabled { get; set; }
 
 		#endregion
 	}

@@ -5,6 +5,7 @@ using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.EntityFramework.Options;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Saml.Configuration;
+using HansKindberg.IdentityServer.Web.Authentication.Configuration;
 using IdentityModel;
 using RegionOrebroLan.Configuration;
 using Rsk.WsFederation.Configuration;
@@ -14,8 +15,6 @@ namespace HansKindberg.IdentityServer.Configuration
 	public class ExtendedIdentityServerOptions : IdentityServerOptions
 	{
 		#region Properties
-
-		public virtual AccountOptions Account { get; set; } = new AccountOptions();
 
 		/// <summary>
 		/// The key can not contain colon, ":". Any colon should be url-encoded to "%3a". This is because keys can not contain colon, ":", in appsettings.json.
@@ -37,6 +36,7 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();
 		public virtual ConsentOptions Consent { get; set; } = new ConsentOptions();
+		public virtual FormsAuthenticationOptions FormsAuthentication { get; set; } = new FormsAuthenticationOptions();
 
 		/// <summary>
 		/// Like MutualTlsOptions.DomainName but used for interactive client authentication.
@@ -44,9 +44,9 @@ namespace HansKindberg.IdentityServer.Configuration
 		public virtual string InteractiveMutualTlsDomain { get; set; }
 
 		public virtual OperationalStoreOptions OperationalStore { get; set; } = new OperationalStoreOptions();
-		public virtual RedirectionOptions Redirection { get; set; } = new RedirectionOptions();
 		public virtual ExtendedSamlIdpOptions Saml { get; set; } = new ExtendedSamlIdpOptions();
 		public virtual DynamicOptions SigningCertificate { get; set; }
+		public virtual SignOutOptions SignOut { get; set; } = new SignOutOptions();
 		public virtual IList<DynamicOptions> ValidationCertificates { get; } = new List<DynamicOptions>();
 		public virtual WsFederationOptions WsFederation { get; set; } = new WsFederationOptions();
 

@@ -12,7 +12,7 @@
 				{
 					<li class="list-group-item">
 						<partial name="ValidationSummary" />
-						<partial model="@Model.Form" name="SignInForm" view-data="@(new ViewDataDictionary(ViewData) { { ViewDataKeys.PersistenceEnabled, Model.FormsAuthentication.Persistent } })" />
+						<partial model="@Model.Form" name="SignInForm" view-data="@(new ViewDataDictionary(ViewData) { { ViewDataKeys.AllowPersistent, Model.FormsAuthentication.AllowPersistent } })" />
 					</li>
 				}
 				@foreach(var authenticationScheme in Model.AuthenticationSchemes)

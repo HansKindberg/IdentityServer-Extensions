@@ -10,13 +10,23 @@ namespace UnitTests.Configuration
 		#region Methods
 
 		[TestMethod]
-		public async Task Account_ShouldHaveADefaultValue()
+		public async Task FormsAuthentication_ShouldHaveADefaultValue()
 		{
 			await Task.CompletedTask;
 
-			var account = new ExtendedIdentityServerOptions().Account;
+			var formsAuthentication = new ExtendedIdentityServerOptions().FormsAuthentication;
 
-			Assert.IsNotNull(account);
+			Assert.IsNotNull(formsAuthentication);
+		}
+
+		[TestMethod]
+		public async Task SignOut_ShouldHaveADefaultValue()
+		{
+			await Task.CompletedTask;
+
+			var signOut = new ExtendedIdentityServerOptions().SignOut;
+
+			Assert.IsNotNull(signOut);
 		}
 
 		#endregion
