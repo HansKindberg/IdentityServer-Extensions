@@ -42,21 +42,22 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<SignedOutViewModel> CreateSignedOutViewModelAsync(string signOutId)
 		{
+			var signOutOptions = this.Facade.IdentityServer.CurrentValue.SignOut;
 			var signOutRequest = await this.Facade.Interaction.GetLogoutContextAsync(signOutId);
 
 			var model = new SignedOutViewModel
 			{
-				AutomaticRedirect = this.Facade.IdentityServer.CurrentValue.SignOut.AutomaticRedirectAfterSignOut,
+				AutomaticRedirect = signOutOptions.AutomaticRedirectAfterSignOut,
 				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
-				IframeUrl = signOutRequest?.SignOutIFrameUrl,
+				IframeUrl = signOutOptions.SloEnabled ? signOutRequest?.SignOutIFrameUrl : null,
 				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
-				SecondsBeforeRedirect = this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut
+				SecondsBeforeRedirect = signOutOptions.SecondsBeforeRedirectAfterSignOut
 			};
 
 			// ReSharper disable InvertIf
 			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
 			{
-				if(signOutRequest != null)
+				if(signOutOptions.SloEnabled && signOutRequest != null)
 					model.SamlIframeUrl = await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, new SamlLogoutRequest(signOutRequest));
 
 				var samlRequestId = await this.GetSamlRequestIdAsync();
@@ -283,6 +284,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[AllowAnonymous]
 		public virtual async Task<IActionResult> SignOut(string signOutId)
 		{
+			if(this.Facade.IdentityServer.CurrentValue.SignOut.IdpInitiatedSloEnabled)
+				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
+
 			var model = await this.CreateSignOutViewModelAsync(signOutId);
 
 			if(!model.Confirm)
