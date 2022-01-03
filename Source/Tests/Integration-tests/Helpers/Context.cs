@@ -90,14 +90,17 @@ namespace IntegrationTests.Helpers
 				if(this._serviceProvider == null)
 				{
 					var configuration = this.CreateConfigurationBuilder().Build();
-					var hostEnvironment = this.CreateHostEnvironment();
+					var hostingEnvironment = this.CreateHostingEnvironment();
 					var services = new ServiceCollection();
 
 					services.AddSingleton<IConfiguration>(configuration);
-					services.AddSingleton(hostEnvironment);
+					services.AddSingleton<IHostEnvironment>(hostingEnvironment);
+#pragma warning disable CS0618 // Type or member is obsolete
+					services.AddSingleton<IHostingEnvironment>(hostingEnvironment);
+#pragma warning restore CS0618 // Type or member is obsolete
 					services.AddSingleton(this._loggerFactory);
 
-					this._configureServicesAction(services, configuration, hostEnvironment);
+					this._configureServicesAction(services, configuration, hostingEnvironment);
 
 					this._serviceProvider = services.BuildServiceProvider();
 				}
@@ -131,7 +134,7 @@ namespace IntegrationTests.Helpers
 			return this._databaseProvider == DatabaseProvider.SqlServer ? DatabaseConfigurationHelper.CreateExplicitSqlServerTestConfiguration() : DatabaseConfigurationHelper.CreateExplicitSqliteTestConfiguration();
 		}
 
-		private IHostEnvironment CreateHostEnvironment()
+		private HostingEnvironment CreateHostingEnvironment()
 		{
 			return new HostingEnvironment
 			{
