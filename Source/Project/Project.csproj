@@ -34,7 +34,8 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.4.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
-		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.2.1-alpha" />
+		<PackageReference Include="RegionOrebroLan" Version="1.3.1-alpha" />
+		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.3.0-alpha" />
 		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.9-alpha" />
 		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.5-alpha" />
 		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.8-alpha" />

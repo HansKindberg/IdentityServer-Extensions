@@ -8,10 +8,8 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.Web.Authorization.Builder.Extentsions;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.IIS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,26 +17,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Caching.Distributed.Builder.Extensions;
 using RegionOrebroLan.DataProtection.Builder.Extensions;
-using RegionOrebroLan.Web.Authentication.Configuration;
 
 namespace HansKindberg.IdentityServer.Builder
 {
 	public static class ApplicationBuilderExtension
 	{
 		#region Methods
-
-		public static IApplicationBuilder ResolveWindowsAuthentication(this IApplicationBuilder applicationBuilder)
-		{
-			if(applicationBuilder == null)
-				throw new ArgumentNullException(nameof(applicationBuilder));
-
-			var authenticationSchemeRegistrations = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedAuthenticationOptions>>().Value.SchemeRegistrations;
-
-			if(!authenticationSchemeRegistrations.TryGetValue(IISServerDefaults.AuthenticationScheme, out var windowsAuthenticationOptions) || !windowsAuthenticationOptions.Enabled)
-				applicationBuilder.ApplicationServices.GetRequiredService<IAuthenticationSchemeProvider>().RemoveScheme(IISServerDefaults.AuthenticationScheme);
-
-			return applicationBuilder;
-		}
 
 		private static IApplicationBuilder UseDatabaseContext<T>(this IApplicationBuilder applicationBuilder) where T : DbContext
 		{
@@ -115,7 +99,6 @@ namespace HansKindberg.IdentityServer.Builder
 				.UseStaticFiles()
 				.UseRouting()
 				.UseRequestLocalization()
-				.ResolveWindowsAuthentication()
 				.UseIdentityServer()
 				.UseExtendedAuthorization();
 

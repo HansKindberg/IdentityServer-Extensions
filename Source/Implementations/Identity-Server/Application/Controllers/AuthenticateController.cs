@@ -184,6 +184,39 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return await Task.FromResult($"{domainNameForCertificateAuthentication}.{this.HttpContext.Request.Host.Value}");
 		}
 
+		public virtual async Task<IActionResult> Negotiate(string authenticationScheme, string returnUrl)
+		{
+			returnUrl = await this.ResolveAndValidateAsync(authenticationScheme, AuthenticationSchemeKind.Negotiate, returnUrl);
+
+			// Check if negotiate-authentication has already been requested and succeeded.
+			var authenticateResult = await this.HttpContext.AuthenticateAsync(authenticationScheme);
+
+			// ReSharper disable InvertIf
+			if(authenticateResult?.Principal is WindowsPrincipal)
+			{
+				var decorators = (await this.Facade.DecorationLoader.GetAuthenticationDecoratorsAsync(authenticationScheme)).ToArray();
+
+				if(!decorators.Any())
+					throw new InvalidOperationException($"There are no authentication-decorators for authentication-scheme \"{authenticationScheme}\".");
+
+				var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(authenticationScheme, returnUrl);
+				var claims = new ClaimBuilderCollection();
+
+				foreach(var decorator in decorators)
+				{
+					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+				}
+
+				await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, this.CreateClaimsPrincipal(authenticationScheme, claims), authenticationProperties);
+
+				return this.Redirect(authenticationProperties.RedirectUri);
+			}
+			// ReSharper restore InvertIf
+
+			// Trigger negotiate-authentication. Since negotiate-authentication don't support the redirect uri, this URL is re-triggered when we call challenge.
+			return this.Challenge(authenticationScheme);
+		}
+
 		public virtual async Task<IActionResult> Remote(string authenticationScheme, string returnUrl)
 		{
 			returnUrl = await this.ResolveAndValidateAsync(authenticationScheme, AuthenticationSchemeKind.Remote, returnUrl);
@@ -283,39 +316,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			if(!authenticationSchemeRestrictions.Contains(authenticationScheme))
 				throw new InvalidOperationException($"The authentication-scheme \"{authenticationScheme}\" is not valid for client \"{clientId}\".");
-		}
-
-		public virtual async Task<IActionResult> Windows(string authenticationScheme, string returnUrl)
-		{
-			returnUrl = await this.ResolveAndValidateAsync(authenticationScheme, AuthenticationSchemeKind.Windows, returnUrl);
-
-			// Check if windows-authentication has already been requested and succeeded.
-			var authenticateResult = await this.HttpContext.AuthenticateAsync(authenticationScheme);
-
-			// ReSharper disable InvertIf
-			if(authenticateResult?.Principal is WindowsPrincipal)
-			{
-				var decorators = (await this.Facade.DecorationLoader.GetAuthenticationDecoratorsAsync(authenticationScheme)).ToArray();
-
-				if(!decorators.Any())
-					throw new InvalidOperationException($"There are no authentication-decorators for authentication-scheme \"{authenticationScheme}\".");
-
-				var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(authenticationScheme, returnUrl);
-				var claims = new ClaimBuilderCollection();
-
-				foreach(var decorator in decorators)
-				{
-					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
-				}
-
-				await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, this.CreateClaimsPrincipal(authenticationScheme, claims), authenticationProperties);
-
-				return this.Redirect(authenticationProperties.RedirectUri);
-			}
-			// ReSharper restore InvertIf
-
-			// Trigger windows-authentication. Since windows-authentication don't support the redirect uri, this URL is re-triggered when we call challenge.
-			return this.Challenge(authenticationScheme);
 		}
 
 		#endregion
