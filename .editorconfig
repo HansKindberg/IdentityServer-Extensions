@@ -4,8 +4,7 @@ root = true
 [*]
 charset = utf-8
 end_of_line = crlf
-# EC116: When "indent_style" is set to tab, it may be desirable to leave indent_size unspecified so readers may view the file using their preferred indentation width.
-# indent_size = tab
+indent_size = tab
 indent_style = tab
 insert_final_newline = false
 tab_width = 4
