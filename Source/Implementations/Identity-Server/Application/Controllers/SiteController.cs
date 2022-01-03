@@ -40,7 +40,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var arguments = new List<object>();
 
 			// ReSharper disable LoopCanBeConvertedToQuery
-			foreach(var argumentKey in argumentKeys)
+			foreach(var argumentKey in argumentKeys ?? Array.Empty<string>())
 			{
 				var localizedArgument = this.Localizer.GetString(argumentKey);
 

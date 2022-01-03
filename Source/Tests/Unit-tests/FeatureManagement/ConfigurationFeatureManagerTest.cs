@@ -29,7 +29,7 @@ namespace UnitTests.FeatureManagement
 		{
 			var sections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-			foreach(var feature in features)
+			foreach(var feature in features ?? Array.Empty<string>())
 			{
 				sections.Add($"{nameof(Microsoft.FeatureManagement)}:{feature}", enabled.ToString().ToLowerInvariant());
 			}

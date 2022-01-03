@@ -73,6 +73,7 @@ namespace IntegrationTests.Data.Transferring.Internal
 			await this.ImportAsyncScenarioTest(DatabaseProvider.SqlServer);
 		}
 
+		[SuppressMessage("Performance", "CA1845:Use span-based 'string.Concat'")]
 		[SuppressMessage("Style", "IDE0057:Use range operator")]
 		public async Task ImportAsyncChangesTest(DatabaseProvider databaseProvider)
 		{

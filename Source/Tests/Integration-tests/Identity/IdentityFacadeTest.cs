@@ -667,6 +667,7 @@ namespace IntegrationTests.Identity
 		}
 
 		[SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+		[SuppressMessage("Style", "IDE0083:Use pattern matching")]
 		protected internal virtual async Task SaveUserLoginAsync_IfTheUserIdIsForAPasswordUser_ShouldThrowAnInvalidOperationException(DatabaseProvider databaseProvider)
 		{
 			using(var context = new Context(databaseProvider: databaseProvider))
@@ -695,8 +696,10 @@ namespace IntegrationTests.Identity
 				}
 				catch(Exception exception)
 				{
+					// ReSharper disable UseNegatedPatternInIsExpression
 					if(!(exception is InvalidOperationException))
 						Assert.Fail("Should have thrown an invalid-operation-exception.");
+					// ReSharper restore UseNegatedPatternInIsExpression
 				}
 			}
 		}
