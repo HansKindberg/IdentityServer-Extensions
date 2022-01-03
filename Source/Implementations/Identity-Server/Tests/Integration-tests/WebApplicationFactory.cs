@@ -12,7 +12,7 @@ namespace IntegrationTests
 
 		public WebApplicationFactory()
 		{
-			this.ClientOptions.BaseAddress = new Uri("https://localhost:44300");
+			this.ClientOptions.BaseAddress = new Uri("https://localhost:6001");
 		}
 
 		#endregion
@@ -21,7 +21,7 @@ namespace IntegrationTests
 
 		protected override IHostBuilder CreateHostBuilder()
 		{
-			return Host.CreateHostBuilder<Startup>(null).UseEnvironment("Development");
+			return Host.CreateHostBuilder<Startup>(null).UseEnvironment("Integration-tests");
 		}
 
 		#endregion
