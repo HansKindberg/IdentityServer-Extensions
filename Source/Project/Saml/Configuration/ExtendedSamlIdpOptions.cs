@@ -6,7 +6,7 @@ namespace HansKindberg.IdentityServer.Saml.Configuration
 	{
 		#region Properties
 
-		public virtual bool ForceAuthenticationSupportEnabled { get; set; }
+		public virtual ForceAuthenticationOptions ForceAuthentication { get; set; } = new ForceAuthenticationOptions();
 
 		#endregion
 	}

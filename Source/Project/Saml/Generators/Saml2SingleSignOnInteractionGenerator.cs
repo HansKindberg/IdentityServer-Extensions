@@ -32,7 +32,7 @@ namespace HansKindberg.IdentityServer.Saml.Generators
 			{
 				var samlIdpOptions = this.IdentityServerOptionsMonitor.CurrentValue.Saml;
 
-				if(!samlIdpOptions.ForceAuthenticationSupportEnabled)
+				if(!samlIdpOptions.ForceAuthentication.Enabled)
 					return false;
 
 				var path = this.HttpContextAccessor.HttpContext?.Request.Path;

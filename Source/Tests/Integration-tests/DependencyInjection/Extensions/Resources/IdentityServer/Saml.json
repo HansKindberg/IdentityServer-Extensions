@@ -1,0 +1,19 @@
+{
+	"IdentityServer": {
+		"Saml": {
+			"ForceAuthentication": {
+				"Enabled": true,
+				"Options": {
+					"Path": "/Test"
+				},
+				"Router": "HansKindberg.IdentityServer.Saml.Routing.ForceAuthenticationRouter, HansKindberg.IdentityServer"
+			},
+			"Licensee": "Test-licensee",
+			"LicenseKey": "Test-licenseKey",
+			"UserInteraction": {
+				"RequestIdParameter": "Test"
+			},
+			"WantAuthenticationRequestsSigned": true
+		}
+	}
+}

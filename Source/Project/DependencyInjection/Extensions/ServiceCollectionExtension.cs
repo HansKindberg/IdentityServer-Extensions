@@ -19,6 +19,7 @@ using HansKindberg.IdentityServer.Data.Saml;
 using HansKindberg.IdentityServer.Data.Transferring;
 using HansKindberg.IdentityServer.Data.WsFederation;
 using HansKindberg.IdentityServer.Development;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
@@ -27,6 +28,9 @@ using HansKindberg.IdentityServer.Json;
 using HansKindberg.IdentityServer.Saml.Configuration;
 using HansKindberg.IdentityServer.Saml.Configuration.Extensions;
 using HansKindberg.IdentityServer.Saml.Generators;
+using HansKindberg.IdentityServer.Saml.Routing;
+using HansKindberg.IdentityServer.Saml.Routing.Configuration;
+using HansKindberg.IdentityServer.Saml.Services;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
@@ -49,6 +53,7 @@ using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using RegionOrebroLan;
 using RegionOrebroLan.Caching.Distributed.DependencyInjection.Extensions;
+using RegionOrebroLan.ComponentModel;
 using RegionOrebroLan.DataProtection.DependencyInjection.Extensions;
 using RegionOrebroLan.Localization.DependencyInjection.Extensions;
 using RegionOrebroLan.Web.Authentication.Cookies.DependencyInjection.Extensions;
@@ -58,11 +63,13 @@ using Rsk.Saml.Configuration;
 using Rsk.Saml.Generators;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Interfaces;
 using Rsk.Saml.IdentityProvider.Storage.EntityFramework.Stores;
+using Rsk.Saml.Services;
 using Rsk.Saml.Validation;
 using Rsk.WsFederation.Configuration;
 using Rsk.WsFederation.EntityFramework.DbContexts;
 using Rsk.WsFederation.EntityFramework.Stores;
 using Saml2SingleSignOnRequestValidator = HansKindberg.IdentityServer.Saml.Validation.Saml2SingleSignOnRequestValidator;
+using SamlPersistedGrantService = HansKindberg.IdentityServer.Saml.Services.SamlPersistedGrantService;
 
 namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 {
@@ -85,6 +92,37 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			{
 				configurationSection.Bind(options);
 			});
+		}
+
+		private static IServiceCollection AddClaimsProvider(this IServiceCollection services, IConfiguration configuration)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			if(configuration == null)
+				throw new ArgumentNullException(nameof(configuration));
+
+			// TODO: fix claims-provider setup.
+
+			//var claimsProviderSection = configuration.GetSection(ConfigurationKeys.ClaimsProviderPath);
+			//var claimsProviderOptions = new DynamicOptions();
+			//claimsProviderSection.Bind(claimsProviderOptions);
+
+			//if(claimsProviderOptions.Type != null)
+			//{
+			//	var claimsProviderInterfaceType = typeof(IClaimsProvider);
+			//	var claimsProviderType = TypeExtension.GetType("claims-provider", claimsProviderInterfaceType, claimsProviderOptions.Type);
+			//	services.AddTransient(claimsProviderInterfaceType, claimsProviderType);
+			//}
+			//else
+			//{
+			//	services.AddSingleton<IClaimsProvider, EmptyClaimsProvider>();
+			//}
+
+			//services.Configure<ClaimsServiceClientOptions>(configuration.GetSection($"{ConfigurationKeys.ServiceClientsPath}:{nameof(ClaimsServiceClient)}"));
+			//services.AddTransient<IClaimsServiceClient, ClaimsServiceClient>();
+
+			return services;
 		}
 
 		public static IServiceCollection AddDataDirectory(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
@@ -311,6 +349,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.Saml))
 			{
 				var samlIdpOptionsSection = serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.Saml)}");
+				var samlIdpOptions = new ExtendedSamlIdpOptions();
+				samlIdpOptionsSection.Bind(samlIdpOptions);
 
 				// This is for this extension-library. The Rsk-libraries uses SamlIdpOptions registered as a singleton.
 				identityServerBuilder.Services.ConfigureIdentityServerSamlPlugin(samlIdpOptionsSection);
@@ -326,13 +366,39 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 					})
 					.AddServiceProviderStore<ServiceProviderStore>();
 
-				// To handle ForceAuthentication
+				identityServerBuilder.Services.Configure<ForceAuthenticationRouterOptions>(samlIdpOptions.ForceAuthentication.Options ?? (IConfiguration)new ConfigurationBuilder().Build());
+
+				if(samlIdpOptions.ForceAuthentication.Router != null)
+				{
+					var forceAuthenticationRouterInterfaceType = typeof(IForceAuthenticationRouter);
+
+					if(!forceAuthenticationRouterInterfaceType.IsAssignableFrom(samlIdpOptions.ForceAuthentication.Router))
+						throw new InvalidOperationException($"The type {samlIdpOptions.ForceAuthentication.Router.FullName.ToStringRepresentation()} does not inherit from {forceAuthenticationRouterInterfaceType.FullName.ToStringRepresentation()}.");
+
+					identityServerBuilder.Services.AddSingleton(forceAuthenticationRouterInterfaceType, samlIdpOptions.ForceAuthentication.Router);
+				}
+				else
+				{
+					identityServerBuilder.Services.AddSingleton<IForceAuthenticationRouter, NullForceAuthenticationRouter>();
+				}
+
 				identityServerBuilder.Services.RemoveAll<ISaml2SingleSignOnInteractionGenerator>();
 				identityServerBuilder.Services.AddTransient<Rsk.Saml.DuendeIdentityServer.Generators.Saml2SingleSignOnInteractionGenerator>();
 				identityServerBuilder.Services.AddTransient<ISaml2SingleSignOnInteractionGenerator, Saml2SingleSignOnInteractionGenerator>();
+
 				identityServerBuilder.Services.RemoveAll<ISaml2SingleSignOnRequestValidator>();
 				identityServerBuilder.Services.AddTransient<Rsk.Saml.Validation.Saml2SingleSignOnRequestValidator>();
 				identityServerBuilder.Services.AddTransient<ISaml2SingleSignOnRequestValidator, Saml2SingleSignOnRequestValidator>();
+
+				identityServerBuilder.Services.RemoveAll<ISamlInteractionService>();
+				identityServerBuilder.Services.AddTransient<DefaultSamlInteractionService>();
+				identityServerBuilder.Services.AddTransient<ExtendedSamlInteractionService>();
+				identityServerBuilder.Services.AddTransient<IExtendedSamlInteractionService>(serviceProvider => serviceProvider.GetRequiredService<ExtendedSamlInteractionService>());
+				identityServerBuilder.Services.AddTransient<ISamlInteractionService>(serviceProvider => serviceProvider.GetRequiredService<ExtendedSamlInteractionService>());
+
+				identityServerBuilder.Services.RemoveAll<ISamlPersistedGrantService>();
+				identityServerBuilder.Services.AddTransient<Rsk.Saml.Services.SamlPersistedGrantService>();
+				identityServerBuilder.Services.AddTransient<ISamlPersistedGrantService, SamlPersistedGrantService>();
 
 				identityServerBuilder.Services.TryAddSingleton<ISamlPluginBuilder, SamlPluginBuilder>();
 			}
@@ -464,12 +530,15 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			{
 				Converters = new List<JsonConverter> { new JsonCertificateConverter() }
 			};
+			TypeDescriptor.AddAttributes(typeof(Type), new TypeConverterAttribute(typeof(TypeTypeConverter)));
 			TypeDescriptor.AddAttributes(typeof(X509Certificate2), new TypeConverterAttribute(typeof(CertificateConverter)));
 
 			var serviceConfiguration = new ServiceConfigurationBuilder(configuration, hostEnvironment);
 
 			services.Configure<ExceptionHandlingOptions>(configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
 			services.Configure<SecurityHeaderOptions>(configuration.GetSection(ConfigurationKeys.SecurityHeadersPath));
+
+			services.AddClaimsProvider(configuration);
 
 			services.AddExtendedAuthorization(configuration);
 

@@ -49,24 +49,25 @@ namespace UnitTests.FeatureManagement
 				featureNames.Add(featureName);
 			}
 
-			Assert.AreEqual(17, featureNames.Count);
+			Assert.AreEqual(18, featureNames.Count);
 			Assert.AreEqual(nameof(Feature.CertificateForwarding), featureNames[0]);
-			Assert.AreEqual(nameof(Feature.DataDirectory), featureNames[1]);
-			Assert.AreEqual(nameof(Feature.DataSeeding), featureNames[2]);
-			Assert.AreEqual(nameof(Feature.DataTransfer), featureNames[3]);
-			Assert.AreEqual(nameof(Feature.Debug), featureNames[4]);
-			Assert.AreEqual(nameof(Feature.Development), featureNames[5]);
-			Assert.AreEqual(nameof(Feature.Diagnostics), featureNames[6]);
-			Assert.AreEqual(nameof(Feature.DynamicAuthenticationProviders), featureNames[7]);
-			Assert.AreEqual(nameof(Feature.FormsAuthentication), featureNames[8]);
-			Assert.AreEqual(nameof(Feature.ForwardedHeaders), featureNames[9]);
-			Assert.AreEqual(nameof(Feature.Home), featureNames[10]);
-			Assert.AreEqual(nameof(Feature.HostInformation), featureNames[11]);
-			Assert.AreEqual(nameof(Feature.Hsts), featureNames[12]);
-			Assert.AreEqual(nameof(Feature.HttpsRedirection), featureNames[13]);
-			Assert.AreEqual(nameof(Feature.Saml), featureNames[14]);
-			Assert.AreEqual(nameof(Feature.SecurityHeaders), featureNames[15]);
-			Assert.AreEqual(nameof(Feature.WsFederation), featureNames[16]);
+			Assert.AreEqual(nameof(Feature.ClaimsSelection), featureNames[1]);
+			Assert.AreEqual(nameof(Feature.DataDirectory), featureNames[2]);
+			Assert.AreEqual(nameof(Feature.DataSeeding), featureNames[3]);
+			Assert.AreEqual(nameof(Feature.DataTransfer), featureNames[4]);
+			Assert.AreEqual(nameof(Feature.Debug), featureNames[5]);
+			Assert.AreEqual(nameof(Feature.Development), featureNames[6]);
+			Assert.AreEqual(nameof(Feature.Diagnostics), featureNames[7]);
+			Assert.AreEqual(nameof(Feature.DynamicAuthenticationProviders), featureNames[8]);
+			Assert.AreEqual(nameof(Feature.FormsAuthentication), featureNames[9]);
+			Assert.AreEqual(nameof(Feature.ForwardedHeaders), featureNames[10]);
+			Assert.AreEqual(nameof(Feature.Home), featureNames[11]);
+			Assert.AreEqual(nameof(Feature.HostInformation), featureNames[12]);
+			Assert.AreEqual(nameof(Feature.Hsts), featureNames[13]);
+			Assert.AreEqual(nameof(Feature.HttpsRedirection), featureNames[14]);
+			Assert.AreEqual(nameof(Feature.Saml), featureNames[15]);
+			Assert.AreEqual(nameof(Feature.SecurityHeaders), featureNames[16]);
+			Assert.AreEqual(nameof(Feature.WsFederation), featureNames[17]);
 		}
 
 		[TestMethod]

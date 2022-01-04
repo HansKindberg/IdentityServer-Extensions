@@ -15,11 +15,14 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
 using HansKindberg.IdentityServer.Saml.Configuration;
+using HansKindberg.IdentityServer.Saml.Routing;
+using HansKindberg.IdentityServer.Saml.Routing.Configuration;
 using HansKindberg.IdentityServer.Web.Localization;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -245,6 +248,41 @@ namespace IntegrationTests.DependencyInjection.Extensions
 				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedSamlIdpOptions>>().CurrentValue);
 				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<SamlIdpOptions>>().Value);
 				await this.AddIdentityServerSamlOptionsTest(context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<SamlIdpOptions>>().CurrentValue);
+			}
+
+			using(var context = new Context(features: new Dictionary<Feature, bool> { { Feature.Saml, true } }))
+			{
+				var extendedSamlIdpOptions = context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.Saml;
+				Assert.IsNotNull(extendedSamlIdpOptions.ForceAuthentication);
+				Assert.IsFalse(extendedSamlIdpOptions.ForceAuthentication.Enabled);
+				Assert.IsNull(extendedSamlIdpOptions.ForceAuthentication.Options);
+				Assert.IsNull(extendedSamlIdpOptions.ForceAuthentication.Router);
+			}
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: "DependencyInjection/Extensions/Resources/IdentityServer/Saml.json", features: new Dictionary<Feature, bool> { { Feature.Saml, true } }))
+			{
+				var extendedSamlIdpOptions = context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.Saml;
+				Assert.IsNotNull(extendedSamlIdpOptions.ForceAuthentication);
+				Assert.IsTrue(extendedSamlIdpOptions.ForceAuthentication.Enabled);
+				Assert.IsNotNull(extendedSamlIdpOptions.ForceAuthentication.Options);
+				Assert.IsNotNull(extendedSamlIdpOptions.ForceAuthentication.Router);
+
+				Assert.AreEqual("Test-licensee", extendedSamlIdpOptions.Licensee);
+				Assert.AreEqual("Test-licenseKey", extendedSamlIdpOptions.LicenseKey);
+				Assert.IsFalse(extendedSamlIdpOptions.UseLegacyRsaEncryption);
+				Assert.AreEqual("Test", extendedSamlIdpOptions.UserInteraction.RequestIdParameter);
+				Assert.IsTrue(extendedSamlIdpOptions.WantAuthenticationRequestsSigned);
+
+				var forceAuthenticationRouterOptions = context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ForceAuthenticationRouterOptions>>().CurrentValue;
+				Assert.AreEqual("/Test", forceAuthenticationRouterOptions.Path);
+
+				var forceAuthenticationRouter = context.ApplicationBuilder.ApplicationServices.GetRequiredService<IForceAuthenticationRouter>();
+				Assert.IsTrue(forceAuthenticationRouter is ForceAuthenticationRouter);
+				var actionResult = await forceAuthenticationRouter.GetActionResultAsync("/path?key=value");
+				Assert.IsNotNull(actionResult);
+				var redirectResult = actionResult as RedirectResult;
+				Assert.IsNotNull(redirectResult);
+				Assert.AreEqual("/Test?ReturnUrl=%2Fpath%3Fkey%3Dvalue", redirectResult.Url);
 			}
 		}
 

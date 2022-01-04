@@ -5,6 +5,7 @@ using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.IdentityServer.Saml.Services;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +16,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Web.Authentication.Decoration;
-using Rsk.Saml.Services;
 
 namespace HansKindberg.IdentityServer
 {
@@ -44,7 +44,7 @@ namespace HansKindberg.IdentityServer
 				throw new ArgumentNullException(nameof(serviceProvider));
 
 			if(featureManager.IsEnabled(Feature.Saml))
-				this.SamlInteraction = serviceProvider.GetRequiredService<ISamlInteractionService>();
+				this.SamlInteraction = serviceProvider.GetRequiredService<IExtendedSamlInteractionService>();
 		}
 
 		#endregion
@@ -65,7 +65,7 @@ namespace HansKindberg.IdentityServer
 		public virtual IStringLocalizerFactory LocalizerFactory { get; }
 		public virtual ILoggerFactory LoggerFactory { get; }
 		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
-		public virtual ISamlInteractionService SamlInteraction { get; }
+		public virtual IExtendedSamlInteractionService SamlInteraction { get; }
 
 		#endregion
 	}

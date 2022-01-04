@@ -2,6 +2,7 @@ using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
+using HansKindberg.IdentityServer.Saml.Services;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Web.Authentication.Decoration;
-using Rsk.Saml.Services;
 
 namespace HansKindberg.IdentityServer
 {
@@ -37,7 +37,7 @@ namespace HansKindberg.IdentityServer
 		/// <summary>
 		/// The SAML-interaction-service if the SAML-feature is enabled otherwise null.
 		/// </summary>
-		ISamlInteractionService SamlInteraction { get; }
+		IExtendedSamlInteractionService SamlInteraction { get; }
 
 		#endregion
 	}

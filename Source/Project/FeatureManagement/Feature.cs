@@ -3,6 +3,7 @@ namespace HansKindberg.IdentityServer.FeatureManagement
 	public enum Feature
 	{
 		CertificateForwarding,
+		ClaimsSelection,
 		DataDirectory,
 		DataSeeding,
 		DataTransfer,
