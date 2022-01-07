@@ -276,17 +276,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 		}
 
 		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
-		protected internal virtual QueryBuilder CreateQueryBuilder(IDictionary<string, StringValues> query, CultureInfo uiCulture)
-		{
-			if(query == null)
-				throw new ArgumentNullException(nameof(query));
-
-			this.ResolveCultureQuery(query, uiCulture);
-
-			return this.CreateQueryBuilder(query);
-		}
-
-		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
 		protected internal virtual string CreateQueryString(CultureInfo uiCulture)
 		{
 			var query = QueryHelpers.ParseQuery(this.HttpContext.Request.QueryString.ToString());
