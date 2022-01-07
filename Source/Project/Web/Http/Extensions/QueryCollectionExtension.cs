@@ -48,6 +48,11 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 			return new HashSet<string>(comparer);
 		}
 
+		public static ISet<string> GetUiLocales(this IQueryCollection queryCollection)
+		{
+			return queryCollection.GetDistinctValues(QueryStringKeys.UiLocales, ' ');
+		}
+
 		public static Uri GetValueAsAbsoluteUrl(this IQueryCollection queryCollection, string key)
 		{
 			if(queryCollection == null)
@@ -64,6 +69,29 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 			// ReSharper restore InvertIf
 
 			return null;
+		}
+
+		public static IDictionary<string, string> ToDictionary(this IQueryCollection queryCollection)
+		{
+			if(queryCollection == null)
+				throw new ArgumentNullException(nameof(queryCollection));
+
+			return queryCollection.ToDictionary(item => item.Key, item => (string)item.Value);
+		}
+
+		public static IDictionary<string, string> ToSortedDictionary(this IQueryCollection queryCollection)
+		{
+			if(queryCollection == null)
+				throw new ArgumentNullException(nameof(queryCollection));
+
+			var sortedDictionary = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+			foreach(var (key, value) in queryCollection.ToDictionary())
+			{
+				sortedDictionary.Add(key, value);
+			}
+
+			return sortedDictionary;
 		}
 
 		#endregion

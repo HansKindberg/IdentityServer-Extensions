@@ -39,6 +39,8 @@ namespace HansKindberg.IdentityServer
 		/// </summary>
 		IExtendedSamlInteractionService SamlInteraction { get; }
 
+		IUriFactory UriFactory { get; }
+
 		#endregion
 	}
 }

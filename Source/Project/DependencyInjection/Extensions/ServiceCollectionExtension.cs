@@ -572,6 +572,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			services.AddSingleton(AppDomain.CurrentDomain);
 			services.AddSingleton<IApplicationDomain, ApplicationHost>();
+			services.AddSingleton<IUriFactory, UriFactory>();
 
 			// This must come after AddPathBasedLocalization.
 			services.AddControllersWithViews(options =>

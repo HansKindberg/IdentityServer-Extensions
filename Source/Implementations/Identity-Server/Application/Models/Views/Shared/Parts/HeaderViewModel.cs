@@ -12,7 +12,6 @@ using HansKindberg.IdentityServer.Navigation;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authorization;
 using HansKindberg.IdentityServer.Web.Extensions;
-using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
 using HansKindberg.IdentityServer.Web.Routing;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +32,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 		private Lazy<string> _environmentName;
 		private INavigationNode _navigation;
 		private Lazy<IRequestCultureFeature> _requestCultureFeature;
-		private Lazy<Uri> _returnUrlAsAbsoluteUrl;
 		private IEnumerable<CultureInfo> _supportedUiCultures;
 		private Lazy<INavigationNode> _uiCultureNavigation;
 
@@ -98,7 +96,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 						this.AddGrantsNavigationNode(navigation);
 
 					if(this.Facade.FeatureManager.IsEnabled(Feature.Home))
-						navigation.Url = this.GetUrl();
+						navigation.Url = this.Facade.UriFactory.CreateRelativeAsync(Enumerable.Empty<string>()).Result;
 
 					if(!this.HttpContext.SignedOut() && this.Facade.AuthorizationResolver.HasPermissionAsync(Permissions.Administrator, this.HttpContext.User).Result)
 					{
@@ -130,16 +128,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			}
 		}
 
-		protected internal virtual Uri ReturnUrlAsAbsoluteUrl
-		{
-			get
-			{
-				this._returnUrlAsAbsoluteUrl ??= new Lazy<Uri>(() => this.HttpContext.Request.Query.GetValueAsAbsoluteUrl(QueryStringKeys.ReturnUrl));
-
-				return this._returnUrlAsAbsoluteUrl.Value;
-			}
-		}
-
 		protected internal virtual IEnumerable<CultureInfo> SupportedUiCultures => this._supportedUiCultures ??= this.Facade.RequestLocalization.CurrentValue.SupportedUICultures.OrderBy(item => item.NativeName, StringComparer.Ordinal);
 		public virtual CultureInfo UiCulture => CultureInfo.CurrentUICulture;
 
@@ -167,7 +155,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 						{
 							Text = this.Localizer.GetString("- Clear -"),
 							Tooltip = this.Localizer.GetString("Clear the selected culture."),
-							Url = this.CreateRelativeUrl((CultureInfo)null)
+							Url = this.Facade.UriFactory.CreateRelativeAsync((CultureInfo)null, uriFactoryQueryMode: UriFactoryQueryMode.All).Result
 						});
 					}
 
@@ -178,7 +166,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 							Active = supportedUiCulture.Equals(this.UiCulture),
 							Text = supportedUiCulture.NativeName,
 							Tooltip = this.Localizer.GetString("Select culture {0}.", supportedUiCulture.Name),
-							Url = this.CreateRelativeUrl(supportedUiCulture)
+							Url = this.Facade.UriFactory.CreateRelativeAsync(supportedUiCulture, uriFactoryQueryMode: UriFactoryQueryMode.All).Result
 						});
 					}
 
@@ -206,7 +194,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			{
 				Text = this.Localizer.GetString("Debug/Heading"),
 				Tooltip = this.Localizer.GetString("Debug/Information"),
-				Url = this.CreateRelativeUrl(this.HttpContext.Request.Path, this.CreateQueryBuilder(query).ToString())
+				Url = this.Facade.UriFactory.CreateRelativeAsync(this.HttpContext.Request.Path, this.CreateQueryBuilder(query).ToString()).Result
 			});
 		}
 
@@ -275,49 +263,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			return queryBuilder;
 		}
 
-		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
-		protected internal virtual string CreateQueryString(CultureInfo uiCulture)
-		{
-			var query = QueryHelpers.ParseQuery(this.HttpContext.Request.QueryString.ToString());
-
-			if(this.ReturnUrlAsAbsoluteUrl != null)
-			{
-				var returnUrlQuery = QueryHelpers.ParseQuery(this.ReturnUrlAsAbsoluteUrl.Query);
-
-				this.ResolveCultureQuery(returnUrlQuery, uiCulture);
-
-				var uriBuilder = new UriBuilder(this.ReturnUrlAsAbsoluteUrl)
-				{
-					Query = this.CreateQueryBuilder(returnUrlQuery).ToString()
-				};
-
-				query[QueryStringKeys.ReturnUrl] = uriBuilder.Uri.PathAndQuery;
-			}
-			else
-			{
-				this.ResolveCultureQuery(query, uiCulture);
-			}
-
-			return this.CreateQueryBuilder(query).ToString();
-		}
-
-		protected internal virtual Uri CreateRelativeUrl(IEnumerable<string> segments)
-		{
-			return this.CreateRelativeUrl(this.JoinSegments(segments), this.HttpContext.Request.QueryString.ToString());
-		}
-
-		protected internal virtual Uri CreateRelativeUrl(string path, string queryString)
-		{
-			return new Uri(path + queryString, UriKind.Relative);
-		}
-
-		protected internal virtual Uri CreateRelativeUrl(CultureInfo uiCulture)
-		{
-			var queryString = this.CreateQueryString(uiCulture);
-
-			return this.CreateRelativeUrl(this.HttpContext.Request.Path, queryString);
-		}
-
 		protected internal virtual string GetCultureNavigationTooltip()
 		{
 			var informationArgument = this.RequestCultureFeature.Provider switch
@@ -337,11 +282,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			return tooltip;
 		}
 
-		protected internal virtual Uri GetUrl()
-		{
-			return this.GetUrl(null);
-		}
-
 		public virtual Uri GetUrl(string controller)
 		{
 			return this.GetUrl(null, controller);
@@ -357,27 +297,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			if(!string.IsNullOrEmpty(action) && !this.StringEquals(action, nameof(HomeController.Index)))
 				segments.Add(action);
 
-			return this.CreateRelativeUrl(segments);
-		}
-
-		protected internal virtual string JoinSegments(IEnumerable<string> segments)
-		{
-			segments = (segments ?? Enumerable.Empty<string>()).ToArray();
-
-			const char pathSeparator = '/';
-
-			return pathSeparator + (segments.Any() ? string.Join(pathSeparator.ToString(CultureInfo.InvariantCulture), segments) + pathSeparator : string.Empty);
-		}
-
-		protected internal virtual void ResolveCultureQuery(IDictionary<string, StringValues> query, CultureInfo uiCulture)
-		{
-			if(query == null)
-				throw new ArgumentNullException(nameof(query));
-
-			if(uiCulture == null || uiCulture.Equals(CultureInfo.InvariantCulture))
-				query.Remove(QueryStringKeys.UiLocales);
-			else
-				query[QueryStringKeys.UiLocales] = uiCulture.Name;
+			return this.Facade.UriFactory.CreateRelativeAsync(segments).Result;
 		}
 
 		protected internal virtual bool StringEquals(string first, string second)

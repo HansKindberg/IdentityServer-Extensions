@@ -23,7 +23,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider)
+		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
 		{
 			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
@@ -45,6 +45,8 @@ namespace HansKindberg.IdentityServer
 
 			if(featureManager.IsEnabled(Feature.Saml))
 				this.SamlInteraction = serviceProvider.GetRequiredService<IExtendedSamlInteractionService>();
+
+			this.UriFactory = uriFactory ?? throw new ArgumentNullException(nameof(uriFactory));
 		}
 
 		#endregion
@@ -66,6 +68,7 @@ namespace HansKindberg.IdentityServer
 		public virtual ILoggerFactory LoggerFactory { get; }
 		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
 		public virtual IExtendedSamlInteractionService SamlInteraction { get; }
+		public virtual IUriFactory UriFactory { get; }
 
 		#endregion
 	}
