@@ -4,6 +4,7 @@ namespace HansKindberg.IdentityServer.Web
 	{
 		#region Fields
 
+		public const string AuthenticationScheme = "AuthenticationScheme";
 		public const string Debug = "Debug";
 		public const string ErrorId = "ErrorId";
 		public const string ReturnUrl = "ReturnUrl";

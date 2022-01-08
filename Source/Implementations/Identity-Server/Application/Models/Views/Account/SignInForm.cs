@@ -16,8 +16,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Account
 		[Display(Name = "Persistent/Name")]
 		public virtual bool Persistent { get; set; }
 
-		public virtual string ReturnUrl { get; set; }
-
 		[Display(Name = "UserName/Name", Prompt = "UserName/Prompt")]
 		[Required(ErrorMessage = "\"{0}\" is required.")]
 		public virtual string UserName { get; set; }

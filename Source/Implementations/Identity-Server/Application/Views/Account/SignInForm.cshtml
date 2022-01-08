@@ -3,8 +3,7 @@
 	var hint = Localizer.GetString("Hint");
 	var allowPersistent = ViewData[ViewDataKeys.AllowPersistent] as bool? ?? false;
 }
-<form asp-action="SignIn" asp-controller="Account" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]">
-	<input asp-for="ReturnUrl" type="hidden" />
+<form asp-action="SignIn" asp-controller="Account" asp-all-route-data="@Context.Request.Query.ToSortedDictionary()">
 	<div class="mb-3">
 		<label asp-for="UserName"></label>
 		<input asp-for="UserName" autofocus="autofocus" class="form-control" />

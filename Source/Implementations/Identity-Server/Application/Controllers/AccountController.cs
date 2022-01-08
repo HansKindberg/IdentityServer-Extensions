@@ -83,7 +83,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			{
 				Form =
 				{
-					ReturnUrl = returnUrl,
 					UserName = authorizationRequest?.LoginHint
 				},
 				FormsAuthentication =
@@ -145,12 +144,13 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return model;
 		}
 
-		protected internal virtual async Task<SignInViewModel> CreateSignInViewModelAsync(SignInForm form)
+		[SuppressMessage("Style", "IDE0016:Use 'throw' expression")]
+		protected internal virtual async Task<SignInViewModel> CreateSignInViewModelAsync(SignInForm form, string returnUrl)
 		{
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
-			var model = await this.CreateSignInViewModelAsync(form.ReturnUrl);
+			var model = await this.CreateSignInViewModelAsync(returnUrl);
 
 			model.Form = form;
 
@@ -195,15 +195,14 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return await Task.FromResult(this.View());
 		}
 
-		protected internal virtual async Task<AuthorizationRequest> ResolveAndValidateAsync(SignInForm form)
+		protected internal virtual async Task<AuthorizationRequest> ResolveAndValidateAsync(SignInForm form, string returnUrl)
 		{
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
 			form.Persistent = form.Persistent && this.Facade.IdentityServer.CurrentValue.FormsAuthentication.AllowPersistent;
-			form.ReturnUrl = this.ResolveAndValidateReturnUrl(form.ReturnUrl);
 
-			return await this.ValidateFormsAuthenticationForClientAsync(form);
+			return await this.ValidateFormsAuthenticationForClientAsync(returnUrl);
 		}
 
 		[AllowAnonymous]
@@ -231,9 +230,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated in another method.")]
-		public virtual async Task<IActionResult> SignIn(SignInForm form)
+		public virtual async Task<IActionResult> SignIn(SignInForm form, string returnUrl)
 		{
-			var authorizationRequest = await this.ResolveAndValidateAsync(form);
+			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
+			var authorizationRequest = await this.ResolveAndValidateAsync(form, returnUrl);
 
 			if(form.Cancel)
 			{
@@ -243,11 +244,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await this.Facade.Interaction.DenyAuthorizationAsync(authorizationRequest, AuthorizationError.AccessDenied);
 
 					if(authorizationRequest.IsNativeClient())
-						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
+						return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
 				}
 				// ReSharper restore InvertIf
 
-				return this.Redirect(form.ReturnUrl);
+				return this.Redirect(returnUrl);
 			}
 
 			if(this.ModelState.IsValid)
@@ -264,9 +265,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: authorizationRequest?.Client.ClientId));
 
 					if(authorizationRequest != null && authorizationRequest.IsNativeClient())
-						return await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
+						return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
 
-					return this.Redirect(form.ReturnUrl);
+					return this.Redirect(returnUrl);
 				}
 
 				this.Logger.LogDebugIfEnabled($"Sign-in for user \"{form.UserName}\" failed. Result: {signInResult}");
@@ -276,7 +277,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				this.ModelState.AddModelError(string.Empty, this.Localizer.GetString("errors/invalid-username-or-password"));
 			}
 
-			var model = await this.CreateSignInViewModelAsync(form);
+			var model = await this.CreateSignInViewModelAsync(form, returnUrl);
 
 			return await Task.FromResult(this.View(model));
 		}
@@ -340,12 +341,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return this.View("SignedOut", model);
 		}
 
-		protected internal virtual async Task<AuthorizationRequest> ValidateFormsAuthenticationForClientAsync(SignInForm form)
+		protected internal virtual async Task<AuthorizationRequest> ValidateFormsAuthenticationForClientAsync(string returnUrl)
 		{
-			if(form == null)
-				throw new ArgumentNullException(nameof(form));
-
-			var authorizationRequest = await this.Facade.Interaction.GetAuthorizationContextAsync(form.ReturnUrl);
+			var authorizationRequest = await this.Facade.Interaction.GetAuthorizationContextAsync(returnUrl);
 
 			var clientId = authorizationRequest?.Client?.ClientId;
 

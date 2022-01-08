@@ -22,7 +22,7 @@
 					var titleLocalized = Localizer.GetString(authenticationScheme.Name + ".information");
 					var title = titleLocalized.ResourceNotFound ? null : titleLocalized.ToString();
 					<li class="list-group-item">
-						<a asp-action="@authenticationScheme.Kind" asp-controller="Authenticate" asp-route-authenticationScheme="@authenticationScheme.Name" asp-route-returnUrl="@Model.Form.ReturnUrl" title="@title">
+						<a asp-action="@authenticationScheme.Kind" asp-all-route-data="@Context.Request.Query.ToSortedDictionary().Set(QueryStringKeys.AuthenticationScheme, authenticationScheme.Name)" asp-controller="Authenticate" title="@title">
 							<h2 class="h6">
 								<svg class="size-1-point-4-rem" role="presentation">
 									<use xlink:href="/Style/Icons/sprite.svg#@authenticationScheme.Icon" />
