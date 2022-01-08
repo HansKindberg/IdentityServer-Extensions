@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Duende.IdentityServer.Extensions;
@@ -12,15 +11,14 @@ using HansKindberg.IdentityServer.Navigation;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authorization;
 using HansKindberg.IdentityServer.Web.Extensions;
+using HansKindberg.IdentityServer.Web.Http.Extensions;
 using HansKindberg.IdentityServer.Web.Localization;
 using HansKindberg.IdentityServer.Web.Routing;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Primitives;
 
 namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 {
@@ -181,7 +179,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 
 		#region Methods
 
-		[SuppressMessage("Globalization", "CA1304:Specify CultureInfo")]
 		protected internal virtual void AddDebugNavigationNode(NavigationNode navigation)
 		{
 			if(navigation == null)
@@ -194,7 +191,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			{
 				Text = this.Localizer.GetString("Debug/Heading"),
 				Tooltip = this.Localizer.GetString("Debug/Information"),
-				Url = this.Facade.UriFactory.CreateRelativeAsync(this.HttpContext.Request.Path, this.CreateQueryBuilder(query).ToString()).Result
+				Url = this.Facade.UriFactory.CreateRelativeAsync(this.HttpContext.Request.Path, QueryBuilderExtension.Create(query).ToString()).Result
 			});
 		}
 
@@ -246,21 +243,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 
 				navigationNode.Children.Add(node);
 			}
-		}
-
-		protected internal virtual QueryBuilder CreateQueryBuilder(IDictionary<string, StringValues> query)
-		{
-			if(query == null)
-				throw new ArgumentNullException(nameof(query));
-
-			var queryBuilder = new QueryBuilder();
-
-			foreach(var (key, value) in query)
-			{
-				queryBuilder.Add(key, value.ToArray());
-			}
-
-			return queryBuilder;
 		}
 
 		protected internal virtual string GetCultureNavigationTooltip()
