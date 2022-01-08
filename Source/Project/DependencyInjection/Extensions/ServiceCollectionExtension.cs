@@ -526,6 +526,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 				return services;
 			}
 
+			services.Configure<UriFactoryOptions>(configuration.GetSection(ConfigurationKeys.UriFactoryPath));
+
 			JsonConvert.DefaultSettings = () => new JsonSerializerSettings
 			{
 				Converters = new List<JsonConverter> { new JsonCertificateConverter() }

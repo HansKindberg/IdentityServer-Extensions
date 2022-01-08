@@ -14,6 +14,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		public const string IdentityServerPath = "IdentityServer";
 		public const string RequestLocalizationPath = "RequestLocalization";
 		public const string SecurityHeadersPath = "SecurityHeaders";
+		public const string UriFactoryPath = "UriFactory";
 
 		#endregion
 	}
