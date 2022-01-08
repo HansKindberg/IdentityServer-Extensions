@@ -48,6 +48,9 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 			return new HashSet<string>(comparer);
 		}
 
+		/// <summary>
+		/// ui_locales, space-separated, https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+		/// </summary>
 		public static ISet<string> GetUiLocales(this IQueryCollection queryCollection)
 		{
 			return queryCollection.GetDistinctValues(QueryStringKeys.UiLocales, ' ');
