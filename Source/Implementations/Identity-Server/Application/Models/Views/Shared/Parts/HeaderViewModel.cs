@@ -147,7 +147,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 						Tooltip = this.GetCultureNavigationTooltip()
 					};
 
-					if(this.HttpContext.Request.Query.TryGetValue(QueryStringKeys.UiLocales, out var values) && values.Any())
+					if(this.HttpContext.Request.Query.GetUiLocales().Any())
 					{
 						uiCultureNavigation.Children.Add(new NavigationNode(uiCultureNavigation)
 						{
