@@ -19,7 +19,8 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 #if NET5_0_OR_GREATER
 			return new QueryBuilder(parameters);
 #else
-			return new QueryBuilder(parameters.ToDictionary(item => item.Key, item => (string)item.Value));
+			// https://github.com/dotnet/aspnetcore/blob/main/src/Http/Http.Extensions/src/QueryBuilder.cs#L42
+			return new QueryBuilder(parameters.SelectMany(item => item.Value, (item, value) => KeyValuePair.Create(item.Key, value ?? string.Empty)));
 #endif
 		}
 
