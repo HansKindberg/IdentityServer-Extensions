@@ -1,8 +1,7 @@
 ﻿@model SignOutForm
 @if(Model != null)
 {
-	<form asp-action="SignOut" asp-controller="Account" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]" class="d-inline ms-2">
-		<input asp-for="Id" type="hidden" />
+	<form asp-action="SignOut" asp-all-route-data="@Context.Request.Query.ToSortedDictionary()" asp-controller="Account" class="d-inline ms-2">
 		<button autofocus="autofocus" class="btn btn-primary" type="submit">@Localizer.GetString("Accept")</button>
 	</form>
 }

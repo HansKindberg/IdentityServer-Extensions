@@ -1,11 +1,7 @@
 namespace HansKindberg.IdentityServer.Application.Models.Views.Account
 {
-	public class SignOutForm
-	{
-		#region Properties
-
-		public virtual string Id { get; set; }
-
-		#endregion
-	}
+	/// <summary>
+	/// The sign-out-form has no properties. We handle the sign-out-id parameter in the url-query. We keep this form so we can distinguish the AccountController.SignOut actions http-get and http-post.
+	/// </summary>
+	public class SignOutForm { }
 }

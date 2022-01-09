@@ -7,10 +7,13 @@ using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Application.Models.Views.Account;
+using HansKindberg.IdentityServer.Collections.Generic.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
+using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Extensions;
+using HansKindberg.IdentityServer.Web.Http.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -161,11 +164,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		{
 			var model = new SignOutViewModel
 			{
-				Confirm = this.Facade.IdentityServer.CurrentValue.SignOut.ConfirmSignOut,
-				Form =
-				{
-					Id = signOutId
-				}
+				Confirm = this.Facade.IdentityServer.CurrentValue.SignOut.ConfirmSignOut
 			};
 
 			if(this.User.Identity.IsAuthenticated)
@@ -285,26 +284,27 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[AllowAnonymous]
 		public virtual async Task<IActionResult> SignOut(string signOutId)
 		{
-			if(this.Facade.IdentityServer.CurrentValue.SignOut.IdpInitiatedSloEnabled)
-				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
-
 			var model = await this.CreateSignOutViewModelAsync(signOutId);
 
 			if(!model.Confirm)
-				return await this.SignOut(model.Form);
+				return await this.SignOut(model.Form, signOutId);
 
 			return this.View(model);
 		}
 
+		/// <summary>
+		/// The form-parameter is never used. We keep it here so we can distinguish the SignOut actions http-get and http-post.
+		/// </summary>
 		[AllowAnonymous]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> SignOut(SignOutForm form)
+		[SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling")]
+		public virtual async Task<IActionResult> SignOut(SignOutForm form, string signOutId)
 		{
-			if(form == null)
-				throw new ArgumentNullException(nameof(form));
+			if(this.Facade.IdentityServer.CurrentValue.SignOut.IdpInitiatedSloEnabled)
+				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
 
-			var model = await this.CreateSignedOutViewModelAsync(form.Id);
+			var model = await this.CreateSignedOutViewModelAsync(signOutId);
 			string externalSignOutScheme = null;
 
 			if(this.User.Identity.IsAuthenticated)
@@ -318,7 +318,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					if(authenticationScheme != null && authenticationScheme.SignOutSupport)
 					{
 						externalSignOutScheme = authenticationSchemeName;
-						form.Id ??= await this.Facade.Interaction.CreateLogoutContextAsync();
+						signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
 					}
 				}
 
@@ -330,7 +330,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper disable InvertIf
 			if(externalSignOutScheme != null)
 			{
-				var redirectUrl = this.Url.Action("SignOut", new { signOutId = form.Id });
+				var query = this.HttpContext.Request.Query.ToSortedDictionary().Set(QueryStringKeys.SignOutId, signOutId);
+
+				var redirectUrl = this.Url.Action("SignOut", query);
 
 				return this.SignOut(new AuthenticationProperties { RedirectUri = redirectUrl }, externalSignOutScheme);
 			}
