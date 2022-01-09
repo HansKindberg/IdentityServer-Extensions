@@ -167,7 +167,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				Confirm = this.Facade.IdentityServer.CurrentValue.SignOut.ConfirmSignOut
 			};
 
-			if(this.User.Identity.IsAuthenticated)
+			if(this.User.IsAuthenticated())
 			{
 				var signOutRequest = await this.Facade.Interaction.GetLogoutContextAsync(signOutId);
 
@@ -307,7 +307,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var model = await this.CreateSignedOutViewModelAsync(signOutId);
 			string externalSignOutScheme = null;
 
-			if(this.User.Identity.IsAuthenticated)
+			if(this.User.IsAuthenticated())
 			{
 				var authenticationSchemeName = this.User.Claims.FindFirstIdentityProviderClaim()?.Value;
 
