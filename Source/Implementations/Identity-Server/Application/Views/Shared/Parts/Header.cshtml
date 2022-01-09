@@ -99,8 +99,8 @@
 					<input name="Culture" type="hidden" value="@Model.Culture" />
 					<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
 					<input name="UiCulture" type="hidden" value="@Model.UiCulture" />
-					<button class="bg-white btn btn-outline-success cookie-button" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
-						<svg class="size-1-point-4-rem text-success" role="presentation">
+					<button class="btn btn-info cookie-button text-light" title="@Localizer.GetString("Save culture-cookie.")" type="submit">
+						<svg class="-save" role="presentation">
 							<use xlink:href="/Style/Icons/sprite.svg#save" />
 						</svg>
 					</button>
@@ -109,8 +109,8 @@
 				{
 					<form asp-action="Delete" asp-controller="CultureCookie" class="d-inline">
 						<input name="ReturnUrl" type="hidden" value="@(Context.Request.Path + Context.Request.QueryString)" />
-						<button class="bg-white btn btn-outline-danger cookie-button ms-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
-							<svg class="size-1-point-4-rem text-danger" role="presentation">
+						<button class="btn btn-danger cookie-button text-light ms-1" title="@Localizer.GetString("Delete culture-cookie.")" type="submit">
+							<svg class="-delete" role="presentation">
 								<use xlink:href="/Style/Icons/sprite.svg#x" />
 							</svg>
 						</button>
