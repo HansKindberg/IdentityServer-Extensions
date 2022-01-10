@@ -17,6 +17,16 @@ namespace HansKindberg.IdentityServer.Collections.Generic.Extensions
 			return dictionary;
 		}
 
+		public static IDictionary<TKey, TValue> Without<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+		{
+			if(dictionary == null)
+				throw new ArgumentNullException(nameof(dictionary));
+
+			dictionary.Remove(key);
+
+			return dictionary;
+		}
+
 		#endregion
 	}
 }
