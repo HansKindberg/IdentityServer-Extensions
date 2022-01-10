@@ -332,7 +332,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper disable InvertIf
 			if(externalSignOutScheme != null)
 			{
-				var query = this.HttpContext.Request.Query.ToSortedDictionary().Set(QueryStringKeys.SignOutId, signOutId);
+				var query = this.HttpContext.Request.Query.ToSortedDictionary().With(QueryStringKeys.SignOutId, signOutId);
 
 				var redirectUrl = this.Url.Action("SignOut", query);
 

@@ -7,7 +7,7 @@ namespace HansKindberg.IdentityServer.Collections.Generic.Extensions
 	{
 		#region Methods
 
-		public static IDictionary<TKey, TValue> Set<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+		public static IDictionary<TKey, TValue> With<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
 		{
 			if(dictionary == null)
 				throw new ArgumentNullException(nameof(dictionary));
