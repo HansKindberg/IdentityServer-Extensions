@@ -228,9 +228,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[FeatureGate(Feature.FormsAuthentication)]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated in another method.")]
 		public virtual async Task<IActionResult> SignIn(SignInForm form, string returnUrl)
 		{
+			if(form == null)
+				throw new ArgumentNullException(nameof(form));
+
 			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
 
 			var authorizationRequest = await this.ResolveAndValidateAsync(form, returnUrl);
