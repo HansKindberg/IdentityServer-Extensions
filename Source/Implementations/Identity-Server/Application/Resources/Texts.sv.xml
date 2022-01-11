@@ -36,11 +36,6 @@
 				<profile lookup="views.consent.scope.profile.label" />
 				<role-service lookup="views.consent.scope.role-service.label" />
 			</consentController>
-			<deviceController>
-				<errors>
-					<invalid-usercode>"{0}" är en ogiltig användar-kod.</invalid-usercode>
-				</errors>
-			</deviceController>
 		</controllers>
 		<models>
 			<views>
@@ -71,15 +66,6 @@
 						</persistent>
 					</consentForm>
 				</consent>
-				<device>
-					<deviceForm>
-						<required name="&quot;{0}&quot; is required.">{0} är obligatorisk.</required>
-						<userCode>
-							<name>Användar-kod</name>
-							<prompt>Ange din användar-kod</prompt>
-						</userCode>
-					</deviceForm>
-				</device>
 				<shared>
 					<parts>
 						<headerviewmodel>
@@ -258,12 +244,12 @@
 					<heading>Bekräftelse</heading>
 					<information>Du har nu autentiserat enheten.</information>
 				</confirmation>
-				<form>
-					<submit>Skicka</submit>
-				</form>
 				<index>
 					<heading>Användar-kod</heading>
 					<information>Var vänlig och fyll i den användar-kod som visas på din enhet.</information>
+					<invalid-usercode-heading>Ogiltig användar-kod</invalid-usercode-heading>
+					<invalid-usercode-message>"{0}" är en ogiltig användar-kod.</invalid-usercode-message>
+					<submit>Skicka</submit>
 				</index>
 			</device>
 			<error>

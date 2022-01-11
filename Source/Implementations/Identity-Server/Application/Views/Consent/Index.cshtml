@@ -18,7 +18,7 @@
 		}
 	</strong>@Localizer.GetString("permission-request").
 </p>
-@foreach(var (key, value) in Model.Form.Dictionary)
+@foreach(var (key, value) in Model.Dictionary)
 {
 	<p>@Localizer.GetString(key): <strong>@value</strong></p>
 }

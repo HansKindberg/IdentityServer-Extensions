@@ -10,7 +10,29 @@
 	</div>
 	<div class="card-body">
 		<p>@Localizer.GetString("Information")</p>
-		<partial name="ValidationSummary" />
-		<partial model="@Model.Form" name="~/Views/Device/Form.cshtml" />
+		@if(Model.UserCodeIsInvalid)
+		{
+			<div class="alert alert-danger pb-1">
+				<h2 class="h5">@Localizer.GetString("Invalid-UserCode-Heading")</h2>
+				<ul>
+					<li>@Localizer.GetString("Invalid-UserCode-Message", Model.UserCode)</li>
+				</ul>
+			</div>
+		}
+		<form method="get">
+			@foreach(var (key, value) in Context.Request.Query.ToSortedDictionary().Without(QueryStringKeys.UserCode))
+			{
+				<input name="@key" type="hidden" value="@value" />
+			}
+			<div class="mb-3">
+				<label asp-for="UserCode">@Localizer.GetString("Heading")</label>
+				<input asp-for="UserCode" autofocus="autofocus" class="form-control" />
+			</div>
+			<div class="text-end">
+				<button class="btn btn-primary" type="submit">
+					@Localizer.GetString("Submit")
+				</button>
+			</div>
+		</form>
 	</div>
 </div>

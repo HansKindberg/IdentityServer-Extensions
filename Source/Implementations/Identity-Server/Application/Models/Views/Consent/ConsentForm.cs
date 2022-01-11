@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using HansKindberg.IdentityServer.Application.Models.Views.Shared.Forms;
 
 namespace HansKindberg.IdentityServer.Application.Models.Views.Consent
 {
-	public class ConsentForm : ReturnForm
+	public class ConsentForm
 	{
 		#region Properties
 
@@ -17,11 +15,6 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Consent
 		[Display(Name = "Description/Name", Prompt = "Description/Prompt")]
 		[MaxLength(256)]
 		public virtual string Description { get; set; }
-
-		/// <summary>
-		/// Used to add extra hidden fields. Used by the device-consent to add the user-code.
-		/// </summary>
-		public virtual IDictionary<string, string> Dictionary { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 		public virtual IList<ScopeViewModel> IdentityResources { get; } = new List<ScopeViewModel>();
 

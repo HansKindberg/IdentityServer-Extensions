@@ -36,11 +36,6 @@
 				<profile lookup="views.consent.scope.profile.label" />
 				<role-service lookup="views.consent.scope.role-service.label" />
 			</consentController>
-			<deviceController>
-				<errors>
-					<invalid-usercode>"{0}" is an invalid user-code.</invalid-usercode>
-				</errors>
-			</deviceController>
 		</controllers>
 		<models>
 			<views>
@@ -71,15 +66,6 @@
 						</persistent>
 					</consentForm>
 				</consent>
-				<device>
-					<deviceForm>
-						<required name="&quot;{0}&quot; is required.">{0} is required.</required>
-						<userCode>
-							<name>User-code</name>
-							<prompt>Enter your user-code</prompt>
-						</userCode>
-					</deviceForm>
-				</device>
 				<shared>
 					<parts>
 						<headerviewmodel>
@@ -258,12 +244,12 @@
 					<heading>Confirmation</heading>
 					<information>You have successfully authorized the device.</information>
 				</confirmation>
-				<form>
-					<submit>Submit</submit>
-				</form>
 				<index>
 					<heading>User-code</heading>
 					<information>Please enter the user-code displayed on your device.</information>
+					<invalid-usercode-heading>Invalid user-code</invalid-usercode-heading>
+					<invalid-usercode-message>"{0}" is an invalid user-code.</invalid-usercode-message>
+					<submit>Submit</submit>
 				</index>
 			</device>
 			<error>

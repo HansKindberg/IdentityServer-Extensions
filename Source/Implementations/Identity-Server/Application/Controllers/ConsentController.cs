@@ -21,7 +21,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(string returnUrl)
 		{
-			return await this.CreateConsentViewModelAsync(await this.GetAuthorizationRequestAsync(returnUrl), null, returnUrl);
+			return await this.CreateConsentViewModelAsync(await this.GetAuthorizationRequestAsync(returnUrl), null);
 		}
 
 		protected internal virtual async Task<AuthorizationRequest> GetAuthorizationRequestAsync(string returnUrl)
@@ -36,29 +36,33 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		public virtual async Task<IActionResult> Index(string returnUrl)
 		{
+			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
 			return this.View(await this.CreateConsentViewModelAsync(returnUrl));
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> Index(ConsentForm form)
+		public virtual async Task<IActionResult> Index(ConsentForm form, string returnUrl)
 		{
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
-			var authorizationRequest = await this.GetAuthorizationRequestAsync(form.ReturnUrl);
+			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
+			var authorizationRequest = await this.GetAuthorizationRequestAsync(returnUrl);
 
 			if(form.Accept)
 				await this.ValidateConsentAsync(authorizationRequest, form);
 
 			if(!this.ModelState.IsValid)
-				return this.View(await this.CreateConsentViewModelAsync(authorizationRequest, form, form.ReturnUrl));
+				return this.View(await this.CreateConsentViewModelAsync(authorizationRequest, form));
 
 			var consentResponse = await (form.Accept ? this.AcceptConsentAsync(authorizationRequest, form) : this.RejectConsentAsync(authorizationRequest));
 
 			await this.Facade.Interaction.GrantConsentAsync(authorizationRequest, consentResponse);
 
-			return authorizationRequest.IsNativeClient() ? await this.Redirect(form.ReturnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut) : this.Redirect(form.ReturnUrl);
+			return authorizationRequest.IsNativeClient() ? await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut) : this.Redirect(returnUrl);
 		}
 
 		#endregion

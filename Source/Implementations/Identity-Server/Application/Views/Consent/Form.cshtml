@@ -4,7 +4,7 @@
 }
 @if(Model != null)
 {
-	<form asp-action="Index" asp-route-ui_locales="@Context.Request.Query[QueryStringKeys.UiLocales]">
+	<form asp-action="Index" asp-all-route-data="@Context.Request.Query.ToSortedDictionary()">
 		@if(Model.IdentityResources.Any())
 		{
 			<div class="card mb-4">
@@ -63,10 +63,5 @@
 			<button autofocus="autofocus" class="btn btn-primary" name="@nameof(Model.Accept)" type="submit" value="true">@Localizer.GetString("accept")</button>
 			<button class="btn btn-secondary" name="@nameof(Model.Accept)" type="submit" value="false">@Localizer.GetString("reject")</button>
 		</div>
-		<input name="@nameof(Model.ReturnUrl)" type="hidden" value="@Model.ReturnUrl" />
-		@foreach(var (key, value) in Model.Dictionary)
-		{
-			<input name="@($"{nameof(Model.Dictionary)}.{key}")" type="hidden" value="@value" />
-		}
 	</form>
 }

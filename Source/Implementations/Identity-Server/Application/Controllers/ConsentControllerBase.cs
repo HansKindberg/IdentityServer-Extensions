@@ -40,15 +40,12 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return consentResponse;
 		}
 
-		protected internal virtual async Task<ConsentForm> CreateConsentFormAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm, string returnUrl)
+		protected internal virtual async Task<ConsentForm> CreateConsentFormAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm)
 		{
 			if(authorizationRequest == null)
 				throw new ArgumentNullException(nameof(authorizationRequest));
 
-			var form = new ConsentForm
-			{
-				ReturnUrl = returnUrl
-			};
+			var form = new ConsentForm();
 
 			form.IdentityResources.Add(authorizationRequest.ValidatedResources.Resources.IdentityResources.Select(this.CreateScopeViewModel));
 			form.ApiScopes.Add(authorizationRequest.ValidatedResources.Resources.ApiScopes.Select(this.CreateScopeViewModel));
@@ -66,11 +63,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper disable InvertIf
 			if(postedForm != null)
 			{
-				foreach(var (key, value) in postedForm.Dictionary)
-				{
-					form.Dictionary.Add(key, value);
-				}
-
 				foreach(var scope in form.IdentityResources)
 				{
 					scope.Checked = postedForm.ConsentedIdentityResources.Contains(scope.Name, StringComparer.OrdinalIgnoreCase);
@@ -86,7 +78,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return await Task.FromResult(form);
 		}
 
-		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm, string returnUrl)
+		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm)
 		{
 			if(authorizationRequest == null)
 				throw new ArgumentNullException(nameof(authorizationRequest));
@@ -95,7 +87,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			{
 				AllowPersistent = authorizationRequest.Client.AllowRememberConsent,
 				Client = authorizationRequest.Client,
-				Form = await this.CreateConsentFormAsync(authorizationRequest, postedForm, returnUrl)
+				Form = await this.CreateConsentFormAsync(authorizationRequest, postedForm)
 			};
 
 			return await Task.FromResult(model);

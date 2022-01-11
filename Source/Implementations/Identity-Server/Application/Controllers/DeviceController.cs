@@ -4,11 +4,8 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using HansKindberg.IdentityServer.Application.Models.Views.Consent;
 using HansKindberg.IdentityServer.Application.Models.Views.Device;
-using HansKindberg.IdentityServer.Application.Models.Views.Device.Extensions;
-using HansKindberg.IdentityServer.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
@@ -39,43 +36,29 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		#region Methods
 
-		protected internal virtual async Task AddInvalidUserCodeErrorAsync(string userCode)
-		{
-			await Task.CompletedTask;
-
-			this.ModelState.AddModelError(nameof(QueryStringKeys.UserCode), this.Localizer.GetString("errors/invalid-usercode", userCode));
-		}
-
 		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(AuthorizationRequest authorizationRequest, string userCode)
 		{
-			if(authorizationRequest == null)
-				throw new ArgumentNullException(nameof(authorizationRequest));
-
-			var model = await this.CreateConsentViewModelAsync(authorizationRequest, null, null);
-
-			model.Form.UserCode(userCode);
-
-			return model;
+			return await this.CreateConsentViewModelAsync(authorizationRequest, null, userCode);
 		}
 
-		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm)
+		protected internal virtual async Task<ConsentViewModel> CreateConsentViewModelAsync(AuthorizationRequest authorizationRequest, ConsentForm postedForm, string userCode)
 		{
 			if(authorizationRequest == null)
 				throw new ArgumentNullException(nameof(authorizationRequest));
 
-			var model = await this.CreateConsentViewModelAsync(authorizationRequest, postedForm, null);
+			var model = await this.CreateConsentViewModelAsync(authorizationRequest, postedForm);
+
+			model.Dictionary[nameof(DeviceViewModel.UserCode)] = userCode;
 
 			return model;
 		}
 
-		protected internal virtual async Task<DeviceViewModel> CreateDeviceViewModelAsync(string userCode)
+		protected internal virtual async Task<DeviceViewModel> CreateDeviceViewModelAsync(string userCode, bool userCodeIsInvalid)
 		{
 			var model = new DeviceViewModel
 			{
-				Form =
-				{
-					UserCode = userCode
-				}
+				UserCode = userCode,
+				UserCodeIsInvalid = userCodeIsInvalid
 			};
 
 			return await Task.FromResult(model);
@@ -83,6 +66,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<AuthorizationRequest> GetAuthorizationRequestAsync(string userCode)
 		{
+			if(string.IsNullOrWhiteSpace(userCode))
+				return null;
+
 			var deviceAuthorizationRequest = await this.DeviceInteraction.GetAuthorizationContextAsync(userCode);
 
 			if(deviceAuthorizationRequest == null)
@@ -97,56 +83,42 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		public virtual async Task<IActionResult> Index(string userCode)
 		{
-			if(!string.IsNullOrEmpty(userCode) && this.ModelState.IsValid)
+			if(userCode != null)
 			{
 				var authorizationRequest = await this.GetAuthorizationRequestAsync(userCode);
 
 				if(authorizationRequest != null)
 					return this.View(this.ConsentViewPath, await this.CreateConsentViewModelAsync(authorizationRequest, userCode));
-
-				await this.AddInvalidUserCodeErrorAsync(userCode);
 			}
 
-			var model = await this.CreateDeviceViewModelAsync(userCode);
+			var model = await this.CreateDeviceViewModelAsync(userCode, userCode != null);
 
-			return this.View(nameof(this.Index), model);
+			return this.View(model);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> Index(ConsentForm form)
+		public virtual async Task<IActionResult> Index(ConsentForm form, string userCode)
 		{
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
-			var userCode = form.UserCode();
-
 			var authorizationRequest = await this.GetAuthorizationRequestAsync(userCode);
 
 			if(authorizationRequest == null)
-				return this.View(nameof(this.Index), await this.CreateDeviceViewModelAsync(userCode));
+				return this.View(await this.CreateDeviceViewModelAsync(userCode, userCode != null));
 
 			if(form.Accept)
 				await this.ValidateConsentAsync(authorizationRequest, form);
 
 			if(!this.ModelState.IsValid)
-				return this.View(this.ConsentViewPath, await this.CreateConsentViewModelAsync(authorizationRequest, form));
+				return this.View(this.ConsentViewPath, await this.CreateConsentViewModelAsync(authorizationRequest, form, userCode));
 
 			var consentResponse = await (form.Accept ? this.AcceptConsentAsync(authorizationRequest, form) : this.RejectConsentAsync(authorizationRequest));
 
 			await this.DeviceInteraction.HandleRequestAsync(userCode, consentResponse);
 
 			return this.View("Confirmation");
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> UserCode(DeviceForm form)
-		{
-			if(form == null)
-				throw new ArgumentNullException(nameof(form));
-
-			return await this.Index(form.UserCode);
 		}
 
 		#endregion
