@@ -44,7 +44,7 @@
 			</div>
 		}
 		<div class="mb-4">
-			<label asp-for="Description">
+			<label asp-for="Description" class="mb-1">
 				<svg class="size-1-point-2-rem" role="presentation">
 					<use xlink:href="/Style/Icons/sprite.svg#phone" />
 				</svg>
@@ -54,9 +54,9 @@
 		</div>
 		@if(allowPersistent)
 		{
-			<div class="mb-4 form-check">
-				<input asp-for="Persistent" class="form-check-input" />
-				<label asp-for="Persistent" class="form-check-label"></label>
+			<div class="mb-4 form-check ps-0">
+				<input asp-for="Persistent" />
+				<label asp-for="Persistent"></label>
 			</div>
 		}
 		<div>
