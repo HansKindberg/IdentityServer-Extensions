@@ -61,7 +61,12 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
 			{
 				if(signOutOptions.SloEnabled && signOutRequest != null)
-					model.SamlIframeUrl = await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, new SamlLogoutRequest(signOutRequest));
+				{
+					var samlSignOutRequest = new SamlLogoutRequest(signOutRequest);
+
+					if(samlSignOutRequest.ServiceProviderIds != null)
+						model.SamlIframeUrl = await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, samlSignOutRequest);
+				}
 
 				var samlRequestId = await this.GetSamlRequestIdAsync();
 
