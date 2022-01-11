@@ -19,7 +19,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Consent
 		public virtual IList<ScopeViewModel> IdentityResources { get; } = new List<ScopeViewModel>();
 
 		[Display(Name = "Persistent/Name")]
-		public virtual bool Persistent { get; set; }
+		public virtual bool Persistent { get; set; } = true;
 
 		#endregion
 	}
