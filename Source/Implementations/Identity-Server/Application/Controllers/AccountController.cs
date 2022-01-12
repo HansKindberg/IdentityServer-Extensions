@@ -8,6 +8,7 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Application.Models.Views.Account;
 using HansKindberg.IdentityServer.Collections.Generic.Extensions;
+using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
@@ -46,13 +47,19 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		protected internal virtual async Task<SignedOutViewModel> CreateSignedOutViewModelAsync(string signOutId)
 		{
 			var signOutOptions = this.Facade.IdentityServer.CurrentValue.SignOut;
+
+			var includeSignOutIframe = await this.IncludeSignOutIframeAsync(signOutId, signOutOptions.Mode);
+
+			if(signOutOptions.Mode.HasFlag(SingleSignOutMode.IdpInitiated))
+				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
+
 			var signOutRequest = await this.Facade.Interaction.GetLogoutContextAsync(signOutId);
 
 			var model = new SignedOutViewModel
 			{
 				AutomaticRedirect = signOutOptions.AutomaticRedirectAfterSignOut,
 				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
-				IframeUrl = signOutOptions.SloEnabled ? signOutRequest?.SignOutIFrameUrl : null,
+				IframeUrl = includeSignOutIframe ? signOutRequest?.SignOutIFrameUrl : null,
 				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
 				SecondsBeforeRedirect = signOutOptions.SecondsBeforeRedirectAfterSignOut
 			};
@@ -60,7 +67,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper disable InvertIf
 			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
 			{
-				if(signOutOptions.SloEnabled && signOutRequest != null)
+				if(includeSignOutIframe && signOutRequest != null)
 				{
 					var samlSignOutRequest = new SamlLogoutRequest(signOutRequest);
 
@@ -194,6 +201,20 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return await Task.FromResult(this.HttpContext.Request.Query[requestIdParameter]);
 		}
 
+		protected internal virtual async Task<bool> IncludeSignOutIframeAsync(string signOutId, SingleSignOutMode singleSignOutMode)
+		{
+			if(singleSignOutMode == SingleSignOutMode.None)
+				return false;
+
+			if(signOutId != null && singleSignOutMode.HasFlag(SingleSignOutMode.ClientInitiated))
+				return true;
+
+			if(signOutId == null && singleSignOutMode.HasFlag(SingleSignOutMode.IdpInitiated))
+				return true;
+
+			return await Task.FromResult(false);
+		}
+
 		public virtual async Task<IActionResult> Index()
 		{
 			return await Task.FromResult(this.View());
@@ -308,9 +329,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling")]
 		public virtual async Task<IActionResult> SignOut(SignOutForm form, string signOutId)
 		{
-			if(this.Facade.IdentityServer.CurrentValue.SignOut.IdpInitiatedSloEnabled)
-				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
-
 			var model = await this.CreateSignedOutViewModelAsync(signOutId);
 			string externalSignOutScheme = null;
 

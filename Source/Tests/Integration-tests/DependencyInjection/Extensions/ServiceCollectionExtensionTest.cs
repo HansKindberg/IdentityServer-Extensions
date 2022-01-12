@@ -287,6 +287,40 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		}
 
 		[TestMethod]
+		public async Task AddIdentityServer_SignOutOptions_Mode_Test()
+		{
+			using(var context = new Context())
+			{
+				await this.AddIdentityServerSignOutOptionsModeTest(true, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.SignOut.Mode, 3);
+				await this.AddIdentityServerSignOutOptionsModeTest(true, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.SignOut.Mode, 3);
+			}
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: "DependencyInjection/Extensions/Resources/IdentityServer/SignOut-Mode-None.json"))
+			{
+				await this.AddIdentityServerSignOutOptionsModeTest(false, false, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.SignOut.Mode, 0);
+				await this.AddIdentityServerSignOutOptionsModeTest(false, false, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.SignOut.Mode, 0);
+			}
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: "DependencyInjection/Extensions/Resources/IdentityServer/SignOut-Mode-ClientInitiated.json"))
+			{
+				await this.AddIdentityServerSignOutOptionsModeTest(true, false, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.SignOut.Mode, 1);
+				await this.AddIdentityServerSignOutOptionsModeTest(true, false, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.SignOut.Mode, 1);
+			}
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: "DependencyInjection/Extensions/Resources/IdentityServer/SignOut-Mode-IdpInitiated.json"))
+			{
+				await this.AddIdentityServerSignOutOptionsModeTest(false, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.SignOut.Mode, 2);
+				await this.AddIdentityServerSignOutOptionsModeTest(false, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.SignOut.Mode, 2);
+			}
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: "DependencyInjection/Extensions/Resources/IdentityServer/SignOut-Mode-ClientInitiated-And-IdpInitiated.json"))
+			{
+				await this.AddIdentityServerSignOutOptionsModeTest(true, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptions<ExtendedIdentityServerOptions>>().Value.SignOut.Mode, 3);
+				await this.AddIdentityServerSignOutOptionsModeTest(true, true, context.ApplicationBuilder.ApplicationServices.GetRequiredService<IOptionsMonitor<ExtendedIdentityServerOptions>>().CurrentValue.SignOut.Mode, 3);
+			}
+		}
+
+		[TestMethod]
 		public async Task AddIdentityServer_Test()
 		{
 			await Task.CompletedTask;
@@ -315,6 +349,15 @@ namespace IntegrationTests.DependencyInjection.Extensions
 
 			Assert.IsFalse(options.UseLegacyRsaEncryption);
 			Assert.AreEqual("SamlRequestId", options.UserInteraction.RequestIdParameter);
+		}
+
+		protected internal virtual async Task AddIdentityServerSignOutOptionsModeTest(bool clientInitiated, bool idpInitiated, SingleSignOutMode mode, int value)
+		{
+			await Task.CompletedTask;
+
+			Assert.AreEqual(value, (int)mode);
+			Assert.AreEqual(clientInitiated, mode.HasFlag(SingleSignOutMode.ClientInitiated));
+			Assert.AreEqual(idpInitiated, mode.HasFlag(SingleSignOutMode.IdpInitiated));
 		}
 
 		protected internal virtual async Task AddIdentityServerTest(Action<Context> assertAction, string configurationFileName)

@@ -8,16 +8,11 @@ namespace HansKindberg.IdentityServer.Configuration
 		public virtual bool ConfirmSignOut { get; set; } = true;
 
 		/// <summary>
-		/// Enables IdP-initiated Single Logout (SLO). Requires SloEnabled = true to work.
+		/// Mode for single-sign-out / single-logout / SLO. What kind of SLO-modes that are supported: None, ClientInitiated, IdpInitiated or both ClientInitiated and IdpInitiated.
 		/// </summary>
-		public virtual bool IdpInitiatedSloEnabled { get; set; } = true;
+		public virtual SingleSignOutMode Mode { get; set; } = SingleSignOutMode.ClientInitiated | SingleSignOutMode.IdpInitiated;
 
 		public virtual byte SecondsBeforeRedirectAfterSignOut { get; set; } = 4;
-
-		/// <summary>
-		/// Enables Single Logout (SLO).
-		/// </summary>
-		public virtual bool SloEnabled { get; set; } = true;
 
 		#endregion
 	}
