@@ -24,9 +24,9 @@
 		<PackageTags></PackageTags>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
 		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.3" />
 		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.3" />
+		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(PackageReferenceVersion)">
