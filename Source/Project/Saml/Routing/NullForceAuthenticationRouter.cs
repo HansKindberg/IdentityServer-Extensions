@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HansKindberg.IdentityServer.Saml.Routing
 {
+	/// <inheritdoc />
 	public class NullForceAuthenticationRouter : IForceAuthenticationRouter
 	{
 		#region Methods

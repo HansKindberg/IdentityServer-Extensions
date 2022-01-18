@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace HansKindberg.IdentityServer.Saml.Routing
 {
+	/// <inheritdoc />
 	public class ForceAuthenticationRouter : IForceAuthenticationRouter
 	{
 		#region Constructors
