@@ -1,0 +1,36 @@
+﻿@model ClaimsSelectionViewModel
+<div class="card">
+	<div class="card-header">
+		<h1 class="h4 m-0 p-0">
+			<svg class="size-1-point-4-rem m-0 p-0" role="presentation">
+				<use xlink:href="/Style/Icons/sprite.svg#person" />
+			</svg>
+			@Localizer.GetString($"{Model.Form.AuthenticationScheme}.Heading")
+		</h1>
+	</div>
+	<div class="card-body">
+		@if(Model.Errors.Any())
+		{
+			<div class="alert alert-danger pb-1">
+				<h2 class="h5">@Localizer.GetString("Error")</h2>
+				<ul>
+					@foreach(var error in Model.Errors)
+					{
+						<li>@error</li>
+					}
+				</ul>
+			</div>
+		}
+		@if(Model.Form.SelectableClaims.Any())
+		{
+			<partial model="@Model.Form" name="Form" />
+		}
+		else
+		{
+			<p class="alert alert-info">@Localizer.GetString($"{Model.Form.AuthenticationScheme}.no-selections-available")</p>
+			<div class="text-end">
+				<a autofocus="autofocus" class="btn btn-primary" href="@Model.ReturnUrl">@Localizer.GetString("Continue")</a>
+			</div>
+		}
+	</div>
+</div>

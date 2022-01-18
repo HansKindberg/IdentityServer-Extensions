@@ -6,6 +6,7 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Saml.Services;
+using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -23,10 +24,11 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
+		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClaimsSelectionContextAccessor claimsSelectionContextAccessor, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
 		{
 			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
+			this.ClaimsSelectionContextAccessor = claimsSelectionContextAccessor ?? throw new ArgumentNullException(nameof(claimsSelectionContextAccessor));
 			this.ClientStore = clientStore ?? throw new ArgumentNullException(nameof(clientStore));
 			this.DecorationLoader = decorationLoader ?? throw new ArgumentNullException(nameof(decorationLoader));
 			this.Events = events ?? throw new ArgumentNullException(nameof(events));
@@ -55,6 +57,7 @@ namespace HansKindberg.IdentityServer
 
 		public virtual IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		public virtual IAuthorizationResolver AuthorizationResolver { get; }
+		public virtual IClaimsSelectionContextAccessor ClaimsSelectionContextAccessor { get; }
 		public virtual IClientStore ClientStore { get; }
 		public virtual IDecorationLoader DecorationLoader { get; }
 		public virtual IEventService Events { get; }

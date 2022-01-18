@@ -8,6 +8,7 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Localization.Extensions;
 using HansKindberg.IdentityServer.Navigation;
+using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authorization;
 using HansKindberg.IdentityServer.Web.Extensions;
@@ -19,6 +20,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 {
@@ -26,6 +28,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 	{
 		#region Fields
 
+		private Lazy<IClaimsSelectionContext> _claimsSelectionContext;
 		private Lazy<string> _cultureCookieValue;
 		private Lazy<string> _environmentName;
 		private INavigationNode _navigation;
@@ -42,11 +45,22 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 			this.Facade = facade ?? throw new ArgumentNullException(nameof(facade));
 			this.HttpContext = (facade.HttpContextAccessor ?? throw new ArgumentException("The http-context-accessor-property can not be null.", nameof(facade))).HttpContext;
 			this.Localizer = (facade.LocalizerFactory ?? throw new ArgumentException("The localizer-factory-property can not be null.", nameof(facade))).CreateFromType(this.GetType());
+			this.Logger = (facade.LoggerFactory ?? throw new ArgumentException("The logger-factory-property can not be null.", nameof(facade))).CreateLogger(this.GetType());
 		}
 
 		#endregion
 
 		#region Properties
+
+		public virtual IClaimsSelectionContext ClaimsSelectionContext
+		{
+			get
+			{
+				this._claimsSelectionContext ??= new Lazy<IClaimsSelectionContext>(() => this.Facade.ClaimsSelectionContextAccessor.ClaimsSelectionContext);
+
+				return this._claimsSelectionContext.Value;
+			}
+		}
 
 		public virtual CultureInfo Culture => CultureInfo.CurrentCulture;
 		public virtual string CultureCookieName => CookieRequestCultureProvider.DefaultCookieName;
@@ -80,6 +94,7 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 		public virtual bool HomeEnabled => this.Facade.FeatureManager.IsEnabled(Feature.Home);
 		protected internal virtual HttpContext HttpContext { get; }
 		protected internal virtual IStringLocalizer Localizer { get; }
+		protected internal virtual ILogger Logger { get; }
 
 		public virtual INavigationNode Navigation
 		{
@@ -280,6 +295,18 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.Shared.Parts
 				segments.Add(action);
 
 			return this.Facade.UriFactory.CreateRelativeAsync(segments).Result;
+		}
+
+		public virtual bool IsActive(string controller)
+		{
+			return this.IsActive(null, controller);
+		}
+
+		public virtual bool IsActive(string action, string controller)
+		{
+			action ??= nameof(HomeController.Index);
+
+			return this.StringEquals(this.HttpContext.GetRouteValue(RouteKeys.Action) as string, action) && this.StringEquals(this.HttpContext.GetRouteValue(RouteKeys.Controller) as string, controller);
 		}
 
 		protected internal virtual bool StringEquals(string first, string second)

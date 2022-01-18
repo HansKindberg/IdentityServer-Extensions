@@ -1,0 +1,26 @@
+﻿@model ClaimsSelectionForm
+@if(Model != null && Model.SelectableClaims.Any())
+{
+	<form asp-action="Index" asp-all-route-data="@Context.Request.Query.ToSortedDictionary()">
+		@foreach(var key in Model.SelectableClaims.Keys)
+		{
+			<h2 class="h5 mb-3">@Localizer.GetString($"{Model.AuthenticationScheme}.{key}.Heading")</h2>
+			@foreach(var selectableClaim in Model.SelectableClaims[key])
+			{
+				var title = string.Join(Environment.NewLine, selectableClaim.Details.Select(item => $"{Localizer.GetString($"{Model.AuthenticationScheme}.{key}.{item.Key}")}: {item.Value}"));
+				<div class="form-check mb-2">
+					<input checked="@(selectableClaim.Selected ? "checked" : null)" class="form-check-input me-2 ms-0" id="@selectableClaim.Id-input" name="@key" type="radio" value="@selectableClaim.Value" />
+					<label class="form-check-label" for="@selectableClaim.Id-input" title="@title">@selectableClaim.Text</label>
+				</div>
+			}
+		}
+		<div class="mt-3 text-end">
+			<button class="btn btn-primary" type="submit">
+				@Localizer.GetString("Submit")
+			</button>
+			<button class="btn btn-secondary" name="@nameof(Model.Cancel)" value="@true.ToString()">
+				@Localizer.GetString("Cancel")
+			</button>
+		</div>
+	</form>
+}

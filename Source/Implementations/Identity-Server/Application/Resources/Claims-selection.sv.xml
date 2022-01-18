@@ -1,0 +1,61 @@
+<cultures>
+	<culture name="sv">
+		<controllers>
+			<claimsSelectionController>
+				<errors>
+					<inera>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+					</inera>
+					<update-sign-in-error>Ett oväntat fel har inträffat.</update-sign-in-error>
+				</errors>
+			</claimsSelectionController>
+		</controllers>
+		<views>
+			<claimsSelection>
+				<confirmation>
+					<inera>
+						<confirmation>Ditt medarbetaruppdrag är ändrat.</confirmation>
+						<heading>Medarbetaruppdrag ändrat</heading>
+						<redirect-text>Fortsätt</redirect-text>
+						<redirect-text-with-client>Fortsätt till applikationen "{0}".</redirect-text-with-client>
+					</inera>
+				</confirmation>
+				<form>
+					<cancel>Avbryt</cancel>
+					<inera>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+							<commission>
+								<commissionName>Namn</commissionName>
+								<commissionPurpose>Syfte</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Välj ett medarbetaruppdrag</heading>
+								<healthCareProviderName>Vårdgivare</healthCareProviderName>
+								<healthCareUnitName>Vårdenhet</healthCareUnitName>
+							</commission>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+					</inera>
+					<submit>Spara</submit>
+				</form>
+				<index>
+					<continue>Fortsätt</continue>
+					<error>Fel</error>
+					<inera>
+						<heading>Medarbetaruppdrag</heading>
+						<no-selections-available>Du har inga medarbetaruppdrag.</no-selections-available>
+					</inera>
+				</index>
+			</claimsSelection>
+			<shared>
+				<parts>
+					<header>
+						<inera>
+							<claims-selection>Byt medarbetaruppdrag</claims-selection>
+						</inera>
+					</header>
+				</parts>
+			</shared>
+		</views>
+	</culture>
+</cultures>

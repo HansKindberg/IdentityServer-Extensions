@@ -48,14 +48,14 @@
 								<div class="dropdown-menu" aria-labelledby="@id">
 									@foreach(var grandChild in child.Children)
 									{
-										<a class="dropdown-item@(grandChild.Active ? " active" : string.Empty)" href="@grandChild.Url" title="@grandChild.Tooltip">@grandChild.Text</a>
+										<a class="dropdown-item@(grandChild.Active ? " active" : null)" href="@grandChild.Url" title="@grandChild.Tooltip">@grandChild.Text</a>
 									}
 								</div>
 							</li>
 						}
 						else
 						{
-							<li class="nav-item@(child.Active ? " active" : string.Empty)">
+							<li class="nav-item@(child.Active ? " active" : null)">
 								<a class="nav-link" href="@child.Url" title="@child.Tooltip">@child.Text</a>
 							</li>
 						}
@@ -73,8 +73,12 @@
 							@User.Identity?.Name
 						</a>
 						<div aria-labelledby="identity-dropdown" class="dropdown-menu">
-							<a class="dropdown-item" href="@Model.GetUrl("Account")">@Localizer.GetString("your-identity")</a>
-							<a class="dropdown-item" href="@Model.GetUrl("SignOut", "Account")">@Localizer.GetString("sign-out")</a>
+							<a class="dropdown-item@(Model.IsActive("Account") ? " active" : null)" href="@Model.GetUrl("Account")">@Localizer.GetString("your-identity")</a>
+							@if(Model.ClaimsSelectionContext != null)
+							{
+								<a class="dropdown-item@(Model.IsActive(nameof(Feature.ClaimsSelection)) ? " active" : null)" href="@Model.ClaimsSelectionContext.Url">@Localizer.GetString($"{Model.ClaimsSelectionContext.AuthenticationScheme}.claims-selection")</a>
+							}
+							<a class="dropdown-item@(Model.IsActive("SignOut", "Account") ? " active" : null)" href="@Model.GetUrl("SignOut", "Account")">@Localizer.GetString("sign-out")</a>
 						</div>
 					</li>
 				}

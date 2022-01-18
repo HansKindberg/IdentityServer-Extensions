@@ -5,6 +5,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		#region Fields
 
 		public const string CertificateForwardingPath = "CertificateForwarding";
+		public const string ClaimsSelectionPath = "Security:Claims:ClaimsSelection";
 		public const string DataDirectoryPath = "DataDirectory";
 		public const string DataPath = "Data";
 		public const string DefaultConnectionStringName = "IdentityServer";

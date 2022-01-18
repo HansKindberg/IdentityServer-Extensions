@@ -8,7 +8,6 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Application.Models.Views.Account;
 using HansKindberg.IdentityServer.Collections.Generic.Extensions;
-using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
@@ -23,7 +22,6 @@ using Microsoft.FeatureManagement.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Web.Authentication;
 using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
-using Rsk.Saml.DuendeIdentityServer.Services.Models;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
@@ -46,48 +44,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<SignedOutViewModel> CreateSignedOutViewModelAsync(string signOutId)
 		{
-			var signOutOptions = this.Facade.IdentityServer.CurrentValue.SignOut;
-
-			var includeSignOutIframe = await this.IncludeSignOutIframeAsync(signOutId, signOutOptions.Mode);
-
-			if(signOutOptions.Mode.HasFlag(SingleSignOutMode.IdpInitiated))
-				signOutId ??= await this.Facade.Interaction.CreateLogoutContextAsync();
-
-			var signOutRequest = await this.Facade.Interaction.GetLogoutContextAsync(signOutId);
-
-			var model = new SignedOutViewModel
-			{
-				AutomaticRedirect = signOutOptions.AutomaticRedirectAfterSignOut,
-				Client = string.IsNullOrEmpty(signOutRequest?.ClientName) ? signOutRequest?.ClientId : signOutRequest.ClientName,
-				IframeUrl = includeSignOutIframe ? signOutRequest?.SignOutIFrameUrl : null,
-				RedirectUrl = signOutRequest?.PostLogoutRedirectUri,
-				SecondsBeforeRedirect = signOutOptions.SecondsBeforeRedirectAfterSignOut
-			};
-
-			// ReSharper disable InvertIf
-			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
-			{
-				if(includeSignOutIframe && signOutRequest != null)
-				{
-					var samlSignOutRequest = new SamlLogoutRequest(signOutRequest);
-
-					if(samlSignOutRequest.ServiceProviderIds != null)
-						model.SamlIframeUrl = await this.Facade.SamlInteraction.GetSamlSignOutFrameUrl(signOutId, samlSignOutRequest);
-				}
-
-				var samlRequestId = await this.GetSamlRequestIdAsync();
-
-				if(samlRequestId != null)
-				{
-					var redirectUrl = await this.Facade.SamlInteraction.GetLogoutCompletionUrl(samlRequestId);
-
-					if(redirectUrl != null)
-						model.RedirectUrl = redirectUrl;
-				}
-			}
-			// ReSharper restore InvertIf
-
-			return model;
+			return await this.CreateSingleSignOutViewModelAsync<SignedOutViewModel>(signOutId);
 		}
 
 		protected internal virtual async Task<SignInViewModel> CreateSignInViewModelAsync(string returnUrl)
@@ -194,27 +151,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return model;
 		}
 
-		protected internal virtual async Task<string> GetSamlRequestIdAsync()
-		{
-			var requestIdParameter = this.Facade.IdentityServer.CurrentValue.Saml.UserInteraction.RequestIdParameter;
-
-			return await Task.FromResult(this.HttpContext.Request.Query[requestIdParameter]);
-		}
-
-		protected internal virtual async Task<bool> IncludeSignOutIframeAsync(string signOutId, SingleSignOutMode singleSignOutMode)
-		{
-			if(singleSignOutMode == SingleSignOutMode.None)
-				return false;
-
-			if(signOutId != null && singleSignOutMode.HasFlag(SingleSignOutMode.ClientInitiated))
-				return true;
-
-			if(signOutId == null && singleSignOutMode.HasFlag(SingleSignOutMode.IdpInitiated))
-				return true;
-
-			return await Task.FromResult(false);
-		}
-
 		public virtual async Task<IActionResult> Index()
 		{
 			return await Task.FromResult(this.View());
@@ -235,6 +171,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		public virtual async Task<IActionResult> SignIn(string returnUrl)
 		{
 			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
+			if(this.TryGetSamlForceAuthenticationActionResult(returnUrl, out var samlForceAuthenticationActionResult))
+				return samlForceAuthenticationActionResult;
 
 			var model = await this.CreateSignInViewModelAsync(returnUrl);
 
@@ -366,6 +305,16 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			this.HttpContext.SetSignedOut();
 
 			return this.View("SignedOut", model);
+		}
+
+		protected internal virtual bool TryGetSamlForceAuthenticationActionResult(string returnUrl, out IActionResult samlForceAuthenticationActionResult)
+		{
+			samlForceAuthenticationActionResult = null;
+
+			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml) && this.User.IsAuthenticated())
+				samlForceAuthenticationActionResult = this.Facade.SamlInteraction.GetForceAuthenticationActionResultAsync(returnUrl).Result;
+
+			return samlForceAuthenticationActionResult != null;
 		}
 
 		protected internal virtual async Task<AuthorizationRequest> ValidateFormsAuthenticationForClientAsync(string returnUrl)

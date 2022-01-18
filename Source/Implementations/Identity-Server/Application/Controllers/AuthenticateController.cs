@@ -20,7 +20,7 @@ using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
-	public class AuthenticateController : SiteController
+	public class AuthenticateController : AuthenticateControllerBase
 	{
 		#region Constructors
 
@@ -75,6 +75,10 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var authorizationRequest = await this.Facade.Interaction.GetAuthorizationContextAsync(returnUrl);
 
 			await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.IdentityProvider, user.ProviderUserId, user.SubjectId, user.DisplayName, true, authorizationRequest?.Client.ClientId));
+
+			var claimsSelectionContext = await this.Facade.ClaimsSelectionContextAccessor.GetAsync(authenticationScheme, returnUrl);
+			if(claimsSelectionContext != null)
+				return this.Redirect(claimsSelectionContext.Url.ToString());
 
 			if(authorizationRequest != null && authorizationRequest.IsNativeClient())
 				return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
@@ -235,44 +239,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			await this.ValidateAuthenticationSchemeForClientAsync(authenticationScheme, returnUrl);
 
 			return returnUrl;
-		}
-
-		protected internal virtual async Task<ExtendedIdentityServerUser> ResolveUserAsync(string authenticationScheme, IClaimBuilderCollection claims)
-		{
-			if(claims == null)
-				throw new ArgumentNullException(nameof(claims));
-
-			claims = claims.Clone();
-
-			var uniqueIdentifierClaim = claims.FindFirstUniqueIdentifierClaim();
-
-			if(uniqueIdentifierClaim == null)
-				throw new InvalidOperationException($"There is no unique-identifier-claim for authentication-scheme \"{authenticationScheme}\".");
-
-			var uniqueIdentifier = uniqueIdentifierClaim.Value;
-			claims.Remove(uniqueIdentifierClaim);
-
-			var identityProviderClaim = claims.FindFirstIdentityProviderClaim();
-			var identityProvider = identityProviderClaim?.Value ?? authenticationScheme;
-
-			if(identityProviderClaim != null)
-				claims.Remove(identityProviderClaim);
-
-			var user = await this.Facade.Identity.ResolveUserAsync(claims, identityProvider, uniqueIdentifier);
-
-			var nameClaim = claims.FindFirstNameClaim();
-			var name = nameClaim?.Value;
-
-			if(nameClaim != null)
-				claims.Remove(nameClaim);
-
-			return new ExtendedIdentityServerUser(user.Id)
-			{
-				AdditionalClaims = claims.Build(),
-				DisplayName = name,
-				IdentityProvider = identityProvider,
-				ProviderUserId = uniqueIdentifier
-			};
 		}
 
 		protected internal virtual async Task ValidateAuthenticationSchemeAsync(AuthenticationSchemeKind expectedKind, string name)

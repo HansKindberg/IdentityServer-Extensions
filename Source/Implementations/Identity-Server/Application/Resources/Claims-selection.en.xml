@@ -1,0 +1,61 @@
+<cultures>
+	<culture name="en">
+		<controllers>
+			<claimsSelectionController>
+				<errors>
+					<inera>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+					</inera>
+					<update-sign-in-error>An unexpected error has occurred.</update-sign-in-error>
+				</errors>
+			</claimsSelectionController>
+		</controllers>
+		<views>
+			<claimsSelection>
+				<confirmation>
+					<inera>
+						<confirmation>Your commission is changed.</confirmation>
+						<heading>Commission changed</heading>
+						<redirect-text>Continue</redirect-text>
+						<redirect-text-with-client>Continue to the application "{0}".</redirect-text-with-client>
+					</inera>
+				</confirmation>
+				<form>
+					<cancel>Cancel</cancel>
+					<inera>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+							<commission>
+								<commissionName>Name</commissionName>
+								<commissionPurpose>Purpose</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Select a commission</heading>
+								<healthCareProviderName>Healthcare provider</healthCareProviderName>
+								<healthCareUnitName>Healthcare unit</healthCareUnitName>
+							</commission>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+					</inera>
+					<submit>Save</submit>
+				</form>
+				<index>
+					<continue>Continue</continue>
+					<error>Error</error>
+					<inera>
+						<heading>Commission</heading>
+						<no-selections-available>You do not have any commissions.</no-selections-available>
+					</inera>
+				</index>
+			</claimsSelection>
+			<shared>
+				<parts>
+					<header>
+						<inera>
+							<claims-selection>Change commission</claims-selection>
+						</inera>
+					</header>
+				</parts>
+			</shared>
+		</views>
+	</culture>
+</cultures>

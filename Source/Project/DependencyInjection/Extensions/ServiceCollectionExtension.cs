@@ -31,6 +31,8 @@ using HansKindberg.IdentityServer.Saml.Generators;
 using HansKindberg.IdentityServer.Saml.Routing;
 using HansKindberg.IdentityServer.Saml.Routing.Configuration;
 using HansKindberg.IdentityServer.Saml.Services;
+using HansKindberg.IdentityServer.Security.Claims;
+using HansKindberg.IdentityServer.Security.Claims.Configuration;
 using HansKindberg.IdentityServer.Validation;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Authentication.Cookies.Extensions;
@@ -94,7 +96,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			});
 		}
 
-		private static IServiceCollection AddClaimsProvider(this IServiceCollection services, IConfiguration configuration)
+		private static IServiceCollection AddClaimsSelection(this IServiceCollection services, IConfiguration configuration)
 		{
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
@@ -102,25 +104,14 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(configuration == null)
 				throw new ArgumentNullException(nameof(configuration));
 
-			// TODO: fix claims-provider setup.
+			services.Configure<ClaimsSelectorLoaderOptions>(configuration.GetSection($"{ConfigurationKeys.ClaimsSelectionPath}:{nameof(ClaimsSelectorLoader)}"));
 
-			//var claimsProviderSection = configuration.GetSection(ConfigurationKeys.ClaimsProviderPath);
-			//var claimsProviderOptions = new DynamicOptions();
-			//claimsProviderSection.Bind(claimsProviderOptions);
-
-			//if(claimsProviderOptions.Type != null)
-			//{
-			//	var claimsProviderInterfaceType = typeof(IClaimsProvider);
-			//	var claimsProviderType = TypeExtension.GetType("claims-provider", claimsProviderInterfaceType, claimsProviderOptions.Type);
-			//	services.AddTransient(claimsProviderInterfaceType, claimsProviderType);
-			//}
-			//else
-			//{
-			//	services.AddSingleton<IClaimsProvider, EmptyClaimsProvider>();
-			//}
-
-			//services.Configure<ClaimsServiceClientOptions>(configuration.GetSection($"{ConfigurationKeys.ServiceClientsPath}:{nameof(ClaimsServiceClient)}"));
-			//services.AddTransient<IClaimsServiceClient, ClaimsServiceClient>();
+			services.TryAddScoped<IClaimsSelectionContextAccessor, ClaimsSelectionContextAccessor>();
+			services.TryAddSingleton<IClaimsSelectorLoader, ClaimsSelectorLoader>();
+			// Each claims-selector (IClaimsSelector) declared in appsettings.json must be registered as transient.
+			services.TryAddTransient<CountyClaimsSelector>();
+			// todo: Remove later
+			services.TryAddTransient<FakeCountyClaimsSelector>();
 
 			return services;
 		}
@@ -375,7 +366,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 					if(!forceAuthenticationRouterInterfaceType.IsAssignableFrom(samlIdpOptions.ForceAuthentication.Router))
 						throw new InvalidOperationException($"The type {samlIdpOptions.ForceAuthentication.Router.FullName.ToStringRepresentation()} does not inherit from {forceAuthenticationRouterInterfaceType.FullName.ToStringRepresentation()}.");
 
-					identityServerBuilder.Services.AddSingleton(forceAuthenticationRouterInterfaceType, samlIdpOptions.ForceAuthentication.Router);
+					identityServerBuilder.Services.Add(new ServiceDescriptor(forceAuthenticationRouterInterfaceType, samlIdpOptions.ForceAuthentication.Router, samlIdpOptions.ForceAuthentication.RouterLifetime));
 				}
 				else
 				{
@@ -540,7 +531,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.Configure<ExceptionHandlingOptions>(configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
 			services.Configure<SecurityHeaderOptions>(configuration.GetSection(ConfigurationKeys.SecurityHeadersPath));
 
-			services.AddClaimsProvider(configuration);
+			services.AddClaimsSelection(configuration);
 
 			services.AddExtendedAuthorization(configuration);
 

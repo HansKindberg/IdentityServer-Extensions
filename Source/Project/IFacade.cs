@@ -3,6 +3,7 @@ using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Saml.Services;
+using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.Web.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +22,7 @@ namespace HansKindberg.IdentityServer
 
 		IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		IAuthorizationResolver AuthorizationResolver { get; }
+		IClaimsSelectionContextAccessor ClaimsSelectionContextAccessor { get; }
 		IClientStore ClientStore { get; }
 		IDecorationLoader DecorationLoader { get; }
 		IEventService Events { get; }
