@@ -17,6 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		..\ReadMe.md = ..\ReadMe.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{3ADEF942-F62D-447B-8E6C-EE331C1FA512}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{1DCCEA1D-11F0-49E3-9F29-A2EAC5A8A7B3}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\Identity-Server-Docker-Deploy.yml = ..\.github\workflows\Identity-Server-Docker-Deploy.yml
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{2F45BC7D-4D4D-4C88-9AD8-AF19C3CEE655}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
@@ -122,6 +129,8 @@ Global
 		{8990224B-F1C5-4677-A0E7-BDFAEA1B4820} = {2C9F176E-B134-41D1-BD13-EB5FE2273194}
 		{CFD638BA-A030-4720-A1C7-A07B54EBF6EC} = {86A226E7-87DA-40A3-8F54-DA52DAD95248}
 		{24578C7C-D213-4C9D-A67C-375A7D5BB7C0} = {86A226E7-87DA-40A3-8F54-DA52DAD95248}
+		{3ADEF942-F62D-447B-8E6C-EE331C1FA512} = {09FC18CE-DA42-4009-91B1-B541A826FDBE}
+		{1DCCEA1D-11F0-49E3-9F29-A2EAC5A8A7B3} = {3ADEF942-F62D-447B-8E6C-EE331C1FA512}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C040DE8-0848-429C-8027-B5613F8441FD}
