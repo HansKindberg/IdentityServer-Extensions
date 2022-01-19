@@ -24,8 +24,8 @@
 		<PackageTags></PackageTags>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.3" />
-		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.3" />
+		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.4" />
+		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.4" />
 		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(PackageReferenceVersion)" />
@@ -51,7 +51,7 @@
 		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
 		<PackageReference Include="Serilog.Sinks.Fluentd" Version="0.4.0" />
-		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.0" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
 	</ItemGroup>
 	<Target Name="HandleAssemblyOriginatorKeyFile" BeforeTargets="BeforeBuild" Condition="$(SignAssembly) AND !Exists('$(AssemblyOriginatorKeyFile)')">
 		<PropertyGroup>
