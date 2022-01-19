@@ -31,7 +31,7 @@ namespace HansKindberg.IdentityServer.Saml.Services
 			var validatedSamlMessage = await this.InternalSamlPersistedGrantService.GetRequest(key);
 
 			// ReSharper disable InvertIf
-			if(validatedSamlMessage.Message is Saml2Request saml2Request)
+			if(validatedSamlMessage?.Message is Saml2Request saml2Request)
 			{
 				var forceAuthenticationValue = validatedSamlMessage.Raw[nameof(Saml2Request.ForceAuthentication)];
 
