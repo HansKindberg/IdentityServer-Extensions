@@ -63,9 +63,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			model.AuthenticationScheme = this.ClaimsSelectionContext.AuthenticationScheme;
 			model.RedirectUrl = returnUrl;
 
-			model.AutomaticRedirect = false;
-			model.SecondsBeforeRedirect = 10;
-
 			return model;
 		}
 
