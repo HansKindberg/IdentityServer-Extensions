@@ -16,6 +16,8 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - name: "Set up Docker Buildx"
         uses: docker/setup-buildx-action@v1
+      - name: "Replace Application.csproj"
+        run: cp "Source/Implementations/Identity-Server/Application/Application.Docker.xml" "Source/Implementations/Identity-Server/Application/Application.csproj"
       - name: "Install npm"
         run: npm install
         working-directory: "Source/Implementations/Identity-Server/Application"

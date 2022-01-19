@@ -25,6 +25,7 @@ LICENSE
 README.md
 
 # Custom
+Application/Application.Docker.xml
 Application/appsettings.json
 Application/appsettings.*.json
 Application/Web.config

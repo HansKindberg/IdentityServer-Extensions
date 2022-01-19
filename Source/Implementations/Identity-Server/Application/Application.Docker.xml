@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<AssemblyName>HansKindberg.IdentityServer.Application</AssemblyName>
+		<RootNamespace>$(AssemblyName)</RootNamespace>
+		<TargetFrameworks>net5.0</TargetFrameworks>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Before Docker deployment we need to update the version below to the latest one. -->
+		<PackageReference Include="HansKindberg.IdentityServer" Version="5.2.4-alpha" />
+	</ItemGroup>
+</Project>
