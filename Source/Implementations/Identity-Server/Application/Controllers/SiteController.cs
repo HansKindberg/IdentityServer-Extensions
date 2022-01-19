@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Application.Models.Views.Shared;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
-using HansKindberg.IdentityServer.Web;
-using HansKindberg.IdentityServer.Web.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Logging.Extensions;
 using Rsk.Saml.DuendeIdentityServer.Services.Models;
-using Rsk.Saml.Models;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
@@ -106,30 +101,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return this.Localizer.GetString(key, arguments.ToArray());
 		}
 
-		[SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code")]
 		protected internal virtual async Task<string> GetSamlRequestIdAsync()
 		{
 			var requestIdParameter = this.Facade.IdentityServer.CurrentValue.Saml.UserInteraction.RequestIdParameter;
 
-			var requestId = (string)this.HttpContext.Request.Query[requestIdParameter];
-
-			// ReSharper disable InvertIf
-			if(requestId == null && await this.IsSamlForceAuthenticationRequestAsync())
-			{
-				// If the Saml-feature is enabled and the request is a force-authentication request we look after the saml-request-id in the return-url parameter.
-				var url = this.HttpContext.Request.Query.GetValueAsAbsoluteUrl(QueryStringKeys.ReturnUrl);
-
-				if(url != null)
-				{
-					var query = QueryHelpers.ParseQuery(url.Query);
-
-					if(query.ContainsKey(requestIdParameter))
-						requestId = query[requestIdParameter];
-				}
-			}
-			// ReSharper restore InvertIf
-
-			return await Task.FromResult(requestId);
+			return await Task.FromResult(this.HttpContext.Request.Query[requestIdParameter]);
 		}
 
 		protected internal virtual async Task<bool> IncludeSignOutIframeAsync(string signOutId, SingleSignOutMode singleSignOutMode)
@@ -144,21 +120,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				return true;
 
 			return await Task.FromResult(false);
-		}
-
-		protected internal virtual async Task<bool> IsSamlForceAuthenticationRequestAsync()
-		{
-			if(!this.Facade.FeatureManager.IsEnabled(Feature.Saml))
-				return false;
-
-			var returnUrl = (string)this.HttpContext.Request.Query[QueryStringKeys.ReturnUrl];
-
-			if(string.IsNullOrWhiteSpace(returnUrl))
-				return false;
-
-			var validatedSamlMessage = await this.Facade.SamlInteraction.GetRequestContext(returnUrl);
-
-			return validatedSamlMessage.Message is Saml2Request { ForceAuthentication: true };
 		}
 
 		protected internal virtual async Task<IActionResult> Redirect(string redirectUrl, byte secondsBeforeRedirect)

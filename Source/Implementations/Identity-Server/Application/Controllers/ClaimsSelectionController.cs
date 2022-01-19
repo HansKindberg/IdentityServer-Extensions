@@ -17,6 +17,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.FeatureManagement.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
+using Rsk.Saml.Models;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
@@ -123,15 +124,15 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper restore PossibleNullReferenceException
 		}
 
-		protected internal virtual async Task<string> GetSignOutIdAsync()
+		protected internal virtual async Task<string> GetSignOutIdAsync(string returnUrl)
 		{
 			// ReSharper disable InvertIf
 			if(this.Facade.FeatureManager.IsEnabled(Feature.Saml))
 			{
-				var samlRequestId = await this.GetSamlRequestIdAsync();
+				var validatedSamlMessage = await this.Facade.SamlInteraction.GetRequestContext(returnUrl);
 
-				// If it is a saml-request it is initiated from a service-provider and if it also is a force-authentication-request we can create a sign-out-id to use for signing out signed in sessions.
-				if(samlRequestId != null)
+				// If it is a saml-force-authentication-request it is initiated from a service-provider and we create a sign-out-id to use.
+				if(validatedSamlMessage?.Message is Saml2Request { ForceAuthentication: true })
 					return await this.Facade.Interaction.CreateLogoutContextAsync();
 			}
 			// ReSharper restore InvertIf
@@ -176,7 +177,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			// ReSharper disable InvertIf
 			if(!model.Errors.Any())
 			{
-				var signOutId = await this.GetSignOutIdAsync();
+				var signOutId = await this.GetSignOutIdAsync(returnUrl);
 
 				var confirmationModel = await this.CreateClaimsSelectionConfirmationViewModelAsync(returnUrl, signOutId);
 
