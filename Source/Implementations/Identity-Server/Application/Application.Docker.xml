@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<AssemblyName>HansKindberg.IdentityServer.Application</AssemblyName>
 		<RootNamespace>$(AssemblyName)</RootNamespace>
-		<TargetFrameworks>net5.0</TargetFrameworks>
+		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- Before Docker deployment we need to update the version below to the latest one. -->
