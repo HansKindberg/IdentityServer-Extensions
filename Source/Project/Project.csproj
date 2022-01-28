@@ -26,7 +26,7 @@
 	<ItemGroup>
 		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.4" />
 		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.4" />
-		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.1-alpha" />
+		<PackageReference Include="HansKindberg.Web.Authorization" Version="0.0.2-alpha" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(PackageReferenceVersion)" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(PackageReferenceVersion)">
@@ -34,14 +34,13 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.4.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
-		<PackageReference Include="RegionOrebroLan" Version="1.3.1-alpha" />
-		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.3.0-alpha" />
-		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.9-alpha" />
-		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.5-alpha" />
-		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.8-alpha" />
-		<PackageReference Include="RegionOrebroLan.Localization" Version="0.0.2-alpha" />
-		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.2-alpha" />
-		<PackageReference Include="RegionOrebroLan.Web.Authentication.OpenIdConnect" Version="0.0.0-alpha" />
+		<PackageReference Include="RegionOrebroLan.ActiveLogin.Authentication" Version="0.3.1-alpha" />
+		<PackageReference Include="RegionOrebroLan.Caching" Version="0.0.11-alpha" />
+		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.6-alpha" />
+		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.10-alpha" />
+		<PackageReference Include="RegionOrebroLan.Localization" Version="1.0.0-alpha" />
+		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.4-alpha" />
+		<PackageReference Include="RegionOrebroLan.Web.Authentication.OpenIdConnect" Version="0.0.1-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.3.1" />
 		<PackageReference Include="Rsk.Saml.DuendeIdentityServer.EntityFramework" Version="5.1.0" />
 		<PackageReference Include="Rsk.Saml.IdentityProvider" Version="1.2.1" />

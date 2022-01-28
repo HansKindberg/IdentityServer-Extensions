@@ -3,4 +3,16 @@
 		<RootNamespace>IntegrationTests</RootNamespace>
 		<TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
 	</PropertyGroup>
+	<ItemGroup>
+		<!--
+			PackageReference: Microsoft.Extensions.DependencyInjection, 6.0.0 below
+			
+			Just to handle the following exception that otherwhise will occur:
+
+			The type 'ServiceCollection' exists in both 'Microsoft.Extensions.DependencyInjection.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60' and 'Microsoft.Extensions.DependencyInjection, Version=5.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60'
+
+			See: https://github.com/grpc/grpc-dotnet/issues/1481
+		-->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+	</ItemGroup>
 </Project>
