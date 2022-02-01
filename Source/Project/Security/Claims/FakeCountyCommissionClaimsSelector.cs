@@ -6,24 +6,22 @@ using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RegionOrebroLan.Web.Authentication.DirectoryServices;
 
 namespace HansKindberg.IdentityServer.Security.Claims
 {
 	/// <inheritdoc />
 	[Obsolete("Only for testing.")]
-	public class FakeCountyClaimsSelector : CountyClaimsSelector
+	public class FakeCountyCommissionClaimsSelector : CountyCommissionClaimsSelector
 	{
 		#region Constructors
 
-		public FakeCountyClaimsSelector(IActiveDirectory activeDirectory, IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory) : base(activeDirectory, httpContextAccessor, loggerFactory) { }
+		public FakeCountyCommissionClaimsSelector(IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory) : base(httpContextAccessor, loggerFactory) { }
 
 		#endregion
 
 		#region Properties
 
 		public virtual string AllCommissionsJson { get; set; }
-		public virtual IList<string> AllEmployeeHsaIds { get; } = new List<string>();
 
 		#endregion
 
@@ -36,11 +34,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			var commissions = JsonConvert.DeserializeObject<List<Commission>>(allCommissionsJson);
 
 			return await Task.FromResult(commissions).ConfigureAwait(false);
-		}
-
-		protected internal override async Task<IList<string>> GetAllEmployeeHsaIdsAsync(ClaimsPrincipal claimsPrincipal)
-		{
-			return await Task.FromResult(this.AllEmployeeHsaIds).ConfigureAwait(false);
 		}
 
 		#endregion

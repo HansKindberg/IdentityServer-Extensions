@@ -21,7 +21,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	{
 		#region Fields
 
-		private static readonly string _claimsSelectionPath = $"/{nameof(Feature.ClaimsSelection)}";
+		private const string _claimsSelectionPath = $"/{nameof(Feature.ClaimsSelection)}";
 		private static readonly string _httpContextItemKey = typeof(ClaimsSelectionContext).FullName;
 
 		#endregion

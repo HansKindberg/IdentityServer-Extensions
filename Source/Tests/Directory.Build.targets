@@ -8,5 +8,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Project\Project.csproj" />
+		<ProjectReference Include="..\Test-helpers\Test-helpers.csproj" />
 	</ItemGroup>
 </Project>
