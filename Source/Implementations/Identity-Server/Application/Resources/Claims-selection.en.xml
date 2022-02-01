@@ -7,6 +7,9 @@
 						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
 							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
 						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
 					</inera>
 					<update-sign-in-error>An unexpected error has occurred.</update-sign-in-error>
 				</errors>
@@ -35,6 +38,16 @@
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
 							</commission>
 						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							<commission>
+								<commissionName>Name</commissionName>
+								<commissionPurpose>Purpose</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Select a commission</heading>
+								<healthCareProviderName>Healthcare provider</healthCareProviderName>
+								<healthCareUnitName>Healthcare unit</healthCareUnitName>
+							</commission>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
 					</inera>
 					<submit>Save</submit>
 				</form>

@@ -7,6 +7,9 @@
 						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
 							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
 						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
 					</inera>
 					<update-sign-in-error>Ett oväntat fel har inträffat.</update-sign-in-error>
 				</errors>
@@ -35,6 +38,16 @@
 								<healthCareUnitName>Vårdenhet</healthCareUnitName>
 							</commission>
 						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							<commission>
+								<commissionName>Namn</commissionName>
+								<commissionPurpose>Syfte</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Välj ett medarbetaruppdrag</heading>
+								<healthCareProviderName>Vårdgivare</healthCareProviderName>
+								<healthCareUnitName>Vårdenhet</healthCareUnitName>
+							</commission>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
 					</inera>
 					<submit>Spara</submit>
 				</form>
