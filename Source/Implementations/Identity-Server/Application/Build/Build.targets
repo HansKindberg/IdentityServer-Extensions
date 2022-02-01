@@ -42,7 +42,8 @@
 			XmlInputPath="$(_ApplicationHostConfigurationFile)"
 		/>
 	</Target>
-	<Target Name="WarnOnMissingApplicationHostConfigurationFile" BeforeTargets="PrepareForRun" Condition="!Exists('$(_ApplicationHostConfigurationFile)')">
+	<!-- The condition '$(VisualStudioDir)' != '' will only trigger in Visual Studio, not in an Azure DevOps pipeline. At least that is the expectation. -->
+	<Target Name="WarnOnMissingApplicationHostConfigurationFile" BeforeTargets="PrepareForRun" Condition="!Exists('$(_ApplicationHostConfigurationFile)') And '$(VisualStudioDir)' != ''">
 		<PropertyGroup>
 			<_Line>------------------------------------------------------------------------------------------------------------------------------------------</_Line>
 			<_Message>The file '$(_ApplicationHostConfigurationFile)' does not exist.</_Message>
