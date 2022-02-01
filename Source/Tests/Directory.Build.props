@@ -2,5 +2,6 @@
 	<Import Project="..\Directory.Build.props" />
 	<PropertyGroup>
 		<IsPackable>false</IsPackable>
+		<NoWarn>CA1014;CS8002</NoWarn>
 	</PropertyGroup>
 </Project>
