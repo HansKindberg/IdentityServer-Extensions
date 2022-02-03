@@ -559,7 +559,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			services.AddIdentity(serviceConfiguration);
 			services.AddIdentityServer(serviceConfiguration);
-			services.AddOpenIdConnectClaimsRequest(configuration);
+			services.AddOpenIdConnectExtensions(configuration);
 			services.AddPathBasedLocalization(configuration);
 			services.AddRequestLocalization(serviceConfiguration);
 			services.AddSameSiteCookiePolicy();
