@@ -11,7 +11,7 @@
 		"IIS Express": {
 			"commandName": "IISExpress",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development",
+				"ASPNETCORE_ENVIRONMENT": "IIS-Express",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true
@@ -255,7 +255,7 @@
 			"applicationUrl": "https://localhost:6001",
 			"commandName": "Project",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development",
+				"ASPNETCORE_ENVIRONMENT": "Kestrel",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true
