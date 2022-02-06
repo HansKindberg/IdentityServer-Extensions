@@ -8,4 +8,13 @@
 		<!-- Before Docker deployment we need to update the version below to the latest one. -->
 		<PackageReference Include="HansKindberg.IdentityServer" Version="5.2.4-alpha.3" />
 	</ItemGroup>
+	<ItemGroup>
+		<None_ Include="wwwroot\**\.gitkeep;package.json;package-lock.json;tsconfig.json" />
+		<Content Remove="@(None_)" />
+		<None Include="@(None_)" />
+		<None Remove="Resources\**\*.xml" />
+		<Content Include="Resources\**\*.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 </Project>

@@ -16,5 +16,14 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Project\Project.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+		<None_ Include="wwwroot\**\.gitkeep;package.json;package-lock.json;tsconfig.json" />
+		<Content Remove="@(None_)" />
+		<None Include="@(None_)" />
+		<None Remove="Resources\**\*.xml" />
+		<Content Include="Resources\**\*.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 	<Import Project="Build\Build.targets" />
 </Project>
