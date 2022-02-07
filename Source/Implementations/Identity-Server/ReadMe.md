@@ -14,4 +14,4 @@ During local development we can run the [Identity-Server implementation](/Source
 
 During Docker deployment another project-file is used that has a NuGet-reference to [HansKindberg.IdentityServer](https://www.nuget.org/packages/HansKindberg.IdentityServer). So before Docker deployment we need to publish the latest release of [HansKindberg.IdentityServer](https://www.nuget.org/packages/HansKindberg.IdentityServer) to NuGet and update the package-reference version in that file. Otherwise the application will not work. The project-file used for Docker deployment:
 
-- [Application.Docker.xml](/Source/Implementations/Identity-Server/Application/Application.Docker.xml)
+- [Application.csproj.deploy](/Source/Implementations/Identity-Server/Application/Application.csproj.deploy)

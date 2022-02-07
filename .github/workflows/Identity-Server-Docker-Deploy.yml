@@ -17,7 +17,7 @@ jobs:
       - name: "Set up Docker Buildx"
         uses: docker/setup-buildx-action@v1
       - name: "Replace Application.csproj"
-        run: cp "Source/Implementations/Identity-Server/Application/Application.Docker.xml" "Source/Implementations/Identity-Server/Application/Application.csproj"
+        run: cp "Source/Implementations/Identity-Server/Application/Application.csproj.deploy" "Source/Implementations/Identity-Server/Application/Application.csproj"
       - name: "Application.csproj content"
         run: cat "Source/Implementations/Identity-Server/Application/Application.csproj"
       - name: "Install npm"
