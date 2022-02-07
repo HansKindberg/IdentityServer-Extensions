@@ -17,6 +17,24 @@ namespace HansKindberg.IdentityServer.Extensions
 
 		#region Methods
 
+		public static bool TryGetAsAbsoluteUrl(this string value, out Uri url)
+		{
+			// We need to use UriKind.RelativeOrAbsolute here and not UriKind.Absolute || UriKind.Relative.
+			// If we are on Linux, a returnUrl of "/Account", would give an absolute file-path of "file:///Account" with UriKind.Absolute.
+			// https://github.com/dotnet/runtime/issues/22718
+			// ReSharper disable InvertIf
+			if(!string.IsNullOrWhiteSpace(value) && Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out url))
+			{
+				if(url.IsAbsoluteUri || Uri.TryCreate("https://localhost" + value, UriKind.Absolute, out url))
+					return true;
+			}
+			// ReSharper restore InvertIf
+
+			url = null;
+
+			return false;
+		}
+
 		[SuppressMessage("Design", "CA1055:URI-like return values should not be strings")]
 		public static string UrlDecodeColon(this string value)
 		{

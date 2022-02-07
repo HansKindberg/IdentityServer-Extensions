@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HansKindberg.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -66,7 +67,7 @@ namespace HansKindberg.IdentityServer.Web.Http.Extensions
 			{
 				var value = values.First();
 
-				if(Uri.TryCreate(value, UriKind.Absolute, out var url) || Uri.TryCreate("https://localhost" + value, UriKind.Absolute, out url))
+				if(value.TryGetAsAbsoluteUrl(out var url))
 					return url;
 			}
 			// ReSharper restore InvertIf

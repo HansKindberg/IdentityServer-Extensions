@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Configuration;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -189,12 +190,7 @@ namespace HansKindberg.IdentityServer
 			{
 				var value = values.FirstOrDefault();
 
-				if(!string.IsNullOrWhiteSpace(value) && (Uri.TryCreate(value, UriKind.Absolute, out var uri) || Uri.TryCreate("https://localhost" + value, UriKind.Absolute, out uri)))
-				{
-					url = uri;
-
-					return true;
-				}
+				return value.TryGetAsAbsoluteUrl(out url);
 			}
 			// ReSharper restore InvertIf
 
