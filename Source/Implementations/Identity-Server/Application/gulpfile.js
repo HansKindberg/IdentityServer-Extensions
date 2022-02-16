@@ -116,8 +116,8 @@
 
 		deleteIfExists(imagesDestinationDirectory);
 
-		return gulp.src([path.join(imagesSourceDirectory, "**/*"), `!${path.join(imagesSourceDirectory, "ReadMe.md")}`])
-			.pipe(gulp.dest(destinationRootDirectoryName));
+		return gulp.src(replaceBackSlashWithForwardSlash(path.join(imagesSourceDirectory, "**/*")))
+			.pipe(gulp.dest(imagesDestinationDirectory));
 	}
 
 	function createRollupInputOptions(minify) {
