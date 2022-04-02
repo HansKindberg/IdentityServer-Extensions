@@ -1,0 +1,14 @@
+{
+	"FeatureManagement": {
+		"Hsts": true
+	},
+	"Hsts": {
+		"ExcludedHosts": [
+			"site-1.example.com",
+			"site-2.example.com"
+		],
+		"IncludeSubDomains": true,
+		"MaxAge": "1:1:1",
+		"Preload": true
+	}
+}

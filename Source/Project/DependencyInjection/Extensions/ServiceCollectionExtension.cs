@@ -44,6 +44,7 @@ using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -533,6 +534,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			var serviceConfiguration = new ServiceConfigurationBuilder(configuration, hostEnvironment);
 
 			services.Configure<ExceptionHandlingOptions>(configuration.GetSection(ConfigurationKeys.ExceptionHandlingPath));
+			services.Configure<HstsOptions>(configuration.GetSection(ConfigurationKeys.HstsPath));
+			services.Configure<HttpsRedirectionOptions>(configuration.GetSection(ConfigurationKeys.HttpsRedirectionPath));
 			services.Configure<SecurityHeaderOptions>(configuration.GetSection(ConfigurationKeys.SecurityHeadersPath));
 
 			services.AddClaimsSelection(configuration);

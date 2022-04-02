@@ -21,6 +21,7 @@ using HansKindberg.IdentityServer.Web.Localization;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -418,6 +419,71 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		{
 			AppDomain.CurrentDomain.SetData(ConfigurationKeys.DataDirectoryPath, null);
 			DatabaseHelper.DeleteIdentityServerDatabase();
+		}
+
+		[TestMethod]
+		public async Task Configure_Hsts_Test()
+		{
+			await Task.CompletedTask;
+
+			var jsonFileRelativePath = "DependencyInjection/Extensions/Resources/Hsts/Empty.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var hsts = context.ServiceProvider.GetRequiredService<IOptions<HstsOptions>>().Value;
+
+				Assert.AreEqual(3, hsts.ExcludedHosts.Count);
+				Assert.AreEqual("localhost", hsts.ExcludedHosts[0]);
+				Assert.AreEqual("127.0.0.1", hsts.ExcludedHosts[1]);
+				Assert.AreEqual("[::1]", hsts.ExcludedHosts[2]);
+				Assert.IsFalse(hsts.IncludeSubDomains);
+				Assert.AreEqual(TimeSpan.FromDays(30), hsts.MaxAge);
+				Assert.IsFalse(hsts.Preload);
+			}
+
+			jsonFileRelativePath = "DependencyInjection/Extensions/Resources/Hsts/Default.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var hsts = context.ServiceProvider.GetRequiredService<IOptions<HstsOptions>>().Value;
+
+				Assert.AreEqual(5, hsts.ExcludedHosts.Count);
+				Assert.AreEqual("localhost", hsts.ExcludedHosts[0]);
+				Assert.AreEqual("127.0.0.1", hsts.ExcludedHosts[1]);
+				Assert.AreEqual("[::1]", hsts.ExcludedHosts[2]);
+				Assert.AreEqual("site-1.example.com", hsts.ExcludedHosts[3]);
+				Assert.AreEqual("site-2.example.com", hsts.ExcludedHosts[4]);
+				Assert.IsTrue(hsts.IncludeSubDomains);
+				Assert.AreEqual(new TimeSpan(0, 1, 1, 1), hsts.MaxAge);
+				Assert.IsTrue(hsts.Preload);
+			}
+		}
+
+		[TestMethod]
+		public async Task Configure_HttpsRedirection_Test()
+		{
+			await Task.CompletedTask;
+
+			var jsonFileRelativePath = "DependencyInjection/Extensions/Resources/HttpsRedirection/Empty.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var httpsRedirection = context.ServiceProvider.GetRequiredService<IOptions<HttpsRedirectionOptions>>().Value;
+
+				Assert.IsNull(httpsRedirection.HttpsPort);
+				Assert.AreEqual(307, httpsRedirection.RedirectStatusCode);
+			}
+
+			jsonFileRelativePath = "DependencyInjection/Extensions/Resources/HttpsRedirection/Default.json";
+
+			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
+			{
+				var httpsRedirection = context.ServiceProvider.GetRequiredService<IOptions<HttpsRedirectionOptions>>().Value;
+
+				Assert.IsNotNull(httpsRedirection.HttpsPort);
+				Assert.AreEqual(100, httpsRedirection.HttpsPort);
+				Assert.AreEqual(100, httpsRedirection.RedirectStatusCode);
+			}
 		}
 
 		[TestInitialize]

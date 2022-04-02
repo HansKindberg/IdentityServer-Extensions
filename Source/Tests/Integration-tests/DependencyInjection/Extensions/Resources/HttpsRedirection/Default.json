@@ -1,0 +1,9 @@
+{
+	"FeatureManagement": {
+		"HttpsRedirection": true
+	},
+	"HttpsRedirection": {
+		"HttpsPort": 100,
+		"RedirectStatusCode": 100
+	}
+}
