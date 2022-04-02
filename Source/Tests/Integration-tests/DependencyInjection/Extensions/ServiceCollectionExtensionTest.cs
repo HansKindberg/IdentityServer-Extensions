@@ -72,7 +72,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 		{
 			await Task.CompletedTask;
 
-			var jsonFileRelativePath = $"DependencyInjection/Extensions/Resources/ForwardedHeaders/Empty.json";
+			var jsonFileRelativePath = "DependencyInjection/Extensions/Resources/ForwardedHeaders/Empty.json";
 
 			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
 			{
@@ -84,7 +84,7 @@ namespace IntegrationTests.DependencyInjection.Extensions
 				Assert.IsFalse(forwardedHeaders.KnownProxies.Any());
 			}
 
-			jsonFileRelativePath = $"DependencyInjection/Extensions/Resources/ForwardedHeaders/Default.json";
+			jsonFileRelativePath = "DependencyInjection/Extensions/Resources/ForwardedHeaders/Default.json";
 
 			using(var context = new Context(additionalJsonConfigurationRelativeFilePath: jsonFileRelativePath))
 			{
