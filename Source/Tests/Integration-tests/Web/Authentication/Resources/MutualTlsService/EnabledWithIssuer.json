@@ -1,0 +1,9 @@
+{
+	"IdentityServer": {
+		"IssuerUri": "https://example.org",
+		"MutualTls": {
+			"DomainName": "mtls",
+			"Enabled": true
+		}
+	}
+}

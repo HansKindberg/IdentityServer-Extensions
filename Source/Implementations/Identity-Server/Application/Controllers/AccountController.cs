@@ -62,7 +62,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					AllowPersistent = this.Facade.IdentityServer.CurrentValue.FormsAuthentication.AllowPersistent,
 					Duration = this.Facade.IdentityServer.CurrentValue.FormsAuthentication.Duration
 				},
-				FormsAuthenticationEnabled = this.Facade.FeatureManager.IsEnabled(Feature.FormsAuthentication)
+				FormsAuthenticationEnabled = await this.FormsAuthenticationEnabled()
 			};
 
 			if(authorizationRequest?.IdP != null)
@@ -151,6 +151,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return model;
 		}
 
+		protected internal virtual async Task<bool> FormsAuthenticationEnabled()
+		{
+			return this.Facade.FeatureManager.IsEnabled(Feature.FormsAuthentication) && !await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request);
+		}
+
 		public virtual async Task<IActionResult> Index()
 		{
 			return await Task.FromResult(this.View());
@@ -195,6 +200,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[ValidateAntiForgeryToken]
 		public virtual async Task<IActionResult> SignIn(SignInForm form, string returnUrl)
 		{
+			if(await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request))
+				throw new InvalidOperationException("Forms-authentication is not allowed on the mTLS-domain.");
+
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 

@@ -1,0 +1,8 @@
+{
+	"IdentityServer": {
+		"MutualTls": {
+			"DomainName": "mtls",
+			"Enabled": false
+		}
+	}
+}

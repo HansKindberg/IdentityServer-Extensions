@@ -34,6 +34,7 @@ namespace HansKindberg.IdentityServer
 		IIdentityServerInteractionService Interaction { get; }
 		IStringLocalizerFactory LocalizerFactory { get; }
 		ILoggerFactory LoggerFactory { get; }
+		IMutualTlsService MutualTlsService { get; }
 		IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
 
 		/// <summary>

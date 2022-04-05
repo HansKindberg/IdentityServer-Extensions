@@ -24,7 +24,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClaimsSelectionContextAccessor claimsSelectionContextAccessor, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
+		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClaimsSelectionContextAccessor claimsSelectionContextAccessor, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
 		{
 			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
@@ -40,6 +40,7 @@ namespace HansKindberg.IdentityServer
 			this.Interaction = interaction ?? throw new ArgumentNullException(nameof(interaction));
 			this.LocalizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
 			this.LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+			this.MutualTlsService = mutualTlsService ?? throw new ArgumentNullException(nameof(mutualTlsService));
 			this.RequestLocalization = requestLocalization ?? throw new ArgumentNullException(nameof(requestLocalization));
 
 			if(serviceProvider == null)
@@ -69,6 +70,7 @@ namespace HansKindberg.IdentityServer
 		public virtual IIdentityServerInteractionService Interaction { get; }
 		public virtual IStringLocalizerFactory LocalizerFactory { get; }
 		public virtual ILoggerFactory LoggerFactory { get; }
+		public virtual IMutualTlsService MutualTlsService { get; }
 		public virtual IOptionsMonitor<RequestLocalizationOptions> RequestLocalization { get; }
 		public virtual IExtendedSamlInteractionService SamlInteraction { get; }
 		public virtual IUriFactory UriFactory { get; }

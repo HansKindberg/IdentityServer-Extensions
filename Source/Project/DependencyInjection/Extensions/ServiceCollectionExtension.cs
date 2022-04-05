@@ -41,6 +41,7 @@ using HansKindberg.IdentityServer.Web.Mvc.Filters;
 using HansKindberg.IdentityServer.Web.Mvc.Filters.Configuration;
 using HansKindberg.IdentityServer.WsFederation.Configuration.Extensions;
 using HansKindberg.Web.Authorization.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -52,6 +53,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using RegionOrebroLan;
@@ -71,6 +73,7 @@ using Rsk.Saml.Validation;
 using Rsk.WsFederation.Configuration;
 using Rsk.WsFederation.EntityFramework.DbContexts;
 using Rsk.WsFederation.EntityFramework.Stores;
+using Options = HansKindberg.IdentityServer.Configuration.Options;
 using Saml2SingleSignOnRequestValidator = HansKindberg.IdentityServer.Saml.Validation.Saml2SingleSignOnRequestValidator;
 using SamlPersistedGrantService = HansKindberg.IdentityServer.Saml.Services.SamlPersistedGrantService;
 
@@ -425,6 +428,18 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			return identityServerBuilder;
 		}
 
+		public static IServiceCollection AddMutualTls(this IServiceCollection services)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			services.AddScoped<IMutualTlsService, MutualTlsService>();
+
+			services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, PostConfigureInternalCookieAuthenticationOptions>();
+
+			return services;
+		}
+
 		public static IServiceCollection AddRequestLocalization(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
@@ -562,6 +577,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 			services.AddIdentity(serviceConfiguration);
 			services.AddIdentityServer(serviceConfiguration);
+			services.AddMutualTls();
 			services.AddOpenIdConnectExtensions(configuration);
 			services.AddPathBasedLocalization(configuration);
 			services.AddRequestLocalization(serviceConfiguration);

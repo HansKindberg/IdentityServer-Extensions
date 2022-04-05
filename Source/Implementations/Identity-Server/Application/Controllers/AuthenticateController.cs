@@ -10,8 +10,10 @@ using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
+using HansKindberg.IdentityServer.Web.Http.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
@@ -94,16 +96,14 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			if(certificate == null)
 			{
-				var request = this.HttpContext.Request;
+				if(await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request))
+					throw new InvalidOperationException("Authentication error.", new InvalidOperationException($"There is no client-certificate connected for url \"{this.Request.GetDisplayUrl()}\"."));
 
-				var certificateAuthenticationHost = await this.GetCertificateAuthenticationHostAsync();
-				var certificateAuthenticationUrl = $"{request.Scheme}://{certificateAuthenticationHost}{request.Path}{request.QueryString}";
-				var host = request.Host.Value;
+				var mtlsOrigin = await this.Facade.MutualTlsService.GetMtlsOriginAsync();
+				var origin = this.Request.Origin();
 
-				if(!string.Equals(certificateAuthenticationHost, host, StringComparison.OrdinalIgnoreCase))
-					return this.Redirect(certificateAuthenticationUrl);
-
-				throw new InvalidOperationException("Authentication error.", new InvalidOperationException($"There is no client-certificate connected for url \"{certificateAuthenticationUrl}\"."));
+				if(!string.Equals(mtlsOrigin, origin, StringComparison.OrdinalIgnoreCase))
+					return this.Redirect($"{mtlsOrigin}{this.Request.Path}{this.Request.QueryString}");
 			}
 
 			var authenticateResult = await this.HttpContext.AuthenticateAsync(authenticationScheme);
@@ -156,6 +156,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				RedirectUri = this.Url.Action(nameof(this.Callback))
 			};
 
+			if(await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request))
+				authenticationProperties.RedirectUri = await this.Facade.MutualTlsService.GetIssuerOriginAsync() + authenticationProperties.RedirectUri;
+
 			authenticationProperties.SetString(AuthenticationKeys.ReturnUrl, returnUrl);
 			authenticationProperties.SetString(AuthenticationKeys.Scheme, authenticationScheme);
 
@@ -173,19 +176,6 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				throw new ArgumentNullException(nameof(claims));
 
 			return new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationScheme, claims.FindFirstNameClaim()?.Type, null));
-		}
-
-		protected internal virtual async Task<string> GetCertificateAuthenticationHostAsync()
-		{
-			var domainNameForCertificateAuthentication = this.Facade.IdentityServer.CurrentValue.InteractiveMutualTlsDomain;
-
-			if(string.IsNullOrEmpty(domainNameForCertificateAuthentication))
-				return this.HttpContext.Request.Host.Value;
-
-			if(domainNameForCertificateAuthentication.Contains('.', StringComparison.OrdinalIgnoreCase))
-				return domainNameForCertificateAuthentication;
-
-			return await Task.FromResult($"{domainNameForCertificateAuthentication}.{this.HttpContext.Request.Host.Value}");
 		}
 
 		public virtual async Task<IActionResult> Negotiate(string authenticationScheme, string returnUrl)
@@ -259,6 +249,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			if(authenticationScheme.Kind != expectedKind)
 				throw new InvalidOperationException($"The authentication-scheme \"{name}\" is not of kind \"{expectedKind}\".");
+
+			if(authenticationScheme.Kind != AuthenticationSchemeKind.Certificate && await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request))
+				throw new InvalidOperationException($"The authentication-scheme \"{name}\" is not allowed on the mTLS-domain. Only certificate-authentication is allowed on the mTLS-domain.");
 		}
 
 		protected internal virtual async Task ValidateAuthenticationSchemeForClientAsync(string authenticationScheme, string returnUrl)

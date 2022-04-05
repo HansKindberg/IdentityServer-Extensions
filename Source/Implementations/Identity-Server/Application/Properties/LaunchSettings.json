@@ -260,6 +260,18 @@
 			},
 			"launchBrowser": true
 		},
+		"Kestrel - MTLS": {
+			// This environment works on Windows if you add the following to C:\Windows\System32\drivers\etc\hosts:
+			//   127.0.0.1 identityserver.local
+			//   127.0.0.1 mtls.identityserver.local
+			"applicationUrl": "https://identityserver.local:6001",
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Mtls",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+			},
+			"launchBrowser": true
+		},
 		"Docker": {
 			"commandName": "Docker",
 			"launchBrowser": true,
