@@ -433,7 +433,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(services == null)
 				throw new ArgumentNullException(nameof(services));
 
-			services.AddScoped<IMutualTlsService, MutualTlsService>();
+			services.AddTransient<IMutualTlsService, MutualTlsService>();
 
 			services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, PostConfigureInternalCookieAuthenticationOptions>();
 
