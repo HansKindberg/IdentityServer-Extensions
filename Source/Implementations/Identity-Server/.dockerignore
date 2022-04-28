@@ -25,6 +25,8 @@ LICENSE
 README.md
 
 # Custom
+Application/Resources/Meta-information.en.xml
+Application/Resources/Meta-information.sv.xml
 Application/Application.csproj.deploy
 Application/appsettings.json
 Application/appsettings.*.json
