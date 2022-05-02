@@ -2,8 +2,9 @@ using System;
 using Duende.IdentityServer;
 using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RegionOrebroLan.Logging.Extensions;
 
 namespace HansKindberg.IdentityServer.Configuration
 {
@@ -11,9 +12,9 @@ namespace HansKindberg.IdentityServer.Configuration
 	{
 		#region Constructors
 
-		public PostConfigureInternalCookieAuthenticationOptions(IHttpContextAccessor httpContextAccessor, IMutualTlsService mutualTlsService)
+		public PostConfigureInternalCookieAuthenticationOptions(ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService)
 		{
-			this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 			this.MutualTlsService = mutualTlsService ?? throw new ArgumentNullException(nameof(mutualTlsService));
 		}
 
@@ -21,7 +22,7 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		#region Properties
 
-		protected internal virtual IHttpContextAccessor HttpContextAccessor { get; }
+		protected internal virtual ILogger Logger { get; }
 		protected internal virtual IMutualTlsService MutualTlsService { get; }
 
 		#endregion
@@ -36,17 +37,15 @@ namespace HansKindberg.IdentityServer.Configuration
 			if(!string.Equals(name, IdentityServerConstants.ExternalCookieAuthenticationScheme, StringComparison.OrdinalIgnoreCase))
 				return;
 
-			var httpRequest = this.HttpContextAccessor.HttpContext?.Request;
-
-			if(httpRequest == null)
-				return;
-
-			if(!this.MutualTlsService.IsMtlsDomainRequestAsync(httpRequest).Result)
-				return;
-
 			var issuerOrigin = this.MutualTlsService.GetIssuerOriginAsync().Result;
+			var mtlsOrigin = this.MutualTlsService.GetMtlsOriginAsync().Result;
+
+			if(string.Equals(issuerOrigin, mtlsOrigin, StringComparison.OrdinalIgnoreCase))
+				return;
 
 			var domain = new Uri(issuerOrigin).Host;
+
+			this.Logger.LogDebugIfEnabled($"Setting cookie-domain to \"{domain}\" for cookie-authentication-options with name \"{name}\", to be able to handle interactive mTLS-authentication.");
 
 			options.Cookie.Domain = domain;
 		}
