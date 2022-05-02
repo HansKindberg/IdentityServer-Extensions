@@ -40,7 +40,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var authenticateResult = await this.HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
 			if(!authenticateResult.Succeeded)
+			{
+				this.Logger.LogErrorIfEnabled($"An authentication-attempt, using the scheme \"{IdentityServerConstants.ExternalCookieAuthenticationScheme}\", was made but failed. Available request-cookies: {string.Join(", ", this.Request.Cookies.Keys)}");
+
 				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
+			}
 
 			var returnUrl = this.ResolveAndValidateReturnUrl(authenticateResult.Properties.Items[AuthenticationKeys.ReturnUrl]);
 
