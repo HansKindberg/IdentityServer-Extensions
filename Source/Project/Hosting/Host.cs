@@ -14,6 +14,11 @@ namespace HansKindberg.IdentityServer.Hosting
 		public static IHostBuilder CreateHostBuilder<TStartup>(string[] arguments) where TStartup : class
 		{
 			return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(arguments)
+				.UseSerilog((hostBuilderContext, serviceProvider, loggerConfiguration) =>
+				{
+					loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration);
+					loggerConfiguration.ReadFrom.Services(serviceProvider);
+				})
 				.ConfigureAppConfiguration(configurationBuilder =>
 				{
 					for(var i = 0; i < configurationBuilder.Sources.Count; i++)
@@ -32,33 +37,24 @@ namespace HansKindberg.IdentityServer.Hosting
 		{
 			Console.Title = applicationName;
 
+			Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+			Log.Information($"Starting host for \"{applicationName}\" at {DateTime.Now:o} ...");
+
 			try
 			{
-				Console.WriteLine($"Starting host for \"{applicationName}\" at {DateTime.Now:o} ...");
-
-				var hostBuilder = CreateHostBuilder<TStartup>(arguments);
-
-				hostBuilder.ConfigureAppConfiguration(configurationBuilder =>
-				{
-					Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configurationBuilder.Build()).CreateLogger();
-				});
-
-				hostBuilder
-					.UseSerilog()
-					.Build()
-					.Run();
+				CreateHostBuilder<TStartup>(arguments).Build().Run();
 
 				return 0;
 			}
 			catch(Exception exception)
 			{
-				Console.WriteLine(exception);
-				Log.Fatal(exception, "Host terminated unexpectedly.");
+				Log.Fatal(exception, $"Host for \"{applicationName}\" terminated unexpectedly.");
 
 				return 1;
 			}
 			finally
 			{
+				Log.Information($"Stopping host for \"{applicationName}\" at {DateTime.Now:o} ...");
 				Log.CloseAndFlush();
 			}
 		}
