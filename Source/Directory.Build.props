@@ -13,8 +13,8 @@
 		<!--
 			Some referenced assemblies do not have a strong name. Not sure if our assembly will be signed correctly. At least it has a PublicKeyToken. But not sure if it is correct.
 		-->
-		<NoWarn>CS8002</NoWarn>
+		<NoWarn>CS8002;CS9057</NoWarn>
 		<SignAssembly>true</SignAssembly>		
-		<WarningsNotAsErrors>CS8002</WarningsNotAsErrors>
+		<WarningsNotAsErrors>CS8002;CS9057</WarningsNotAsErrors>
 	</PropertyGroup>
 </Project>
