@@ -33,6 +33,7 @@ namespace HansKindberg.IdentityServer.Hosting
 		}
 
 		[SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+		[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider")]
 		public static int Run<TStartup>(string applicationName, string[] arguments) where TStartup : class
 		{
 			Console.Title = applicationName;
