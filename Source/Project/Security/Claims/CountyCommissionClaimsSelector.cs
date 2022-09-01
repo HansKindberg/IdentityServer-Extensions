@@ -39,6 +39,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string AllCommissionsClaimType { get; set; } = "allCommissions";
+		public virtual string EmployeeHsaIdClaimType { get; set; } = nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant();
 		protected internal virtual string Group => _group;
 		protected internal virtual IHttpContextAccessor HttpContextAccessor { get; }
 
@@ -59,7 +60,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(selectables.Any(selectable => selectable.Selected))
 				return;
 
-			var employeeHsaIdClaim = claimsPrincipal.FindFirst(nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant());
+			var employeeHsaIdClaim = claimsPrincipal.FindFirst(this.EmployeeHsaIdClaimType);
 
 			if(employeeHsaIdClaim == null)
 				return;
@@ -194,7 +195,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 			var commissionMap = new List<KeyValuePair<string, Commission>>();
 
-			var employeeHsaId = claimsPrincipal.FindFirst(nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant())?.Value;
+			var employeeHsaId = claimsPrincipal.FindFirst(this.EmployeeHsaIdClaimType)?.Value;
 
 			// ReSharper disable All
 			if(!string.IsNullOrEmpty(employeeHsaId))

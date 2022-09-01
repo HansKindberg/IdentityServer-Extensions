@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using RegionOrebroLan.Localization.Extensions;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
 using RegionOrebroLan.Web.Authentication.DirectoryServices;
@@ -113,7 +112,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			var issuer = allCommissionsClaim?.Issuer;
 			var originalIssuer = allCommissionsClaim?.OriginalIssuer;
 
-			await this.PopulateClaimsAsync(claims, issuer, originalIssuer, nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant(), employeeHsaId).ConfigureAwait(false);
+			await this.PopulateClaimsAsync(claims, issuer, originalIssuer, this.EmployeeHsaIdClaimType, employeeHsaId).ConfigureAwait(false);
 
 			foreach(var activeDirectoryClaimType in this.ActiveDirectoryMap.Values.Distinct(StringComparer.OrdinalIgnoreCase))
 			{
