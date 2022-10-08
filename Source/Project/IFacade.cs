@@ -12,6 +12,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using RegionOrebroLan.Web.Authentication.Configuration;
 using RegionOrebroLan.Web.Authentication.Decoration;
 
 namespace HansKindberg.IdentityServer
@@ -20,6 +21,7 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Properties
 
+		IOptionsMonitor<ExtendedAuthenticationOptions> Authentication { get; }
 		IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		IAuthorizationResolver AuthorizationResolver { get; }
 		IClaimsSelectionContextAccessor ClaimsSelectionContextAccessor { get; }

@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
 using RegionOrebroLan.Web.Authentication;
+using RegionOrebroLan.Web.Authentication.Configuration;
 using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
@@ -26,7 +27,16 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 	{
 		#region Constructors
 
-		public AuthenticateController(IFacade facade) : base(facade) { }
+		public AuthenticateController(IFacade facade) : base(facade)
+		{
+			this.Authentication = ((facade ?? throw new ArgumentNullException(nameof(facade))).Authentication ?? throw new ArgumentException("The authentication-property can not be null.", nameof(facade))).CurrentValue;
+		}
+
+		#endregion
+
+		#region Properties
+
+		protected internal virtual ExtendedAuthenticationOptions Authentication { get; }
 
 		#endregion
 

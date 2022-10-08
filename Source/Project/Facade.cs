@@ -16,6 +16,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using RegionOrebroLan.Web.Authentication.Configuration;
 using RegionOrebroLan.Web.Authentication.Decoration;
 
 namespace HansKindberg.IdentityServer
@@ -24,8 +25,9 @@ namespace HansKindberg.IdentityServer
 	{
 		#region Constructors
 
-		public Facade(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClaimsSelectionContextAccessor claimsSelectionContextAccessor, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
+		public Facade(IOptionsMonitor<ExtendedAuthenticationOptions> authentication, IAuthenticationSchemeRetriever authenticationSchemeRetriever, IAuthorizationResolver authorizationResolver, IClaimsSelectionContextAccessor claimsSelectionContextAccessor, IClientStore clientStore, IDecorationLoader decorationLoader, IEventService events, IOptionsMonitor<ExceptionHandlingOptions> exceptionHandling, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, IIdentityFacade identity, IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, IIdentityServerInteractionService interaction, IStringLocalizerFactory localizerFactory, ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService, IOptionsMonitor<RequestLocalizationOptions> requestLocalization, IServiceProvider serviceProvider, IUriFactory uriFactory)
 		{
+			this.Authentication = authentication ?? throw new ArgumentNullException(nameof(authentication));
 			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
 			this.AuthorizationResolver = authorizationResolver ?? throw new ArgumentNullException(nameof(authorizationResolver));
 			this.ClaimsSelectionContextAccessor = claimsSelectionContextAccessor ?? throw new ArgumentNullException(nameof(claimsSelectionContextAccessor));
@@ -56,6 +58,7 @@ namespace HansKindberg.IdentityServer
 
 		#region Properties
 
+		public virtual IOptionsMonitor<ExtendedAuthenticationOptions> Authentication { get; }
 		public virtual IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		public virtual IAuthorizationResolver AuthorizationResolver { get; }
 		public virtual IClaimsSelectionContextAccessor ClaimsSelectionContextAccessor { get; }
