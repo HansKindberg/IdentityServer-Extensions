@@ -139,7 +139,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
 				}
 
-				certificatePrincipal = this.CreateClaimsPrincipal(authenticationScheme, claims);
+				certificatePrincipal = await this.CreateClaimsPrincipalAsync(authenticationScheme, claims);
 			}
 
 			await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, certificatePrincipal, authenticationProperties);
@@ -185,12 +185,12 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return authenticationProperties;
 		}
 
-		protected internal virtual ClaimsPrincipal CreateClaimsPrincipal(string authenticationScheme, IClaimBuilderCollection claims)
+		protected internal virtual async Task<ClaimsPrincipal> CreateClaimsPrincipalAsync(string authenticationScheme, IClaimBuilderCollection claims)
 		{
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
 
-			return new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationScheme, claims.FindFirstNameClaim()?.Type, claims.FindFirst(ClaimTypes.Role, JwtClaimTypes.Role)?.Type));
+			return await Task.FromResult(new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationScheme, claims.FindFirstNameClaim()?.Type, claims.FindFirst(ClaimTypes.Role, JwtClaimTypes.Role)?.Type)));
 		}
 
 		public virtual async Task<IActionResult> Negotiate(string authenticationScheme, string returnUrl)
@@ -216,7 +216,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
 				}
 
-				await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, this.CreateClaimsPrincipal(authenticationScheme, claims), authenticationProperties);
+				await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, await this.CreateClaimsPrincipalAsync(authenticationScheme, claims), authenticationProperties);
 
 				return this.Redirect(authenticationProperties.RedirectUri);
 			}
