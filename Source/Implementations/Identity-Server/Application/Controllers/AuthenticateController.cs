@@ -11,6 +11,7 @@ using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Http.Extensions;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -189,7 +190,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
 
-			return new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationScheme, claims.FindFirstNameClaim()?.Type, null));
+			return new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationScheme, claims.FindFirstNameClaim()?.Type, claims.FindFirst(ClaimTypes.Role, JwtClaimTypes.Role)?.Type));
 		}
 
 		public virtual async Task<IActionResult> Negotiate(string authenticationScheme, string returnUrl)
