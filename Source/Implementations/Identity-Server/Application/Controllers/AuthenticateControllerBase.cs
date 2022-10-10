@@ -17,6 +17,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<ExtendedIdentityServerUser> ResolveUserAsync(string authenticationScheme, IClaimBuilderCollection claims)
 		{
+			if(authenticationScheme == null)
+				throw new ArgumentNullException(nameof(authenticationScheme));
+
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
 
@@ -30,13 +33,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var uniqueIdentifier = uniqueIdentifierClaim.Value;
 			claims.Remove(uniqueIdentifierClaim);
 
-			var identityProviderClaim = claims.FindFirstIdentityProviderClaim();
-			var identityProvider = identityProviderClaim?.Value ?? authenticationScheme;
-
-			if(identityProviderClaim != null)
-				claims.Remove(identityProviderClaim);
-
-			var user = await this.Facade.Identity.ResolveUserAsync(claims, identityProvider, uniqueIdentifier);
+			var user = await this.Facade.Identity.ResolveUserAsync(claims, authenticationScheme, uniqueIdentifier);
 
 			var nameClaim = claims.FindFirstNameClaim();
 			var name = nameClaim?.Value;
@@ -48,7 +45,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			{
 				AdditionalClaims = claims.Build(),
 				DisplayName = name,
-				IdentityProvider = identityProvider,
+				IdentityProvider = authenticationScheme,
 				ProviderUserId = uniqueIdentifier
 			};
 		}
