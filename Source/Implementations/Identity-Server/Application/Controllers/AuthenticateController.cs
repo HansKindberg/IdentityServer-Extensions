@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
@@ -57,33 +58,41 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
 			}
 
-			var returnUrl = this.ResolveAndValidateReturnUrl(authenticateResult.Properties.Items[AuthenticationKeys.ReturnUrl]);
+			var returnUrl = this.ResolveAndValidateReturnUrl(authenticateResult.Properties?.Items[AuthenticationKeys.ReturnUrl]);
 
-			var authenticationScheme = authenticateResult.Properties.Items[AuthenticationKeys.Scheme];
+			var authenticationScheme = authenticateResult.Properties?.Items[AuthenticationKeys.Scheme];
 			await this.ValidateAuthenticationSchemeForClientAsync(authenticationScheme, returnUrl);
 
 			this.Logger.LogDebugIfEnabled($"Callback: authentication-sheme = \"{authenticationScheme}\", claims received = \"{string.Join(", ", authenticateResult.Principal.Claims.Select(claim => claim.Type))}\".");
 
 			var decorators = (await this.Facade.DecorationLoader.GetCallbackDecoratorsAsync(authenticationScheme)).ToArray();
 
-			if(!decorators.Any())
-				throw new InvalidOperationException($"There are no callback-decorators for authentication-scheme \"{authenticationScheme}\".");
-
 			var authenticationProperties = new AuthenticationProperties();
 			var claims = new ClaimBuilderCollection();
 
-			foreach(var decorator in decorators)
+			if(decorators.Any())
 			{
-				await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+				foreach(var decorator in decorators)
+				{
+					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
 
-				this.Logger.LogDebugIfEnabled($"Callback: {decorator.GetType().FullName}.DecorateAsync claims = \"{string.Join(", ", claims.Select(claim => claim.Type))}\".");
+					this.Logger.LogDebugIfEnabled($"Callback: {decorator.GetType().FullName}.DecorateAsync claims = \"{string.Join(", ", claims.Select(claim => claim.Type))}\".");
+				}
 			}
+			else
+			{
+				this.Logger.LogDebugIfEnabled($"There are no callback-decorators for authentication-scheme \"{authenticationScheme}\".");
+			}
+
+			await this.ResolveRequiredClaims(authenticateResult, authenticationScheme, claims);
 
 			await this.ConvertToJwtClaimsAsync(claims);
 
 			this.Logger.LogDebugIfEnabled($"Callback: converted to jwt-claims = \"{string.Join(", ", claims.Select(claim => claim.Type))}\".");
 
 			var user = await this.ResolveUserAsync(authenticationScheme, claims);
+
+			await this.ResolveAuthenticationLocally(authenticateResult, authenticationProperties, user);
 
 			await this.HttpContext.SignInAsync(user, authenticationProperties);
 
@@ -201,19 +210,81 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var authenticateResult = await this.HttpContext.AuthenticateAsync(authenticationScheme);
 
 			// ReSharper disable InvertIf
-			if(authenticateResult?.Principal is WindowsPrincipal)
+			if(authenticateResult.Succeeded)
 			{
-				var decorators = (await this.Facade.DecorationLoader.GetAuthenticationDecoratorsAsync(authenticationScheme)).ToArray();
-
-				if(!decorators.Any())
-					throw new InvalidOperationException($"There are no authentication-decorators for authentication-scheme \"{authenticationScheme}\".");
+				if(authenticateResult.Principal == null)
+					throw new InvalidOperationException("Succeeded authenticate-result but the principal is null.");
 
 				var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(authenticationScheme, returnUrl);
 				var claims = new ClaimBuilderCollection();
+				var decorators = (await this.Facade.DecorationLoader.GetAuthenticationDecoratorsAsync(authenticationScheme)).ToArray();
 
-				foreach(var decorator in decorators)
+				if(decorators.Any())
 				{
-					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+					foreach(var decorator in decorators)
+					{
+						await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+					}
+				}
+				else
+				{
+					var nameClaim = authenticateResult.Principal.Claims.FindFirstNameClaim();
+
+					if(nameClaim != null)
+						claims.Add(new ClaimBuilder(nameClaim));
+
+					var uniqueIdentifierClaim = authenticateResult.Principal.Claims.FindFirst(this.Authentication.Negotiate.UniqueIdentifierClaimType);
+
+					if(uniqueIdentifierClaim == null)
+						throw new InvalidOperationException($"Could not find an unique identifier claim. Claim-type uses as unique identifier claim-type is {this.Authentication.Negotiate.UniqueIdentifierClaimType.ToStringRepresentation()}.");
+
+					claims.Add(new ClaimBuilder { Type = ClaimTypes.NameIdentifier, Value = uniqueIdentifierClaim.Value });
+
+					if(this.Authentication.Negotiate.IncludeSecurityIdentifierClaim)
+					{
+						var securityIdentifierClaim = authenticateResult.Principal.Claims.FindFirst(ClaimTypes.PrimarySid);
+
+						if(securityIdentifierClaim != null)
+							claims.Add(new ClaimBuilder(securityIdentifierClaim));
+					}
+
+					if(this.Authentication.Negotiate.IncludeNameClaimAsWindowsAccountNameClaim && nameClaim != null)
+						claims.Add(new ClaimBuilder { Type = ClaimTypes.WindowsAccountName, Value = nameClaim.Value });
+
+					if(this.Authentication.Negotiate.Roles.Include)
+					{
+						/*
+							If there are many roles and we save the principal in the authentication-cookie we may get an error:
+							Bad Request - Request Too Long: HTTP Error 400. The size of the request headers is too long.
+
+							We can handle that by implementing a CookieAuthenticationOptions.SessionStore (ITicketStore).
+
+							Still, it is not recommended to save roles as claims. Identity vs Permissions: https://leastprivilege.com/2016/12/16/identity-vs-permissions/
+						*/
+						var roles = new List<string>();
+
+						foreach(var roleClaim in authenticateResult.Principal.Claims.Find(this.Authentication.Negotiate.Roles.ClaimType))
+						{
+							var role = roleClaim.Value;
+
+							if(this.Authentication.Negotiate.Roles.Translate && OperatingSystem.IsWindows())
+							{
+								var securityIdentifier = new SecurityIdentifier(role);
+								role = securityIdentifier.Translate(typeof(NTAccount)).Value;
+							}
+
+							roles.Add(role);
+						}
+
+						roles.Sort();
+
+						// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+						foreach(var role in roles)
+						{
+							claims.Add(new ClaimBuilder { Type = ClaimTypes.Role, Value = role });
+						}
+						// ReSharper restore ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+					}
 				}
 
 				await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, await this.CreateClaimsPrincipalAsync(authenticationScheme, claims), authenticationProperties);
@@ -244,6 +315,86 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			await this.ValidateAuthenticationSchemeForClientAsync(authenticationScheme, returnUrl);
 
 			return returnUrl;
+		}
+
+		protected internal virtual async Task ResolveAuthenticationLocally(AuthenticateResult authenticateResult, AuthenticationProperties authenticationProperties, ExtendedIdentityServerUser user)
+		{
+			if(authenticateResult == null)
+				throw new ArgumentNullException(nameof(authenticateResult));
+
+			if(authenticationProperties == null)
+				throw new ArgumentNullException(nameof(authenticationProperties));
+
+			if(user == null)
+				throw new ArgumentNullException(nameof(user));
+
+			await Task.CompletedTask;
+
+			// If the external provider issued an id_token, we'll keep it for sign-out.
+			var identityToken = authenticateResult.Properties?.GetTokenValue(OidcConstants.TokenTypes.IdentityToken);
+
+			if(identityToken != null)
+			{
+				authenticationProperties.StoreTokens(new[] { new AuthenticationToken { Name = OidcConstants.TokenTypes.IdentityToken, Value = identityToken } });
+				this.Logger.LogDebugIfEnabled("An identity-token was added.");
+			}
+			else
+			{
+				this.Logger.LogDebugIfEnabled("No identity-token to add.");
+			}
+
+			// If the external provider sent a session id claim, we'll copy it over for sign-out.
+			var sessionIdClaim = authenticateResult.Principal?.Claims.FirstOrDefault(claim => string.Equals(JwtClaimTypes.SessionId, claim.Type, StringComparison.OrdinalIgnoreCase));
+
+			if(sessionIdClaim != null)
+			{
+				user.AdditionalClaims.Add(new Claim(JwtClaimTypes.SessionId, sessionIdClaim.Value));
+				this.Logger.LogDebugIfEnabled("A session-id-claim was added.");
+			}
+			else
+			{
+				this.Logger.LogDebugIfEnabled("No session-id-claim to add.");
+			}
+		}
+
+		protected internal virtual async Task ResolveRequiredClaims(AuthenticateResult authenticateResult, string authenticationScheme, IClaimBuilderCollection claims)
+		{
+			if(authenticateResult == null)
+				throw new ArgumentNullException(nameof(authenticateResult));
+
+			if(claims == null)
+				throw new ArgumentNullException(nameof(claims));
+
+			await Task.CompletedTask;
+
+			var uniqueIdentifierClaim = claims.FindFirstUniqueIdentifierClaim();
+
+			if(uniqueIdentifierClaim == null)
+			{
+				var principalUniqueIdentifierClaim = authenticateResult.Principal?.Claims.FindFirstUniqueIdentifierClaim();
+
+				if(principalUniqueIdentifierClaim != null)
+				{
+					uniqueIdentifierClaim = new ClaimBuilder(principalUniqueIdentifierClaim);
+					claims.Add(uniqueIdentifierClaim);
+				}
+			}
+
+			if(uniqueIdentifierClaim == null)
+				throw new InvalidOperationException($"There is no unique-identifier-claim for authentication-scheme \"{authenticationScheme}\".");
+
+			var nameClaim = claims.FindFirstNameClaim();
+
+			if(nameClaim == null)
+			{
+				var principalNameClaim = authenticateResult.Principal?.Claims.FindFirstNameClaim();
+
+				if(principalNameClaim != null)
+				{
+					nameClaim = new ClaimBuilder(principalNameClaim);
+					claims.Add(nameClaim);
+				}
+			}
 		}
 
 		protected internal virtual async Task ValidateAuthenticationSchemeAsync(AuthenticationSchemeKind expectedKind, string name)

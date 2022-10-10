@@ -162,9 +162,13 @@
 						<information>Det finns inte några giltiga inloggnings-sätt för denna klient.</information>
 					</no-available-authentication-alternatives>
 					<SithsCertificate>
-						<heading>SITHS-certifikat</heading>
+						<heading>SITHS certifikat</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</SithsCertificate>
+					<TestSithsCertificate>
+						<heading>Test SITHS certifikat</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</TestSithsCertificate>
 					<Windows>
 						<heading>Windows-inloggning</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>

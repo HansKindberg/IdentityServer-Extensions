@@ -162,9 +162,13 @@
 						<information>There are no valid signin methods for this client.</information>
 					</no-available-authentication-alternatives>
 					<SithsCertificate>
-						<heading>SITHS-certificate</heading>
+						<heading>SITHS certificate</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
 					</SithsCertificate>
+					<TestSithsCertificate>
+						<heading>Test SITHS certificate</heading>
+						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
+					</TestSithsCertificate>
 					<Windows>
 						<heading>Windows</heading>
 						<information>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</information>
