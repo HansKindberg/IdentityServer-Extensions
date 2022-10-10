@@ -39,7 +39,10 @@ namespace UnitTests.Security.Claims
 		{
 			activeDirectoryAttributes ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 			var activeDirectoryMock = new Mock<IActiveDirectory>();
+			// TODO: Fix this (GetUserAttributesAsync / multiple hits)
+#pragma warning disable CS0618 // Type or member is obsolete
 			activeDirectoryMock.Setup(activeDirectory => activeDirectory.GetAttributesAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<string>(), It.IsAny<IdentifierKind>())).Returns(Task.FromResult(activeDirectoryAttributes));
+#pragma warning restore CS0618 // Type or member is obsolete
 			var activeDirectory = activeDirectoryMock.Object;
 
 			var claimsPrincipal = await this.CreateClaimsPrincipalAsync(claims, isAuthenticated);

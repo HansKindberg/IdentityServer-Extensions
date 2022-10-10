@@ -73,7 +73,10 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			const string issuer = "Active Directory";
 			var samAccountName = employeeHsaId.Substring(this.SamAccountNamePrefix.Length);
 
+			// TODO: Fix this (GetUserAttributesAsync / multiple hits)
+#pragma warning disable CS0618 // Type or member is obsolete
 			var attributes = await this.ActiveDirectory.GetAttributesAsync(this.ActiveDirectoryMap.Keys, samAccountName, IdentifierKind.SamAccountName).ConfigureAwait(false);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			foreach(var (attributeName, claimType) in this.ActiveDirectoryMap)
 			{
