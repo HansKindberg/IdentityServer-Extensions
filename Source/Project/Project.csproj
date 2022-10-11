@@ -38,7 +38,7 @@
 		<PackageReference Include="RegionOrebroLan.Configuration" Version="0.0.8-alpha" />
 		<PackageReference Include="RegionOrebroLan.DataProtection" Version="0.0.10-alpha" />
 		<PackageReference Include="RegionOrebroLan.Localization" Version="1.0.0-alpha" />
-		<PackageReference Include="RegionOrebroLan.Web.Authentication" Version="0.8.0-alpha" />
+		<PackageReference Include="RegionOrebroLan.Web.Authentication" Version="0.8.1-alpha" />
 		<PackageReference Include="RegionOrebroLan.Web.Authentication.Cookies" Version="0.0.4-alpha" />
 		<PackageReference Include="RegionOrebroLan.Web.Authentication.OpenIdConnect" Version="0.1.0-alpha" />
 		<PackageReference Include="Rsk.Saml" Version="4.3.1" />
