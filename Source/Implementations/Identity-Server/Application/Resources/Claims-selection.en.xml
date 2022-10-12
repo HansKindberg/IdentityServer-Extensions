@@ -4,12 +4,12 @@
 			<claimsSelectionController>
 				<errors>
 					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
 							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</inera>
 					<update-sign-in-error>An unexpected error has occurred.</update-sign-in-error>
 				</errors>
@@ -28,26 +28,26 @@
 				<form>
 					<cancel>Cancel</cancel>
 					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-							<commission>
+						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+							<county>
 								<commissionName>Name</commissionName>
 								<commissionPurpose>Purpose</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Select a commission</heading>
 								<healthCareProviderName>Healthcare provider</healthCareProviderName>
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</commission>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
-							<commission>
+							</county>
+						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+							<county>
 								<commissionName>Name</commissionName>
 								<commissionPurpose>Purpose</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Select a commission</heading>
 								<healthCareProviderName>Healthcare provider</healthCareProviderName>
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</commission>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							</county>
+						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</inera>
 					<submit>Save</submit>
 				</form>

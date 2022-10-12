@@ -1,0 +1,164 @@
+[
+	{
+		"employeeHsaId": "TEST123456-e001",
+		"commissionName": "Commission 1",
+		"commissionHsaId": "TEST123456-c001",
+		"commissionPurpose": "Purpose 1",
+		"healthCareUnitHsaId": "TEST123456-hu01",
+		"healthCareUnitName": "Healthcare unit 1",
+		"healthCareUnitStartDate": {
+			"year": 2000,
+			"month": 1,
+			"day": 1
+		},
+		"healthCareProviderHsaId": "TEST123456-hp03",
+		"healthCareProviderName": "Healthcare provider 3",
+		"healthCareProviderOrgNo": "TEST123456",
+		"commissionRights": [
+			{
+				"activity": "AB",
+				"informationClass": "a1",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a2",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a3",
+				"scope": "AB"
+			}
+		]
+	},
+	{
+		"employeeHsaId": "TEST123456-e001",
+		"commissionName": "Commission 2",
+		"commissionHsaId": "TEST123456-c002",
+		"commissionPurpose": "Purpose 2",
+		"healthCareUnitHsaId": "TEST123456-hu02",
+		"healthCareUnitName": "Healthcare unit 2",
+		"healthCareUnitStartDate": {
+			"year": 2000,
+			"month": 1,
+			"day": 1
+		},
+		"healthCareProviderHsaId": "TEST123456-hp02",
+		"healthCareProviderName": "Healthcare provider 2",
+		"healthCareProviderOrgNo": "TEST123456",
+		"commissionRights": [
+			{
+				"activity": "AB",
+				"informationClass": "a1",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a2",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a3",
+				"scope": "AB"
+			}
+		]
+	},
+	{
+		"employeeHsaId": "TEST123456-e001",
+		"commissionName": "Commission 3",
+		"commissionHsaId": "TEST123456-c003",
+		"commissionPurpose": "Purpose 3",
+		"healthCareUnitHsaId": "TEST123456-hu03",
+		"healthCareUnitName": "Healthcare unit 3",
+		"healthCareUnitStartDate": {
+			"year": 2000,
+			"month": 1,
+			"day": 1
+		},
+		"healthCareProviderHsaId": "TEST123456-hp03",
+		"healthCareProviderName": "Healthcare provider 3",
+		"healthCareProviderOrgNo": "TEST123456",
+		"commissionRights": [
+			{
+				"activity": "AB",
+				"informationClass": "a1",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a2",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a3",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a4",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a5",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a6",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a7",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a8",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a9",
+				"scope": "AB"
+			}
+		]
+	},
+	{
+		"employeeHsaId": "TEST123456-e002",
+		"commissionName": "Commission 4",
+		"commissionHsaId": "TEST123456-c004",
+		"commissionPurpose": "Purpose 4",
+		"healthCareUnitHsaId": "TEST123456-hu04",
+		"healthCareUnitName": "Healthcare unit 4",
+		"healthCareUnitStartDate": {
+			"year": 2000,
+			"month": 1,
+			"day": 1
+		},
+		"healthCareProviderHsaId": "TEST123456-hp04",
+		"healthCareProviderName": "Healthcare provider 4",
+		"healthCareProviderOrgNo": "TEST123456",
+		"commissionRights": [
+			{
+				"activity": "AB",
+				"informationClass": "a1",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a2",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a3",
+				"scope": "AB"
+			}
+		]
+	}
+]

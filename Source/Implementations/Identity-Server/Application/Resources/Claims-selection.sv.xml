@@ -4,12 +4,12 @@
 			<claimsSelectionController>
 				<errors>
 					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
+						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
 							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</inera>
 					<update-sign-in-error>Ett oväntat fel har inträffat.</update-sign-in-error>
 				</errors>
@@ -28,26 +28,26 @@
 				<form>
 					<cancel>Avbryt</cancel>
 					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-							<commission>
+						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+							<county>
 								<commissionName>Namn</commissionName>
 								<commissionPurpose>Syfte</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Välj ett medarbetaruppdrag</heading>
 								<healthCareProviderName>Vårdgivare</healthCareProviderName>
 								<healthCareUnitName>Vårdenhet</healthCareUnitName>
-							</commission>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyClaimsSelector>
-						<HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
-							<commission>
+							</county>
+						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+							<county>
 								<commissionName>Namn</commissionName>
 								<commissionPurpose>Syfte</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Välj ett medarbetaruppdrag</heading>
 								<healthCareProviderName>Vårdgivare</healthCareProviderName>
 								<healthCareUnitName>Vårdenhet</healthCareUnitName>
-							</commission>
-						</HansKindberg_IdentityServer_Security_Claims_FakeCountyCommissionClaimsSelector>
+							</county>
+						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</inera>
 					<submit>Spara</submit>
 				</form>

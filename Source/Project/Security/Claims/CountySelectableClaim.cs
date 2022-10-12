@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using HansKindberg.IdentityServer.Security.Claims.County;
+using Newtonsoft.Json;
+using RegionOrebroLan.Localization.Extensions;
+using RegionOrebroLan.Security.Claims;
 
 namespace HansKindberg.IdentityServer.Security.Claims
 {
@@ -21,18 +24,19 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Constructors
 
-		public CountySelectableClaim(Commission commission, string employeeHsaId, string group)
+		public CountySelectableClaim(string claimTypePrefix, string group, bool presentEmployeeHsaId, Selection selection)
 		{
-			this.Commission = commission;
-			this.EmployeeHsaId = employeeHsaId ?? throw new ArgumentNullException(nameof(employeeHsaId));
+			this.ClaimTypePrefix = claimTypePrefix;
 			this.Group = group ?? throw new ArgumentNullException(nameof(group));
+			this.PresentEmployeeHsaId = presentEmployeeHsaId;
+			this.Selection = selection ?? throw new ArgumentNullException(nameof(selection));
 		}
 
 		#endregion
 
 		#region Properties
 
-		public virtual Commission Commission { get; }
+		protected internal virtual string ClaimTypePrefix { get; }
 		public virtual char Delimiter => _delimiter;
 
 		public virtual IReadOnlyDictionary<string, string> Details
@@ -44,15 +48,15 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				{
 					var details = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 					{
-						{ nameof(Commission.EmployeeHsaId), this.EmployeeHsaId }
+						{ nameof(Commission.EmployeeHsaId), this.Selection.EmployeeHsaId }
 					};
 
-					if(this.Commission != null)
+					if(this.Selection.Commission != null)
 					{
-						details.Add(nameof(Commission.CommissionName), this.Commission.CommissionName);
-						details.Add(nameof(Commission.HealthCareUnitName), this.Commission.HealthCareUnitName);
-						details.Add(nameof(Commission.CommissionPurpose), this.Commission.CommissionPurpose);
-						details.Add(nameof(Commission.HealthCareProviderName), this.Commission.HealthCareProviderName);
+						details.Add(nameof(Commission.CommissionName), this.Selection.Commission.CommissionName);
+						details.Add(nameof(Commission.HealthCareUnitName), this.Selection.Commission.HealthCareUnitName);
+						details.Add(nameof(Commission.CommissionPurpose), this.Selection.Commission.CommissionPurpose);
+						details.Add(nameof(Commission.HealthCareProviderName), this.Selection.Commission.HealthCareProviderName);
 					}
 
 					this._details = new ReadOnlyDictionary<string, string>(details);
@@ -63,7 +67,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 		}
 
-		public virtual string EmployeeHsaId { get; }
 		public virtual string Group { get; }
 
 		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
@@ -77,7 +80,9 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 		}
 
+		protected internal virtual bool PresentEmployeeHsaId { get; }
 		public virtual bool Selected { get; set; }
+		public virtual Selection Selection { get; }
 
 		public virtual string Text
 		{
@@ -85,13 +90,13 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			{
 				this._text ??= new Lazy<string>(() =>
 				{
-					var parts = new List<string>
-					{
-						this.EmployeeHsaId
-					};
+					var parts = new List<string>();
 
-					if(this.Commission != null)
-						parts.Add(this.Commission.CommissionName);
+					if(this.PresentEmployeeHsaId)
+						parts.Add(this.Selection.EmployeeHsaId);
+
+					if(this.Selection.Commission != null)
+						parts.Add(this.Selection.Commission.CommissionName);
 
 					return string.Join($"{this.Delimiter} ", parts);
 				});
@@ -108,17 +113,73 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				{
 					var parts = new List<string>
 					{
-						this.EmployeeHsaId
+						this.Selection.EmployeeHsaId
 					};
 
-					if(this.Commission != null)
-						parts.Add(this.Commission.CommissionHsaId);
+					if(this.Selection.Commission != null)
+						parts.Add(this.Selection.Commission.CommissionHsaId);
 
 					return string.Join(this.Delimiter, parts);
 				});
 
 				return this._value.Value;
 			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		public virtual IClaimBuilderCollection Build()
+		{
+			var claims = new ClaimBuilderCollection();
+
+			this.PopulateClaims(claims, nameof(Commission.CommissionHsaId), this.Selection.Commission?.CommissionHsaId);
+			this.PopulateClaims(claims, nameof(Commission.CommissionName), this.Selection.Commission?.CommissionName);
+			this.PopulateClaims(claims, nameof(Commission.CommissionPurpose), this.Selection.Commission?.CommissionPurpose);
+
+			if(this.Selection.Commission != null)
+			{
+				foreach(var commissionRigth in this.Selection.Commission.CommissionRights)
+				{
+					this.PopulateClaims(claims, nameof(CommissionRight), JsonConvert.SerializeObject(commissionRigth));
+				}
+			}
+
+			this.PopulateClaims(claims, nameof(Commission.EmployeeHsaId), this.Selection.EmployeeHsaId);
+			this.PopulateClaims(claims, nameof(Selection.GivenName), this.Selection.GivenName);
+
+			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderHsaId), this.Selection.Commission?.HealthCareProviderHsaId);
+			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderName), this.Selection.Commission?.HealthCareProviderName);
+			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderOrgNo), this.Selection.Commission?.HealthCareProviderOrgNo);
+			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitHsaId), this.Selection.Commission?.HealthCareUnitHsaId);
+			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitName), this.Selection.Commission?.HealthCareUnitName);
+			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitStartDate), JsonConvert.SerializeObject(this.Selection.Commission?.HealthCareUnitStartDate));
+
+			this.PopulateClaims(claims, nameof(Selection.Mail), this.Selection.Mail);
+			this.PopulateClaims(claims, nameof(Selection.PaTitleCode), this.Selection.PaTitleCode);
+			this.PopulateClaims(claims, nameof(Selection.PersonalIdentityNumber), this.Selection.PersonalIdentityNumber);
+			this.PopulateClaims(claims, nameof(Selection.PersonalPrescriptionCode), this.Selection.PersonalPrescriptionCode);
+			this.PopulateClaims(claims, nameof(Selection.Surname), this.Selection.Surname);
+			this.PopulateClaims(claims, nameof(Selection.SystemRole), this.Selection.SystemRole);
+
+			return claims;
+		}
+
+		protected internal virtual void PopulateClaims(IClaimBuilderCollection claims, string propertyName, string value)
+		{
+			if(claims == null)
+				throw new ArgumentNullException(nameof(claims));
+
+			if(propertyName == null)
+				throw new ArgumentNullException(nameof(propertyName));
+
+			if(string.IsNullOrEmpty(value))
+				return;
+
+			var claim = new ClaimBuilder { Type = $"{this.ClaimTypePrefix}{propertyName.FirstCharacterToLowerInvariant()}", Value = value };
+
+			claims.Add(claim);
 		}
 
 		#endregion

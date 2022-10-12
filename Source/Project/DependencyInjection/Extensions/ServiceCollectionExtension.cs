@@ -113,12 +113,10 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			services.TryAddScoped<IClaimsSelectionContextAccessor, ClaimsSelectionContextAccessor>();
 			services.TryAddSingleton<IClaimsSelectorLoader, ClaimsSelectorLoader>();
 			// Each claims-selector (IClaimsSelector) declared in appsettings.json must be registered as transient.
-			services.TryAddTransient<CountyClaimsSelector>();
-			services.TryAddTransient<CountyCommissionClaimsSelector>();
-			// todo: Maybe remove later services.TryAddTransient<FakeCountyClaimsSelector>() & services.TryAddTransient<FakeCountyCommissionClaimsSelector>().
+			services.TryAddTransient<ClaimBasedCountySelector>();
+			// todo: Maybe remove later services.TryAddTransient<FakeClaimBasedCountySelector>().
 #pragma warning disable CS0618 // Type or member is obsolete
-			services.TryAddTransient<FakeCountyClaimsSelector>();
-			services.TryAddTransient<FakeCountyCommissionClaimsSelector>();
+			services.TryAddTransient<FakeClaimBasedCountySelector>();
 #pragma warning restore CS0618 // Type or member is obsolete
 
 			return services;

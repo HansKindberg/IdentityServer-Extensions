@@ -255,7 +255,8 @@
 			"applicationUrl": "https://localhost:6001",
 			"commandName": "Project",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Kestrel",
+				//"ASPNETCORE_ENVIRONMENT": "Kestrel",
+				"ASPNETCORE_ENVIRONMENT": "Development",
 				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
 			},
 			"launchBrowser": true

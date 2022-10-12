@@ -1,0 +1,14 @@
+[
+	{
+		"hsa_identity": "TEST123456-e001"
+	},
+	{
+		"hsa_identity": "TEST123456-e002"
+	},
+	{
+		"selected_commissionHsaId": "TEST123456-c004"
+	},
+	{
+		"selected_employeeHsaId": "TEST123456-e002"
+	}
+]
