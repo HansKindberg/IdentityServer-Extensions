@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,7 +29,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Methods
 
-		public abstract Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(IClaimsSelectionResult selectionResult);
+		public abstract Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(ClaimsPrincipal claimsPrincipal, IClaimsSelectionResult selectionResult);
 
 		public virtual async Task InitializeAsync(IConfiguration optionsConfiguration)
 		{
@@ -37,7 +38,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			await Task.CompletedTask.ConfigureAwait(false);
 		}
 
-		public abstract Task<IClaimsSelectionResult> SelectAsync(IDictionary<string, string> selections);
+		public abstract Task<IClaimsSelectionResult> SelectAsync(ClaimsPrincipal claimsPrincipal, IDictionary<string, string> selections);
 
 		#endregion
 	}

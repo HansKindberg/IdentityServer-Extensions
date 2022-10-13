@@ -98,7 +98,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					}
 				}
 
-				var result = await claimsSelector.SelectAsync(selections);
+				var result = await claimsSelector.SelectAsync(this.User, selections);
 
 				model.Results.Add(result);
 
@@ -220,7 +220,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			foreach(var result in claimsSelectionResults)
 			{
-				var selectedClaims = await result.Selector.GetClaimsAsync(result);
+				var selectedClaims = await result.Selector.GetClaimsAsync(this.User, result);
 
 				foreach(var selectedClaimType in selectedClaims.Keys)
 				{

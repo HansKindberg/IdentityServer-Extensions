@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Duende.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Security.Claims.County;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Localization.Extensions;
 using RegionOrebroLan.Security.Claims;
@@ -25,10 +23,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Constructors
 
-		protected CountySelectorBase(IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory) : base(loggerFactory)
-		{
-			this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-		}
+		protected CountySelectorBase(ILoggerFactory loggerFactory) : base(loggerFactory) { }
 
 		#endregion
 
@@ -36,7 +31,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		public virtual string EmployeeHsaIdClaimType { get; set; } = _employeeHsaIdClaimType;
 		protected internal virtual string Group => _group;
-		protected internal virtual IHttpContextAccessor HttpContextAccessor { get; }
 		public virtual string SelectedClaimTypePrefix { get; set; } = _selectedClaimTypePrefix;
 
 		#endregion
@@ -90,8 +84,11 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			selectedSelectable.Selected = true;
 		}
 
-		public override async Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(IClaimsSelectionResult selectionResult)
+		public override async Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(ClaimsPrincipal claimsPrincipal, IClaimsSelectionResult selectionResult)
 		{
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
 			if(selectionResult == null)
 				throw new ArgumentNullException(nameof(selectionResult));
 
@@ -100,14 +97,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 			if(!selectionResult.Complete)
 				throw new InvalidOperationException("The selection is not complete.");
-
-			var httpContext = this.HttpContextAccessor.HttpContext;
-
-			if(httpContext == null)
-				throw new InvalidOperationException("The http-context is null.");
-
-			if(!httpContext.User.IsAuthenticated())
-				throw new InvalidOperationException("The http-context-user is not authenticated.");
 
 			if(!selectionResult.Selectables.TryGetValue(this.Group, out var selectables))
 				throw new InvalidOperationException($"There is no selectable with key \"{this.Group}\".");
@@ -167,24 +156,19 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		protected internal abstract Task<IList<Selection>> GetSelectionsAsync(ClaimsPrincipal claimsPrincipal);
 
-		public override async Task<IClaimsSelectionResult> SelectAsync(IDictionary<string, string> selections)
+		public override async Task<IClaimsSelectionResult> SelectAsync(ClaimsPrincipal claimsPrincipal, IDictionary<string, string> selections)
 		{
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
 			if(selections == null)
 				throw new ArgumentNullException(nameof(selections));
 
-			var httpContext = this.HttpContextAccessor.HttpContext;
-
-			if(httpContext == null)
-				throw new InvalidOperationException("The http-context is null.");
-
-			if(!httpContext.User.IsAuthenticated())
-				throw new InvalidOperationException("The http-context-user is not authenticated.");
-
-			var employeeHsaIds = await this.GetEmployeeHsaIdsAsync(httpContext.User).ConfigureAwait(false);
+			var employeeHsaIds = await this.GetEmployeeHsaIdsAsync(claimsPrincipal).ConfigureAwait(false);
 			var result = new ClaimsSelectionResult(this);
 			var selectables = new List<CountySelectableClaim>();
 
-			foreach(var selection in await this.GetSelectionsAsync(httpContext.User).ConfigureAwait(false))
+			foreach(var selection in await this.GetSelectionsAsync(claimsPrincipal).ConfigureAwait(false))
 			{
 				var selectable = new CountySelectableClaim(this.SelectedClaimTypePrefix, this.Group, employeeHsaIds.Count > 1, selection);
 
@@ -195,7 +179,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 
 			if(!selectables.Any(selectable => selectable.Selected))
-				await this.DetermineSelectedFromClaimsAsync(httpContext.User, selectables).ConfigureAwait(false);
+				await this.DetermineSelectedFromClaimsAsync(claimsPrincipal, selectables).ConfigureAwait(false);
 
 			if(selectables.Any())
 				result.Selectables.Add(this.Group, new List<ISelectableClaim>(selectables));

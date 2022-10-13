@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Security.Claims.County;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
+using TestHelpers.Mocks.Logging;
 using TestHelpers.Security.Claims;
 
 namespace UnitTests.Security.Claims
@@ -18,42 +20,40 @@ namespace UnitTests.Security.Claims
 	{
 		#region Methods
 
-		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync()
+		protected internal virtual async Task<ClaimsPrincipal> CreateClaimsPrincipalAsync(string claimsFileName, string authenticationType = "Test")
 		{
-			return await this.CreateCountySelectorBaseAsync(Mock.Of<IHttpContextAccessor>(), Mock.Of<ILoggerFactory>(), Enumerable.Empty<Selection>().ToList());
+			var claimsFileContent = await File.ReadAllTextAsync(Path.Combine(this.ResourceDirectoryPath, $"{claimsFileName}.json"));
+			var claimDictionaries = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(claimsFileContent);
+
+			var claims = new List<Claim>();
+
+			foreach(var claimDictionary in claimDictionaries ?? Enumerable.Empty<Dictionary<string, string>>())
+			{
+				foreach(var (key, value) in claimDictionary)
+				{
+					claims.Add(new Claim(key, value));
+				}
+			}
+
+			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims, authenticationType);
+
+			return claimsPrincipal;
 		}
 
-		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync(ClaimsPrincipal claimsPrincipal, IList<Selection> selections = null)
+		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync(string commissionsFileName, ILoggerFactory loggerFactory = null)
 		{
-			var httpContextMock = new Mock<HttpContext>();
-			httpContextMock.Setup(httpContext => httpContext.User).Returns(claimsPrincipal);
-			var httpContext = httpContextMock.Object;
-
-			var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-			httpContextAccessorMock.Setup(httpContextAccessor => httpContextAccessor.HttpContext).Returns(httpContext);
-			var httpContextAccessor = httpContextAccessorMock.Object;
-
-			return await this.CreateCountySelectorBaseAsync(httpContextAccessor, Mock.Of<ILoggerFactory>(), selections ?? Enumerable.Empty<Selection>().ToList());
-		}
-
-		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync(IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory, IList<Selection> selections)
-		{
-			var countySelectorBaseMock = new Mock<CountySelectorBase>(httpContextAccessor, loggerFactory) { CallBase = true };
-
-			countySelectorBaseMock.Setup(countySelectorBase => countySelectorBase.GetSelectionsAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(selections));
-
-			return await Task.FromResult(countySelectorBaseMock.Object);
-		}
-
-		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync(string claimsFileName, string commissionsFileName, string authenticationType = "Test", string commissionsClaimType = "commissions")
-		{
-			var claimsPrincipal = await this.CreateClaimsPrincipalAsync(claimsFileName, commissionsFileName, authenticationType, commissionsClaimType);
-
 			var selections = await this.CreateSelectionsAsync(commissionsFileName);
 
-			var countySelectorBase = await this.CreateCountySelectorBaseAsync(claimsPrincipal, selections);
+			return await this.CreateCountySelectorBaseAsync(loggerFactory, selections);
+		}
 
-			return countySelectorBase;
+		protected internal virtual async Task<CountySelectorBase> CreateCountySelectorBaseAsync(ILoggerFactory loggerFactory = null, IList<Selection> selections = null)
+		{
+			var countySelectorBaseMock = new Mock<CountySelectorBase>(loggerFactory ?? Mock.Of<ILoggerFactory>()) { CallBase = true };
+
+			countySelectorBaseMock.Setup(countySelectorBase => countySelectorBase.GetSelectionsAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(selections ?? new List<Selection>()));
+
+			return await Task.FromResult(countySelectorBaseMock.Object);
 		}
 
 		[TestMethod]
@@ -67,70 +67,74 @@ namespace UnitTests.Security.Claims
 		[TestMethod]
 		public async Task GetClaimsAsync_ShouldWorkProperly()
 		{
-			var countySelectorBase = await this.CreateCountySelectorBaseAsync("Claims-2", "Commissions-1");
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-1", loggerFactory);
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-2");
 
-			var result = await countySelectorBase.SelectAsync(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+				var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
-			var claims = await countySelectorBase.GetClaimsAsync(result);
+				var claims = await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
 
-			Assert.AreEqual(11, claims.Count);
+				Assert.AreEqual(11, claims.Count);
 
-			var (key, value) = claims.ElementAt(0);
-			Assert.AreEqual("selected_commissionHsaId", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_commissionHsaId", value.First().Type);
+				var (key, value) = claims.ElementAt(0);
+				Assert.AreEqual("selected_commissionHsaId", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_commissionHsaId", value.First().Type);
 
-			(key, value) = claims.ElementAt(1);
-			Assert.AreEqual("selected_commissionName", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_commissionName", value.First().Type);
+				(key, value) = claims.ElementAt(1);
+				Assert.AreEqual("selected_commissionName", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_commissionName", value.First().Type);
 
-			(key, value) = claims.ElementAt(2);
-			Assert.AreEqual("selected_commissionPurpose", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_commissionPurpose", value.First().Type);
+				(key, value) = claims.ElementAt(2);
+				Assert.AreEqual("selected_commissionPurpose", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_commissionPurpose", value.First().Type);
 
-			(key, value) = claims.ElementAt(3);
-			Assert.AreEqual("selected_commissionRight", key);
-			Assert.AreEqual(3, value.Count);
-			Assert.AreEqual("selected_commissionRight", value.First().Type);
-			Assert.AreEqual("selected_commissionRight", value.ElementAt(1).Type);
-			Assert.AreEqual("selected_commissionRight", value.ElementAt(2).Type);
+				(key, value) = claims.ElementAt(3);
+				Assert.AreEqual("selected_commissionRight", key);
+				Assert.AreEqual(3, value.Count);
+				Assert.AreEqual("selected_commissionRight", value.First().Type);
+				Assert.AreEqual("selected_commissionRight", value.ElementAt(1).Type);
+				Assert.AreEqual("selected_commissionRight", value.ElementAt(2).Type);
 
-			(key, value) = claims.ElementAt(4);
-			Assert.AreEqual("selected_employeeHsaId", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_employeeHsaId", value.First().Type);
+				(key, value) = claims.ElementAt(4);
+				Assert.AreEqual("selected_employeeHsaId", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_employeeHsaId", value.First().Type);
 
-			(key, value) = claims.ElementAt(5);
-			Assert.AreEqual("selected_healthCareProviderHsaId", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareProviderHsaId", value.First().Type);
+				(key, value) = claims.ElementAt(5);
+				Assert.AreEqual("selected_healthCareProviderHsaId", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareProviderHsaId", value.First().Type);
 
-			(key, value) = claims.ElementAt(6);
-			Assert.AreEqual("selected_healthCareProviderName", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareProviderName", value.First().Type);
+				(key, value) = claims.ElementAt(6);
+				Assert.AreEqual("selected_healthCareProviderName", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareProviderName", value.First().Type);
 
-			(key, value) = claims.ElementAt(7);
-			Assert.AreEqual("selected_healthCareProviderOrgNo", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareProviderOrgNo", value.First().Type);
+				(key, value) = claims.ElementAt(7);
+				Assert.AreEqual("selected_healthCareProviderOrgNo", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareProviderOrgNo", value.First().Type);
 
-			(key, value) = claims.ElementAt(8);
-			Assert.AreEqual("selected_healthCareUnitHsaId", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareUnitHsaId", value.First().Type);
+				(key, value) = claims.ElementAt(8);
+				Assert.AreEqual("selected_healthCareUnitHsaId", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareUnitHsaId", value.First().Type);
 
-			(key, value) = claims.ElementAt(9);
-			Assert.AreEqual("selected_healthCareUnitName", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareUnitName", value.First().Type);
+				(key, value) = claims.ElementAt(9);
+				Assert.AreEqual("selected_healthCareUnitName", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareUnitName", value.First().Type);
 
-			(key, value) = claims.ElementAt(10);
-			Assert.AreEqual("selected_healthCareUnitStartDate", key);
-			Assert.AreEqual(1, value.Count);
-			Assert.AreEqual("selected_healthCareUnitStartDate", value.First().Type);
+				(key, value) = claims.ElementAt(10);
+				Assert.AreEqual("selected_healthCareUnitStartDate", key);
+				Assert.AreEqual(1, value.Count);
+				Assert.AreEqual("selected_healthCareUnitStartDate", value.First().Type);
+			}
 		}
 
 		[TestMethod]
@@ -215,41 +219,45 @@ namespace UnitTests.Security.Claims
 		[TestMethod]
 		public async Task SelectAsync_ShouldWorkProperly()
 		{
-			// First test
-			var countySelectorBase = await this.CreateCountySelectorBaseAsync("Claims-1", "Commissions-1");
-
-			var result = await countySelectorBase.SelectAsync(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
-
-			Assert.IsNotNull(result);
-			Assert.IsFalse(result.Complete);
-			Assert.AreEqual(1, result.Selectables.Count);
-			Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
-
-			// Second test
-			var value = result.Selectables[countySelectorBase.Group].First().Value;
-			var selections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+			using(var loggerFactory = LoggerFactoryMock.Create())
 			{
-				{ countySelectorBase.Group, value }
-			};
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-1", loggerFactory);
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
 
-			result = await countySelectorBase.SelectAsync(selections);
+				// First test
+				var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
-			Assert.IsNotNull(result);
-			Assert.IsTrue(result.Complete);
-			Assert.AreEqual(1, result.Selectables.Count);
-			Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
-			Assert.IsTrue(result.Selectables[countySelectorBase.Group].First().Selected);
+				Assert.IsNotNull(result);
+				Assert.IsFalse(result.Complete);
+				Assert.AreEqual(1, result.Selectables.Count);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
 
-			// Third test
-			countySelectorBase = await this.CreateCountySelectorBaseAsync("Claims-2", "Commissions-1");
+				// Second test
+				var value = result.Selectables[countySelectorBase.Group].First().Value;
+				var selections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+				{
+					{ countySelectorBase.Group, value }
+				};
 
-			result = await countySelectorBase.SelectAsync(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+				result = await countySelectorBase.SelectAsync(claimsPrincipal, selections);
 
-			Assert.IsNotNull(result);
-			Assert.IsTrue(result.Complete);
-			Assert.AreEqual(1, result.Selectables.Count);
-			Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
-			Assert.IsTrue(result.Selectables[countySelectorBase.Group].Last().Selected);
+				Assert.IsNotNull(result);
+				Assert.IsTrue(result.Complete);
+				Assert.AreEqual(1, result.Selectables.Count);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
+				Assert.IsTrue(result.Selectables[countySelectorBase.Group].First().Selected);
+
+				// Third test
+				claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-2");
+
+				result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+
+				Assert.IsNotNull(result);
+				Assert.IsTrue(result.Complete);
+				Assert.AreEqual(1, result.Selectables.Count);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
+				Assert.IsTrue(result.Selectables[countySelectorBase.Group].Last().Selected);
+			}
 		}
 
 		[TestMethod]

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Security.Claims.County;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -25,7 +24,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Constructors
 
-		public FakeClaimBasedCountySelector(IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory) : base(httpContextAccessor, loggerFactory) { }
+		public FakeClaimBasedCountySelector(ILoggerFactory loggerFactory) : base(loggerFactory) { }
 
 		#endregion
 
