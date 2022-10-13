@@ -1,5 +1,4 @@
 using System;
-using Duende.IdentityServer;
 using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
@@ -12,8 +11,9 @@ namespace HansKindberg.IdentityServer.Configuration
 	{
 		#region Constructors
 
-		public PostConfigureInternalCookieAuthenticationOptions(ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService)
+		public PostConfigureInternalCookieAuthenticationOptions(IOptionsMonitor<ExtendedIdentityServerOptions> identityServer, ILoggerFactory loggerFactory, IMutualTlsService mutualTlsService)
 		{
+			this.IdentityServer = identityServer ?? throw new ArgumentNullException(nameof(identityServer));
 			this.Logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).CreateLogger(this.GetType());
 			this.MutualTlsService = mutualTlsService ?? throw new ArgumentNullException(nameof(mutualTlsService));
 		}
@@ -22,6 +22,7 @@ namespace HansKindberg.IdentityServer.Configuration
 
 		#region Properties
 
+		protected internal virtual IOptionsMonitor<ExtendedIdentityServerOptions> IdentityServer { get; }
 		protected internal virtual ILogger Logger { get; }
 		protected internal virtual IMutualTlsService MutualTlsService { get; }
 
@@ -34,7 +35,7 @@ namespace HansKindberg.IdentityServer.Configuration
 			if(options == null)
 				throw new ArgumentNullException(nameof(options));
 
-			if(!string.Equals(name, IdentityServerConstants.ExternalCookieAuthenticationScheme, StringComparison.OrdinalIgnoreCase))
+			if(!string.Equals(name, this.IdentityServer.CurrentValue.IntermediateCookieAuthenticationHandlers.Certificate.Name, StringComparison.OrdinalIgnoreCase))
 				return;
 
 			var issuerOrigin = this.MutualTlsService.GetIssuerOriginAsync().Result;

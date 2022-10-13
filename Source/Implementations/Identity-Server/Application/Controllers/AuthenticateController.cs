@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Stores;
+using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
@@ -32,6 +33,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		public AuthenticateController(IFacade facade) : base(facade)
 		{
 			this.Authentication = ((facade ?? throw new ArgumentNullException(nameof(facade))).Authentication ?? throw new ArgumentException("The authentication-property can not be null.", nameof(facade))).CurrentValue;
+			this.IdentityServer = (facade.IdentityServer ?? throw new ArgumentException("The identity-server-property can not be null.", nameof(facade))).CurrentValue;
 		}
 
 		#endregion
@@ -39,6 +41,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		#region Properties
 
 		protected internal virtual ExtendedAuthenticationOptions Authentication { get; }
+		protected internal virtual ExtendedIdentityServerOptions IdentityServer { get; }
 
 		#endregion
 
@@ -47,6 +50,11 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		public virtual async Task<IActionResult> Callback()
 		{
 			return await this.CallbackInternal(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+		}
+
+		public virtual async Task<IActionResult> CallbackCertificate()
+		{
+			return await this.CallbackInternal(this.IdentityServer.IntermediateCookieAuthenticationHandlers.Certificate.Name);
 		}
 
 		/// <summary>
@@ -146,7 +154,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			if(!authenticateResult.Succeeded)
 				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
 
-			var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(authenticationScheme, returnUrl);
+			var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(authenticationScheme, this.Url.Action(nameof(this.CallbackCertificate)), returnUrl);
 			var certificatePrincipal = authenticateResult.Principal;
 			var decorators = (await this.Facade.DecorationLoader.GetAuthenticationDecoratorsAsync(authenticationScheme)).ToArray();
 
@@ -162,7 +170,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				certificatePrincipal = await this.CreateClaimsPrincipalAsync(authenticationScheme, claims);
 			}
 
-			await this.HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, certificatePrincipal, authenticationProperties);
+			await this.HttpContext.SignInAsync(this.IdentityServer.IntermediateCookieAuthenticationHandlers.Certificate.Name, certificatePrincipal, authenticationProperties);
 
 			return this.Redirect(authenticationProperties.RedirectUri);
 		}
@@ -186,9 +194,14 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		protected internal virtual async Task<AuthenticationProperties> CreateAuthenticationPropertiesAsync(string authenticationScheme, string returnUrl)
 		{
+			return await this.CreateAuthenticationPropertiesAsync(authenticationScheme, this.Url.Action(nameof(this.Callback)), returnUrl);
+		}
+
+		protected internal virtual async Task<AuthenticationProperties> CreateAuthenticationPropertiesAsync(string authenticationScheme, string redirectUri, string returnUrl)
+		{
 			var authenticationProperties = new AuthenticationProperties
 			{
-				RedirectUri = this.Url.Action(nameof(this.Callback))
+				RedirectUri = redirectUri
 			};
 
 			if(await this.Facade.MutualTlsService.IsMtlsDomainRequestAsync(this.Request))
