@@ -17,6 +17,12 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	[Obsolete("Only for testing.")]
 	public class FakeClaimBasedCountySelector : CountySelectorBase
 	{
+		#region Fields
+
+		private const string _group = "FakeCounty";
+
+		#endregion
+
 		#region Constructors
 
 		public FakeClaimBasedCountySelector(IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory) : base(httpContextAccessor, loggerFactory) { }
@@ -26,6 +32,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string CommissionsJson { get; set; }
+		protected internal override string Group => _group;
 
 		#endregion
 
