@@ -10,7 +10,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Methods
 
 		Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(IClaimsSelectionResult selectionResult);
-		Task InitializeAsync(IConfigurationSection optionsConfiguration);
+		Task InitializeAsync(IConfiguration optionsConfiguration);
 		Task<IClaimsSelectionResult> SelectAsync(IDictionary<string, string> selections);
 
 		#endregion

@@ -29,7 +29,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		public abstract Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(IClaimsSelectionResult selectionResult);
 
-		public virtual async Task InitializeAsync(IConfigurationSection optionsConfiguration)
+		public virtual async Task InitializeAsync(IConfiguration optionsConfiguration)
 		{
 			optionsConfiguration?.Bind(this, binderOptions => { binderOptions.BindNonPublicProperties = true; });
 
