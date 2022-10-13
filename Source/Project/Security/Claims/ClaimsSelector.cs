@@ -22,6 +22,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		protected internal virtual ILogger Logger { get; }
+		public virtual bool SelectionRequired { get; set; }
 
 		#endregion
 

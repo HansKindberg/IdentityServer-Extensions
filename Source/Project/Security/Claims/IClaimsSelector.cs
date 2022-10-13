@@ -7,6 +7,12 @@ namespace HansKindberg.IdentityServer.Security.Claims
 {
 	public interface IClaimsSelector
 	{
+		#region Properties
+
+		bool SelectionRequired { get; }
+
+		#endregion
+
 		#region Methods
 
 		Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(IClaimsSelectionResult selectionResult);
