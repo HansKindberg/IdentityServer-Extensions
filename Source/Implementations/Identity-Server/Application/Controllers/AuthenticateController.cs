@@ -44,16 +44,27 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		#region Methods
 
-		[SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling")]
 		public virtual async Task<IActionResult> Callback()
 		{
+			return await this.CallbackInternal(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+		}
+
+		/// <summary>
+		/// So we can use the callback action with different intermediate cookie-authentication-schemes. The usual one is "idsrv.external".
+		/// </summary>
+		[SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling")]
+		protected internal virtual async Task<IActionResult> CallbackInternal(string intermediateCookieAuthenticationScheme)
+		{
+			if(intermediateCookieAuthenticationScheme == null)
+				throw new ArgumentNullException(nameof(intermediateCookieAuthenticationScheme));
+
 			this.Logger.LogDebugIfEnabled("Callback: starting...");
 
-			var authenticateResult = await this.HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+			var authenticateResult = await this.HttpContext.AuthenticateAsync(intermediateCookieAuthenticationScheme);
 
 			if(!authenticateResult.Succeeded)
 			{
-				this.Logger.LogErrorIfEnabled($"An authentication-attempt, using the scheme \"{IdentityServerConstants.ExternalCookieAuthenticationScheme}\", was made but failed. Available request-cookies: {string.Join(", ", this.Request.Cookies.Keys)}");
+				this.Logger.LogErrorIfEnabled($"An authentication-attempt, using the scheme \"{intermediateCookieAuthenticationScheme}\", was made but failed. Available request-cookies: {string.Join(", ", this.Request.Cookies.Keys)}");
 
 				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
 			}
@@ -96,7 +107,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			await this.HttpContext.SignInAsync(user, authenticationProperties);
 
-			await this.HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+			await this.HttpContext.SignOutAsync(intermediateCookieAuthenticationScheme);
 
 			var authorizationRequest = await this.Facade.Interaction.GetAuthorizationContextAsync(returnUrl);
 
