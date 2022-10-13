@@ -84,6 +84,36 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 	{
 		#region Methods
 
+		private static IServiceCollection AddAdditionalIntermediateCookieAuthenticationHandlers(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
+		{
+			if(services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			if(serviceConfigurationBuilder == null)
+				throw new ArgumentNullException(nameof(serviceConfigurationBuilder));
+
+			var intermediateCookieAuthenticationHandlersOptions = new IntermediateCookieAuthenticationHandlersOptions();
+			serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.IntermediateCookieAuthenticationHandlers)}").Bind(intermediateCookieAuthenticationHandlersOptions);
+
+			if(intermediateCookieAuthenticationHandlersOptions.Certificate is { Enabled: true })
+			{
+				services.AddAuthentication().AddCookie(intermediateCookieAuthenticationHandlersOptions.Certificate.Name, options =>
+				{
+					intermediateCookieAuthenticationHandlersOptions.Certificate.Configure(options);
+				});
+			}
+
+			if(serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.ClaimsSelection) && intermediateCookieAuthenticationHandlersOptions.ClaimsSelection is { Enabled: true })
+			{
+				services.AddAuthentication().AddCookie(intermediateCookieAuthenticationHandlersOptions.ClaimsSelection.Name, options =>
+				{
+					intermediateCookieAuthenticationHandlersOptions.ClaimsSelection.Configure(options);
+				});
+			}
+
+			return services;
+		}
+
 		public static IServiceCollection AddCertificateForwarding(this IServiceCollection services, IServiceConfigurationBuilder serviceConfigurationBuilder)
 		{
 			if(services == null)
@@ -306,6 +336,8 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 
 					serviceConfigurationBuilder.Configuration.GetSection($"{ConfigurationKeys.IdentityServerPath}:{nameof(ExtendedIdentityServerOptions.OperationalStore)}").Bind(options);
 				});
+
+			services.AddAdditionalIntermediateCookieAuthenticationHandlers(serviceConfigurationBuilder);
 
 			if(!serviceConfigurationBuilder.FeatureManager.IsEnabled(Feature.DynamicAuthenticationProviders))
 			{

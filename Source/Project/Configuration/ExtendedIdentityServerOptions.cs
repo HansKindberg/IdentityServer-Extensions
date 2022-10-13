@@ -37,6 +37,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		public virtual ConfigurationStoreOptions ConfigurationStore { get; set; } = new ConfigurationStoreOptions();
 		public virtual ConsentOptions Consent { get; set; } = new ConsentOptions();
 		public virtual FormsAuthenticationOptions FormsAuthentication { get; set; } = new FormsAuthenticationOptions();
+		public virtual IntermediateCookieAuthenticationHandlersOptions IntermediateCookieAuthenticationHandlers { get; set; } = new IntermediateCookieAuthenticationHandlersOptions();
 		public virtual OperationalStoreOptions OperationalStore { get; set; } = new OperationalStoreOptions();
 		public virtual ExtendedSamlIdpOptions Saml { get; set; } = new ExtendedSamlIdpOptions();
 		public virtual DynamicOptions SigningCertificate { get; set; }
