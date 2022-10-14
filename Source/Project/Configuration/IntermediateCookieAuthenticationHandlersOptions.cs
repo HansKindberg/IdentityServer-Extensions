@@ -17,7 +17,7 @@ namespace HansKindberg.IdentityServer.Configuration
 		#region Properties
 
 		public virtual IntermediateCookieAuthenticationOptions Certificate { get; set; } = new(_expiration, _certificateName, SameSiteMode.None);
-		public virtual IntermediateCookieAuthenticationOptions ClaimsSelection { get; set; } = new(_expiration, _claimsSelectionName, SameSiteMode.Strict);
+		public virtual IntermediateCookieAuthenticationOptions ClaimsSelection { get; set; } = new(_expiration, _claimsSelectionName, SameSiteMode.Lax);
 
 		#endregion
 	}
