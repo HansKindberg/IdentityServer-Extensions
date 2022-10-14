@@ -95,21 +95,21 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(!ReferenceEquals(this, selectionResult.Selector))
 				throw new ArgumentNullException(nameof(selectionResult), "The selector-property is invalid.");
 
-			if(!selectionResult.Complete)
-				throw new InvalidOperationException("The selection is not complete.");
+			if(this.SelectionRequired && !selectionResult.Complete)
+				throw new InvalidOperationException("Selection required but the selection is not complete.");
 
 			if(!selectionResult.Selectables.TryGetValue(this.Group, out var selectables))
 				throw new InvalidOperationException($"There is no selectable with key \"{this.Group}\".");
 
 			var selectedSelectable = selectables.FirstOrDefault(selectable => selectable.Selected);
 
-			if(selectedSelectable == null)
-				throw new InvalidOperationException("There is no selected selectable.");
+			if(this.SelectionRequired && selectedSelectable == null)
+				throw new InvalidOperationException("Selection required but there is no selected selectable.");
 
-			if(selectedSelectable is not CountySelectableClaim countySelectableClaim)
+			if(this.SelectionRequired && selectedSelectable is not CountySelectableClaim)
 				throw new InvalidOperationException($"The selected selectable must be of type \"{typeof(CountySelectableClaim)}\".");
 
-			var claims = countySelectableClaim.Build();
+			var claims = selectedSelectable?.Build() ?? new ClaimBuilderCollection();
 
 			var claimsDictionary = new Dictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
 
