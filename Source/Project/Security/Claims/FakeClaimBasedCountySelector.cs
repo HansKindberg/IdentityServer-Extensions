@@ -31,7 +31,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string CommissionsJson { get; set; }
-		protected internal override string Group => _group;
+		public override string Group { get; set; } = _group;
 
 		#endregion
 

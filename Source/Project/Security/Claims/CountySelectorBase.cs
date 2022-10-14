@@ -30,7 +30,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string EmployeeHsaIdClaimType { get; set; } = _employeeHsaIdClaimType;
-		protected internal virtual string Group => _group;
+		public virtual string Group { get; set; } = _group;
 		public virtual string SelectedClaimTypePrefix { get; set; } = _selectedClaimTypePrefix;
 
 		#endregion
