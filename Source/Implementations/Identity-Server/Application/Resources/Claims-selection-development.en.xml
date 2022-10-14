@@ -3,69 +3,59 @@
 		<controllers>
 			<claimsSelectionController>
 				<errors>
-					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
-							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-					</inera>
-					<unexpected-error>An unexpected error has occurred.</unexpected-error>
+					</Negotiate>
 				</errors>
 			</claimsSelectionController>
 		</controllers>
 		<views>
 			<claimsSelection>
 				<confirmation>
-					<inera>
+					<Negotiate>
 						<confirmation>Your commission is changed.</confirmation>
 						<heading>Commission changed</heading>
 						<redirect-text>Continue</redirect-text>
 						<redirect-text-with-client>Continue to the application "{0}".</redirect-text-with-client>
-					</inera>
+					</Negotiate>
 				</confirmation>
 				<form>
-					<cancel>Cancel</cancel>
-					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
-							<county>
-								<commissionName>Name</commissionName>
-								<commissionPurpose>Purpose</commissionPurpose>
-								<employeeHsaId>HSA-id</employeeHsaId>
-								<heading>Select a commission</heading>
-								<healthCareProviderName>Healthcare provider</healthCareProviderName>
-								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</county>
-						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<county>
+							<CountyFake1>
 								<commissionName>Name</commissionName>
 								<commissionPurpose>Purpose</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Select a commission</heading>
 								<healthCareProviderName>Healthcare provider</healthCareProviderName>
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</county>
+							</CountyFake1>
+							<CountyFake2>
+								<commissionName>Name</commissionName>
+								<commissionPurpose>Purpose</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Select another commission</heading>
+								<healthCareProviderName>Healthcare provider</healthCareProviderName>
+								<healthCareUnitName>Healthcare unit</healthCareUnitName>
+							</CountyFake2>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-					</inera>
-					<submit>Save</submit>
+					</Negotiate>
 				</form>
 				<index>
-					<continue>Continue</continue>
-					<error>Error</error>
-					<inera>
+					<Negotiate>
 						<heading>Commission</heading>
 						<no-selections-available>You do not have any commissions.</no-selections-available>
-					</inera>
+					</Negotiate>
 				</index>
 			</claimsSelection>
 			<shared>
 				<parts>
 					<header>
-						<inera>
+						<Negotiate>
 							<claims-selection>Change commission</claims-selection>
-						</inera>
+						</Negotiate>
 					</header>
 				</parts>
 			</shared>

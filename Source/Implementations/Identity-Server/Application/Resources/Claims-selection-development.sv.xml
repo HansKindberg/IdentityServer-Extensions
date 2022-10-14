@@ -3,69 +3,59 @@
 		<controllers>
 			<claimsSelectionController>
 				<errors>
-					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
-							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
-						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-					</inera>
-					<unexpected-error>Ett oväntat fel har inträffat.</unexpected-error>
+					</Negotiate>
 				</errors>
 			</claimsSelectionController>
 		</controllers>
 		<views>
 			<claimsSelection>
 				<confirmation>
-					<inera>
+					<Negotiate>
 						<confirmation>Ditt medarbetaruppdrag är ändrat.</confirmation>
 						<heading>Medarbetaruppdrag ändrat</heading>
 						<redirect-text>Fortsätt</redirect-text>
 						<redirect-text-with-client>Fortsätt till applikationen "{0}".</redirect-text-with-client>
-					</inera>
+					</Negotiate>
 				</confirmation>
 				<form>
-					<cancel>Avbryt</cancel>
-					<inera>
-						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
-							<county>
-								<commissionName>Namn</commissionName>
-								<commissionPurpose>Syfte</commissionPurpose>
-								<employeeHsaId>HSA-id</employeeHsaId>
-								<heading>Välj ett medarbetaruppdrag</heading>
-								<healthCareProviderName>Vårdgivare</healthCareProviderName>
-								<healthCareUnitName>Vårdenhet</healthCareUnitName>
-							</county>
-						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
+					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<county>
+							<CountyFake1>
 								<commissionName>Namn</commissionName>
 								<commissionPurpose>Syfte</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Välj ett medarbetaruppdrag</heading>
 								<healthCareProviderName>Vårdgivare</healthCareProviderName>
 								<healthCareUnitName>Vårdenhet</healthCareUnitName>
-							</county>
+							</CountyFake1>
+							<CountyFake2>
+								<commissionName>Namn</commissionName>
+								<commissionPurpose>Syfte</commissionPurpose>
+								<employeeHsaId>HSA-id</employeeHsaId>
+								<heading>Välj ett till medarbetaruppdrag</heading>
+								<healthCareProviderName>Vårdgivare</healthCareProviderName>
+								<healthCareUnitName>Vårdenhet</healthCareUnitName>
+							</CountyFake2>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-					</inera>
-					<submit>Spara</submit>
+					</Negotiate>
 				</form>
 				<index>
-					<continue>Fortsätt</continue>
-					<error>Fel</error>
-					<inera>
+					<Negotiate>
 						<heading>Medarbetaruppdrag</heading>
 						<no-selections-available>Du har inga medarbetaruppdrag.</no-selections-available>
-					</inera>
+					</Negotiate>
 				</index>
 			</claimsSelection>
 			<shared>
 				<parts>
 					<header>
-						<inera>
+						<Negotiate>
 							<claims-selection>Byt medarbetaruppdrag</claims-selection>
-						</inera>
+						</Negotiate>
 					</header>
 				</parts>
 			</shared>

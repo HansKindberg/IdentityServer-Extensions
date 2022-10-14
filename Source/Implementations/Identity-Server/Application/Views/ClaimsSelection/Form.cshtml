@@ -1,14 +1,16 @@
 ﻿@model ClaimsSelectionForm
-@if(Model != null && Model.SelectableClaims.Any())
+@if(Model != null && Model.Groups.Any())
 {
 	<form asp-action="Index" asp-all-route-data="@Context.Request.Query.ToSortedDictionary()">
-		@foreach(var key in Model.SelectableClaims.Keys)
+		@foreach(var key in Model.Groups.Keys)
 		{
-			<h2 class="h5 mb-3">@Localizer.GetString($"{Model.AuthenticationScheme}.{key}.Heading")</h2>
-			@foreach(var selectableClaim in Model.SelectableClaims[key])
+			var group = Model.Groups[key];
+			<h2 class="h5 mb-3">@Localizer.GetString($"{Model.AuthenticationScheme}.{key}.Heading")@Html.Raw(group.SelectionRequired ? " <em>*</em>" : null)</h2>
+			@foreach(var selectableClaim in group.SelectableClaims)
 			{
 				var title = string.Join(Environment.NewLine, selectableClaim.Details.Select(item => $"{Localizer.GetString($"{Model.AuthenticationScheme}.{key}.{item.Key}")}: {item.Value}"));
 				<div class="form-check mb-2">
+					@*<input checked="@(selectableClaim.Selected ? "checked" : null)" class="form-check-input me-2 ms-0" id="@selectableClaim.Id-input" name="@key" type="radio" required="@(group.SelectionRequired ? "required" : null)" value="@selectableClaim.Value" />*@
 					<input checked="@(selectableClaim.Selected ? "checked" : null)" class="form-check-input me-2 ms-0" id="@selectableClaim.Id-input" name="@key" type="radio" value="@selectableClaim.Value" />
 					<label class="form-check-label" for="@selectableClaim.Id-input" title="@title">@selectableClaim.Text</label>
 				</div>
@@ -18,9 +20,12 @@
 			<button class="btn btn-primary" type="submit">
 				@Localizer.GetString("Submit")
 			</button>
-			<button class="btn btn-secondary" name="@nameof(Model.Cancel)" value="@true.ToString()">
-				@Localizer.GetString("Cancel")
-			</button>
+			@if(Model.RequiredSelectionsSelected)
+			{
+				<button class="btn btn-secondary" name="@nameof(Model.Cancel)" value="@true.ToString()">
+					@Localizer.GetString("Cancel")
+				</button>
+			}
 		</div>
 	</form>
 }

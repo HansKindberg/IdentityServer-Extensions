@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using HansKindberg.IdentityServer.Security.Claims;
 
 namespace HansKindberg.IdentityServer.Application.Models.Views.ClaimsSelection
 {
@@ -10,7 +9,8 @@ namespace HansKindberg.IdentityServer.Application.Models.Views.ClaimsSelection
 
 		public virtual string AuthenticationScheme { get; set; }
 		public virtual bool Cancel { get; set; }
-		public virtual IDictionary<string, IList<ISelectableClaim>> SelectableClaims { get; } = new Dictionary<string, IList<ISelectableClaim>>(StringComparer.OrdinalIgnoreCase);
+		public virtual IDictionary<string, ClaimsSelectionGroup> Groups { get; } = new Dictionary<string, ClaimsSelectionGroup>(StringComparer.OrdinalIgnoreCase);
+		public virtual bool RequiredSelectionsSelected { get; set; }
 
 		#endregion
 	}

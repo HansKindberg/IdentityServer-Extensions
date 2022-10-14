@@ -2,33 +2,40 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Application.Models.Views.ClaimsSelection;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Security.Claims;
+using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.FeatureManagement.Mvc;
+using RegionOrebroLan.Collections.Generic.Extensions;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
+using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
 using Rsk.Saml.Models;
 
 namespace HansKindberg.IdentityServer.Application.Controllers
 {
-	[Authorize]
 	[FeatureGate(Feature.ClaimsSelection)]
 	public class ClaimsSelectionController : AuthenticateControllerBase
 	{
 		#region Fields
 
-		private const string _authenticationType = "Duende.IdentityServer"; // Duende.IdentityServer.Constants.IdentityServerAuthenticationType
+		private AuthenticateResult _authenticateResult;
+		private Lazy<string> _authenticationScheme;
 		private Lazy<IClaimsSelectionContext> _claimsSelectionContext;
+		private const string _clientAuthenticationKey = "client";
+		private const string _iframeUrlAuthenticationKey = "iframeUrl";
+		private const string _samlIframeUrlAuthenticationKey = "samlIframeUrl";
 
 		#endregion
 
@@ -40,30 +47,173 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		#region Properties
 
-		protected internal virtual string AuthenticationType => _authenticationType;
+		protected internal virtual AuthenticateResult AuthenticateResult
+		{
+			get
+			{
+				// ReSharper disable InvertIf
+				if(this._authenticateResult == null)
+				{
+					var authenticateResult = (this.User.IsAuthenticated() ? this.HttpContext.AuthenticateAsync().Result : this.HttpContext.AuthenticateAsync(this.IntermediateAuthenticationScheme).Result).Clone();
+
+					if(this.User.IsAuthenticated())
+					{
+						var identityProviderClaim = this.User.Claims.FindFirstIdentityProviderClaim();
+
+						if(identityProviderClaim != null)
+							authenticateResult.Properties?.SetString(AuthenticationKeys.Scheme, identityProviderClaim.Value);
+					}
+
+					this._authenticateResult = authenticateResult;
+				}
+				// ReSharper restore InvertIf
+
+				return this._authenticateResult;
+			}
+		}
+
+		protected internal virtual string AuthenticationScheme
+		{
+			get
+			{
+				this._authenticationScheme ??= new Lazy<string>(() => this.AuthenticateResult.Succeeded ? this.AuthenticateResult.Properties?.GetString(AuthenticationKeys.Scheme) : null);
+
+				return this._authenticationScheme.Value;
+			}
+		}
 
 		protected internal virtual IClaimsSelectionContext ClaimsSelectionContext
 		{
 			get
 			{
-				this._claimsSelectionContext ??= new Lazy<IClaimsSelectionContext>(() => this.Facade.ClaimsSelectionContextAccessor.ClaimsSelectionContext);
+				this._claimsSelectionContext ??= new Lazy<IClaimsSelectionContext>(() => this.Facade.ClaimsSelectionContextAccessor.GetAsync(this.AuthenticationScheme, string.Empty).Result);
 
 				return this._claimsSelectionContext.Value;
 			}
 		}
 
+		protected internal virtual bool ClaimsSelectionFeaterEnabled => this.Facade.FeatureManager.IsEnabled(Feature.ClaimsSelection);
+		protected internal virtual string ClientAuthenticationKey => _clientAuthenticationKey;
+		protected internal virtual string IframeUrlAuthenticationKey => _iframeUrlAuthenticationKey;
+		protected internal virtual string IntermediateAuthenticationScheme => this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name;
+		protected internal virtual string SamlIframeUrlAuthenticationKey => _samlIframeUrlAuthenticationKey;
+
 		#endregion
 
 		#region Methods
 
-		protected internal virtual async Task<ClaimsSelectionConfirmationViewModel> CreateClaimsSelectionConfirmationViewModelAsync(string returnUrl, string signOutId)
+		public virtual async Task<IActionResult> Confirmation()
 		{
+			var authenticateResult = await this.HttpContext.AuthenticateAsync(this.IntermediateAuthenticationScheme);
+
+			if(!authenticateResult.Succeeded)
+			{
+				this.Logger.LogErrorIfEnabled($"An authentication-attempt, using the scheme {this.IntermediateAuthenticationScheme.ToStringRepresentation()}, was made but failed. Available request-cookies: {string.Join(", ", this.Request.Cookies.Keys)}");
+
+				throw new InvalidOperationException("Authentication error.", authenticateResult.Failure);
+			}
+
+			var model = await this.CreateClaimsSelectionConfirmationViewModelAsync(authenticateResult.Properties);
+
+			await this.CallbackInternal(authenticateResult, this.IntermediateAuthenticationScheme);
+
+			return this.View("Confirmation", model);
+		}
+
+		protected internal virtual async Task<AuthenticationProperties> CreateAuthenticationPropertiesAsync(string returnUrl)
+		{
+			var model = await this.CreateClaimsSelectionConfirmationViewModelAsync(returnUrl);
+
+			var authenticationProperties = this.AuthenticateResult.Properties?.Clone() ?? new AuthenticationProperties();
+
+			authenticationProperties.ExpiresUtc = null;
+			authenticationProperties.IssuedUtc = null;
+
+			authenticationProperties.RedirectUri = this.Url.Action(nameof(this.Confirmation));
+
+			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionHandled, true.ToString());
+			authenticationProperties.SetString(this.ClientAuthenticationKey, model.Client);
+			authenticationProperties.SetString(this.IframeUrlAuthenticationKey, model.IframeUrl);
+			authenticationProperties.SetString(AuthenticationKeys.ReturnUrl, model.RedirectUrl);
+			authenticationProperties.SetString(this.SamlIframeUrlAuthenticationKey, model.SamlIframeUrl);
+			authenticationProperties.SetString(AuthenticationKeys.Scheme, this.AuthenticationScheme);
+
+			return authenticationProperties;
+		}
+
+		protected internal virtual async Task<ClaimsPrincipal> CreateClaimsPrincipalAsync(IEnumerable<IClaimsSelectionResult> claimsSelectionResults)
+		{
+			try
+			{
+				if(claimsSelectionResults == null)
+					throw new ArgumentNullException(nameof(claimsSelectionResults));
+
+				var claimsPrincipal = this.AuthenticateResult.Principal;
+
+				if(claimsPrincipal == null)
+					throw new InvalidOperationException("The claims-principal from the current authentication is null.");
+
+				var claims = new ClaimBuilderCollection();
+				claims.AddRange(claimsPrincipal.Claims.Select(claim => new ClaimBuilder(claim)));
+
+				foreach(var result in claimsSelectionResults)
+				{
+					var selectedClaims = await result.Selector.GetClaimsAsync(claimsPrincipal, result);
+
+					foreach(var selectedClaimType in selectedClaims.Keys)
+					{
+						for(var i = claims.Count - 1; i >= 0; i--)
+						{
+							if(string.Equals(claims[i].Type, selectedClaimType, StringComparison.OrdinalIgnoreCase))
+								claims.RemoveAt(i);
+						}
+					}
+
+					foreach(var claimBuilderCollection in selectedClaims.Values)
+					{
+						claims.AddRange(claimBuilderCollection);
+					}
+				}
+
+				return await this.CreateClaimsPrincipalAsync(this.AuthenticateResult.Principal?.Identity?.AuthenticationType, claims);
+			}
+			catch(Exception exception)
+			{
+				throw new InvalidOperationException("Could not create claims-principal from claims-selection-results.", exception);
+			}
+		}
+
+		protected internal virtual async Task<ClaimsSelectionConfirmationViewModel> CreateClaimsSelectionConfirmationViewModelAsync(string returnUrl)
+		{
+			var signOutId = await this.GetSignOutIdAsync(returnUrl);
+
 			var model = await this.CreateSingleSignOutViewModelAsync<ClaimsSelectionConfirmationViewModel>(signOutId);
 
-			model.AuthenticationScheme = this.ClaimsSelectionContext.AuthenticationScheme;
+			model.AuthenticationScheme = this.AuthenticationScheme;
 			model.RedirectUrl = returnUrl;
 
 			return model;
+		}
+
+		protected internal virtual async Task<ClaimsSelectionConfirmationViewModel> CreateClaimsSelectionConfirmationViewModelAsync(AuthenticationProperties authenticationProperties)
+		{
+			if(authenticationProperties == null)
+				throw new ArgumentNullException(nameof(authenticationProperties));
+
+			var signOutOptions = this.Facade.IdentityServer.CurrentValue.SignOut;
+
+			var model = new ClaimsSelectionConfirmationViewModel
+			{
+				AuthenticationScheme = authenticationProperties.GetString(AuthenticationKeys.Scheme),
+				AutomaticRedirect = signOutOptions.AutomaticRedirectAfterSignOut,
+				Client = authenticationProperties.GetString(this.ClientAuthenticationKey),
+				IframeUrl = authenticationProperties.GetString(this.IframeUrlAuthenticationKey),
+				RedirectUrl = authenticationProperties.GetString(AuthenticationKeys.ReturnUrl),
+				SamlIframeUrl = authenticationProperties.GetString(this.SamlIframeUrlAuthenticationKey),
+				SecondsBeforeRedirect = signOutOptions.SecondsBeforeRedirectAfterSignOut
+			};
+
+			return await Task.FromResult(model);
 		}
 
 		[SuppressMessage("Style", "IDE0057:Use range operator")]
@@ -76,7 +226,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			{
 				Form =
 				{
-					AuthenticationScheme = this.ClaimsSelectionContext.AuthenticationScheme
+					AuthenticationScheme = this.AuthenticationScheme
 				},
 				ReturnUrl = returnUrl
 			};
@@ -98,15 +248,20 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					}
 				}
 
-				var result = await claimsSelector.SelectAsync(this.User, selections);
+				var result = await claimsSelector.SelectAsync(this.AuthenticateResult.Principal, selections);
 
 				model.Results.Add(result);
 
 				foreach(var (key, value) in result.Selectables)
 				{
-					model.Form.SelectableClaims.Add($"{inputPrefix}{key}", value);
+					var group = new ClaimsSelectionGroup { SelectionRequired = claimsSelector.SelectionRequired };
+					group.SelectableClaims.Add(value);
+
+					model.Form.Groups.Add($"{inputPrefix}{key}", group);
 				}
 			}
+
+			model.Form.RequiredSelectionsSelected = !model.Form.Groups.Values.Any(group => group.SelectionRequired && !group.SelectableClaims.Any(selectableClaim => selectableClaim.Selected));
 
 			return await Task.FromResult(model);
 		}
@@ -139,9 +294,16 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 		public virtual async Task<IActionResult> Index(string returnUrl)
 		{
-			this.ValidateContext();
+			if(!this.ClaimsSelectionFeaterEnabled)
+				return this.NotFound();
 
 			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
+			if(!this.AuthenticateResult.Succeeded)
+				return await this.RedirectToSignIn(returnUrl);
+
+			if(this.ClaimsSelectionContext == null)
+				return this.NotFound();
 
 			var model = await this.CreateClaimsSelectionViewModelAsync(returnUrl);
 
@@ -153,42 +315,56 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		[SuppressMessage("Design", "CA1031:Do not catch general exception types")]
 		public virtual async Task<IActionResult> Index(ClaimsSelectionForm form, string returnUrl)
 		{
-			this.ValidateContext();
+			if(!this.ClaimsSelectionFeaterEnabled)
+				return this.NotFound();
+
+			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+
+			if(!this.AuthenticateResult.Succeeded)
+				return await this.RedirectToSignIn(returnUrl);
+
+			if(this.ClaimsSelectionContext == null)
+				return this.NotFound();
 
 			if(form == null)
 				throw new ArgumentNullException(nameof(form));
 
-			returnUrl = this.ResolveAndValidateReturnUrl(returnUrl);
+			var model = await this.CreateClaimsSelectionViewModelAsync(returnUrl);
 
 			if(form.Cancel)
-				return await this.RedirectAsync(returnUrl);
-
-			var model = await this.CreateClaimsSelectionViewModelAsync(returnUrl);
+			{
+				if(model.Form.RequiredSelectionsSelected)
+					return await this.RedirectAsync(returnUrl);
+			}
 
 			foreach(var result in model.Results)
 			{
-				if(!result.Complete)
+				if(!result.Complete && result.Selector.SelectionRequired)
 					model.Errors.Add(this.Localizer.GetString($"errors/{model.Form.AuthenticationScheme}/{await this.GetFullTypeNameWithUnderscoresInsteadOfDotsAsync(result.Selector)}/selection-is-not-complete"));
 			}
 
 			// ReSharper disable InvertIf
 			if(!model.Errors.Any())
 			{
-				var signOutId = await this.GetSignOutIdAsync(returnUrl);
-
-				var confirmationModel = await this.CreateClaimsSelectionConfirmationViewModelAsync(returnUrl, signOutId);
-
 				try
 				{
-					await this.UpdateSignInAsync(model.Results);
+					var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(returnUrl);
+					var claimsPrincipal = await this.CreateClaimsPrincipalAsync(model.Results);
 
-					return this.View("Confirmation", confirmationModel);
+					if(this.User.IsAuthenticated())
+						await this.Facade.Identity.SignOutAsync();
+					else
+						await this.HttpContext.SignOutAsync(this.IntermediateAuthenticationScheme);
+
+					await this.HttpContext.SignInAsync(this.IntermediateAuthenticationScheme, claimsPrincipal, authenticationProperties);
+
+					return this.Redirect(authenticationProperties.RedirectUri);
 				}
 				catch(Exception exception)
 				{
-					this.Logger.LogErrorIfEnabled(exception, "Could not refresh sign-in.");
+					this.Logger.LogErrorIfEnabled(exception, "Could not set selected claims.");
 
-					model.Errors.Add(this.Localizer.GetString("errors/update-sign-in-error"));
+					model.Errors.Add(this.Localizer.GetString("errors/unexpected-error"));
 				}
 			}
 			// ReSharper restore InvertIf
@@ -206,52 +382,17 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return this.Redirect(returnUrl);
 		}
 
-		protected internal virtual async Task UpdateSignInAsync(IEnumerable<IClaimsSelectionResult> claimsSelectionResults)
+		protected internal virtual async Task<IActionResult> RedirectToSignIn(string returnUrl)
 		{
-			if(claimsSelectionResults == null)
-				throw new ArgumentNullException(nameof(claimsSelectionResults));
+			var returnUrlParameterName = this.IdentityServer.UserInteraction.LoginReturnUrlParameter;
+			var signInPath = this.IdentityServer.UserInteraction.LoginUrl;
 
-			claimsSelectionResults = claimsSelectionResults.ToArray();
-
-			var claimsIdentity = this.User.Identities.First(claimsIdentity => string.Equals(this.AuthenticationType, claimsIdentity.AuthenticationType, StringComparison.OrdinalIgnoreCase));
-
-			var claims = new ClaimBuilderCollection();
-			claims.AddRange(claimsIdentity.Claims.Select(claim => new ClaimBuilder(claim)));
-
-			foreach(var result in claimsSelectionResults)
-			{
-				var selectedClaims = await result.Selector.GetClaimsAsync(this.User, result);
-
-				foreach(var selectedClaimType in selectedClaims.Keys)
-				{
-					for(var i = claims.Count - 1; i >= 0; i--)
-					{
-						if(string.Equals(claims[i].Type, selectedClaimType, StringComparison.OrdinalIgnoreCase))
-							claims.RemoveAt(i);
-					}
-				}
-
-				foreach(var claimBuilderCollection in selectedClaims.Values)
-				{
-					claims.AddRange(claimBuilderCollection);
-				}
-			}
-
-			var user = await this.ResolveUserAsync(this.ClaimsSelectionContext.AuthenticationScheme, claims);
-
-			await this.HttpContext.SignInAsync(user, new AuthenticationProperties());
+			return await this.RedirectAsync(signInPath + QueryString.Create(returnUrlParameterName, returnUrl));
 		}
 
-		protected internal virtual void ValidateContext()
+		protected internal override string ResolveReturnUrl(string returnUrl)
 		{
-			if(!this.Facade.FeatureManager.IsEnabled(Feature.ClaimsSelection))
-				throw new InvalidOperationException($"The feature \"{Feature.ClaimsSelection}\" is not enabled.");
-
-			if(!this.User.IsAuthenticated())
-				throw new UnauthorizedAccessException("The http-context-user is not authenticated.");
-
-			if(this.ClaimsSelectionContext == null)
-				throw new InvalidOperationException("The current claims-selection-context is null.");
+			return string.IsNullOrEmpty(returnUrl) || string.Equals(returnUrl, "~/", StringComparison.OrdinalIgnoreCase) ? "/Account" : returnUrl;
 		}
 
 		#endregion
