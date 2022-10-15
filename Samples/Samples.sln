@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Role-Service", "Role-Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Clients\Source\Web\ASP.NET-Core-MVC-Windows\Application.csproj", "{786EB1CB-180D-455A-A72A-8CE653D4940B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "..\Source\Sample\Application\Application.csproj", "{4253FCCE-7877-48EE-8CCE-FFA304E36A1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "..\Source\Implementations\Identity-Server\Application\Application.csproj", "{4253FCCE-7877-48EE-8CCE-FFA304E36A1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Role-Service\Source\Application\Application.csproj", "{16A42E2E-4895-4D83-8905-9257AEBBB66F}"
 EndProject
