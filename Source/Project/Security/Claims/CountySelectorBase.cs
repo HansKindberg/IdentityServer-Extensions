@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Localization.Extensions;
@@ -132,7 +133,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 			else if(this.SelectionRequired)
 			{
-				throw new InvalidOperationException($"There is no selectable with key \"{this.Group}\".");
+				throw new InvalidOperationException($"There is no selectable with key {this.Group.ToStringRepresentation()}.");
 			}
 
 			return await Task.FromResult(claimsDictionary).ConfigureAwait(false);
