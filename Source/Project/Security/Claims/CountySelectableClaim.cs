@@ -37,7 +37,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		protected internal virtual string ClaimTypePrefix { get; }
-		public virtual char Delimiter => _delimiter;
+		protected internal virtual char Delimiter => _delimiter;
 
 		public virtual IReadOnlyDictionary<string, string> Details
 		{
@@ -81,7 +81,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		protected internal virtual string Key { get; }
 		protected internal virtual bool PresentEmployeeHsaId { get; }
 		public virtual bool Selected { get; set; }
-		public virtual Selection Selection { get; }
+		protected internal virtual Selection Selection { get; }
 
 		public virtual string Text
 		{
