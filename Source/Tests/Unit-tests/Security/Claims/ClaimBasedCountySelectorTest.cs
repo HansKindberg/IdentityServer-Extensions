@@ -107,21 +107,21 @@ namespace UnitTests.Security.Claims
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(3, result.Selectables[claimBasedCountySelector.Group].Count);
+				Assert.AreEqual(3, result.Selectables[claimBasedCountySelector.Key].Count);
 
 				// Second test
-				var value = result.Selectables[claimBasedCountySelector.Group].First().Value;
+				var value = result.Selectables[claimBasedCountySelector.Key].First().Value;
 				var selections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 				{
-					{ claimBasedCountySelector.Group, value }
+					{ claimBasedCountySelector.Key, value }
 				};
 
 				result = await claimBasedCountySelector.SelectAsync(claimsPrincipal, selections);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(3, result.Selectables[claimBasedCountySelector.Group].Count);
-				Assert.IsTrue(result.Selectables[claimBasedCountySelector.Group].First().Selected);
+				Assert.AreEqual(3, result.Selectables[claimBasedCountySelector.Key].Count);
+				Assert.IsTrue(result.Selectables[claimBasedCountySelector.Key].First().Selected);
 
 				// Third test
 				claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-2", "Commissions-2");
@@ -130,8 +130,8 @@ namespace UnitTests.Security.Claims
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(4, result.Selectables[claimBasedCountySelector.Group].Count);
-				Assert.IsTrue(result.Selectables[claimBasedCountySelector.Group].ElementAt(1).Selected);
+				Assert.AreEqual(4, result.Selectables[claimBasedCountySelector.Key].Count);
+				Assert.IsTrue(result.Selectables[claimBasedCountySelector.Key].ElementAt(1).Selected);
 			}
 		}
 

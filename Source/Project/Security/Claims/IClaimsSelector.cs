@@ -10,6 +10,11 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	{
 		#region Properties
 
+		/// <summary>
+		/// The key for this claims-selector. Each claims-selector must have a unique key.
+		/// </summary>
+		string Key { get; }
+
 		bool SelectionRequired { get; }
 
 		#endregion

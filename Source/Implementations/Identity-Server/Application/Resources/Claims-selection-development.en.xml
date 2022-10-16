@@ -24,22 +24,22 @@
 				<form>
 					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<CountyFake1>
+							<county-fake-1>
 								<commissionName>Name</commissionName>
 								<commissionPurpose>Purpose</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Select a commission</heading>
 								<healthCareProviderName>Healthcare provider</healthCareProviderName>
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</CountyFake1>
-							<CountyFake2>
+							</county-fake-1>
+							<county-fake-2>
 								<commissionName>Name</commissionName>
 								<commissionPurpose>Purpose</commissionPurpose>
 								<employeeHsaId>HSA-id</employeeHsaId>
 								<heading>Select another commission</heading>
 								<healthCareProviderName>Healthcare provider</healthCareProviderName>
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
-							</CountyFake2>
+							</county-fake-2>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</Negotiate>
 				</form>

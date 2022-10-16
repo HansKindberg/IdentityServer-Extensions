@@ -141,8 +141,8 @@ namespace UnitTests.Security.Claims
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(4, result.Selectables[fakeClaimBasedCountySelector.Group].Count);
-				Assert.IsTrue(result.Selectables[fakeClaimBasedCountySelector.Group].ElementAt(1).Selected);
+				Assert.AreEqual(4, result.Selectables[fakeClaimBasedCountySelector.Key].Count);
+				Assert.IsTrue(result.Selectables[fakeClaimBasedCountySelector.Key].ElementAt(1).Selected);
 			}
 		}
 

@@ -103,12 +103,12 @@ namespace UnitTests.Security.Claims
 		[ExpectedException(typeof(InvalidOperationException))]
 		public async Task GetClaimsAsync_IfSelectionRequiredAndNoSelections_ShouldThrowAnInvalidOperationException()
 		{
-			const string group = "Test";
+			const string key = "Test";
 
 			using(var loggerFactory = LoggerFactoryMock.Create())
 			{
 				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-Empty", loggerFactory);
-				countySelectorBase.Group = group;
+				countySelectorBase.Key = key;
 				countySelectorBase.SelectionRequired = true;
 				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
 
@@ -119,7 +119,7 @@ namespace UnitTests.Security.Claims
 				}
 				catch(InvalidOperationException invalidOperationException)
 				{
-					if(invalidOperationException.Message == $"There is no selectable with key {group.ToStringRepresentation()}.")
+					if(invalidOperationException.Message == $"There is no selectable with key {key.ToStringRepresentation()}.")
 						throw;
 				}
 			}
@@ -333,14 +333,6 @@ namespace UnitTests.Security.Claims
 		}
 
 		[TestMethod]
-		public async Task Group_ShouldReturnADefaultValue()
-		{
-			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
-
-			Assert.AreEqual("County", countySelectorBase.Group);
-		}
-
-		[TestMethod]
 		public async Task SelectAsync_ShouldWorkProperly()
 		{
 			using(var loggerFactory = LoggerFactoryMock.Create())
@@ -353,21 +345,21 @@ namespace UnitTests.Security.Claims
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Key].Count);
 
 				// Second test
-				var value = result.Selectables[countySelectorBase.Group].First().Value;
+				var value = result.Selectables[countySelectorBase.Key].First().Value;
 				var selections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 				{
-					{ countySelectorBase.Group, value }
+					{ countySelectorBase.Key, value }
 				};
 
 				result = await countySelectorBase.SelectAsync(claimsPrincipal, selections);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
-				Assert.IsTrue(result.Selectables[countySelectorBase.Group].First().Selected);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Key].Count);
+				Assert.IsTrue(result.Selectables[countySelectorBase.Key].First().Selected);
 
 				// Third test
 				claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-2");
@@ -376,8 +368,8 @@ namespace UnitTests.Security.Claims
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(1, result.Selectables.Count);
-				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
-				Assert.IsTrue(result.Selectables[countySelectorBase.Group].Last().Selected);
+				Assert.AreEqual(4, result.Selectables[countySelectorBase.Key].Count);
+				Assert.IsTrue(result.Selectables[countySelectorBase.Key].Last().Selected);
 			}
 		}
 

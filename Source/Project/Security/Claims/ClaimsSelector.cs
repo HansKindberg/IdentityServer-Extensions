@@ -22,6 +22,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Properties
 
+		public virtual string Key { get; set; } = Guid.NewGuid().ToString("N");
 		protected internal virtual ILogger Logger { get; }
 		public virtual bool SelectionRequired { get; set; }
 

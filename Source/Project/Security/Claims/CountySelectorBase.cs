@@ -17,7 +17,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Fields
 
 		private const string _employeeHsaIdClaimType = "hsa_identity";
-		private const string _group = "County";
 		private const string _selectedClaimTypePrefix = "selected_";
 
 		#endregion
@@ -31,7 +30,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string EmployeeHsaIdClaimType { get; set; } = _employeeHsaIdClaimType;
-		public virtual string Group { get; set; } = _group;
 		public virtual string SelectedClaimTypePrefix { get; set; } = _selectedClaimTypePrefix;
 
 		#endregion
@@ -75,7 +73,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				EmployeeHsaId = selectedEmployeeHsaId
 			};
 
-			var selectableCompare = new CountySelectableClaim(this.SelectedClaimTypePrefix, this.Group, false, selectionCompare);
+			var selectableCompare = new CountySelectableClaim(this.SelectedClaimTypePrefix, this.Key, false, selectionCompare);
 
 			var selectedSelectable = selectables.FirstOrDefault(selectable => string.Equals(selectable.Id, selectableCompare.Id, StringComparison.OrdinalIgnoreCase));
 
@@ -98,7 +96,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 			var claimsDictionary = new Dictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
 
-			if(selectionResult.Selectables.TryGetValue(this.Group, out var selectables))
+			if(selectionResult.Selectables.TryGetValue(this.Key, out var selectables))
 			{
 				var countySelectableClaim = selectables.FirstOrDefault(selectable => selectable.Selected) as CountySelectableClaim;
 
@@ -133,7 +131,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 			else if(this.SelectionRequired)
 			{
-				throw new InvalidOperationException($"There is no selectable with key {this.Group.ToStringRepresentation()}.");
+				throw new InvalidOperationException($"There is no selectable with key {this.Key.ToStringRepresentation()}.");
 			}
 
 			return await Task.FromResult(claimsDictionary).ConfigureAwait(false);
@@ -172,10 +170,10 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 			foreach(var selection in await this.GetSelectionsAsync(claimsPrincipal).ConfigureAwait(false))
 			{
-				var selectable = new CountySelectableClaim(this.SelectedClaimTypePrefix, this.Group, employeeHsaIds.Count > 1, selection);
+				var selectable = new CountySelectableClaim(this.SelectedClaimTypePrefix, this.Key, employeeHsaIds.Count > 1, selection);
 
-				if(selections.ContainsKey(this.Group))
-					selectable.Selected = string.Equals(selections[this.Group], selectable.Value, StringComparison.OrdinalIgnoreCase);
+				if(selections.ContainsKey(this.Key))
+					selectable.Selected = string.Equals(selections[this.Key], selectable.Value, StringComparison.OrdinalIgnoreCase);
 
 				selectables.Add(selectable);
 			}
@@ -184,7 +182,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				await this.DetermineSelectedFromClaimsAsync(claimsPrincipal, selectables).ConfigureAwait(false);
 
 			if(selectables.Any())
-				result.Selectables.Add(this.Group, new List<ISelectableClaim>(selectables));
+				result.Selectables.Add(this.Key, new List<ISelectableClaim>(selectables));
 
 			return result;
 		}
