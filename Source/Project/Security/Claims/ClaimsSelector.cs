@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HansKindberg.IdentityServer.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Security.Claims;
@@ -40,6 +42,74 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		}
 
 		public abstract Task<IClaimsSelectionResult> SelectAsync(ClaimsPrincipal claimsPrincipal, IDictionary<string, string> selections);
+
+		#endregion
+	}
+
+	/// <inheritdoc />
+	public abstract class ClaimsSelector<T> : ClaimsSelector where T : ISelectableClaim
+	{
+		#region Constructors
+
+		protected ClaimsSelector(ILoggerFactory loggerFactory) : base(loggerFactory) { }
+
+		#endregion
+
+		#region Methods
+
+		public override async Task<IDictionary<string, IClaimBuilderCollection>> GetClaimsAsync(ClaimsPrincipal claimsPrincipal, IClaimsSelectionResult selectionResult)
+		{
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
+			if(selectionResult == null)
+				throw new ArgumentNullException(nameof(selectionResult));
+
+			if(!ReferenceEquals(this, selectionResult.Selector))
+				throw new ArgumentException("The selector-property of the selection-result is not this instance.", nameof(selectionResult));
+
+			var claimsDictionary = new Dictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
+
+			if(selectionResult.Selectables.TryGetValue(this.Key, out var selectables))
+			{
+				var selectableClaim = selectables.OfType<T>().FirstOrDefault(selectable => selectable.Selected);
+
+				if(selectableClaim == null && this.SelectionRequired)
+					throw new InvalidOperationException($"Selection required but there is no selected selectable of type \"{typeof(T)}\".");
+
+				// ReSharper disable InvertIf
+				if(selectableClaim != null)
+				{
+					foreach(var claim in selectableClaim.Build())
+					{
+						var type = claim.Type;
+
+						if(!claimsDictionary.ContainsKey(type))
+							claimsDictionary.Add(type, new ClaimBuilderCollection());
+
+						var value = claim.Value;
+
+						if(value == null)
+							continue;
+
+						var collection = claimsDictionary[type];
+
+						collection.Add(new ClaimBuilder
+						{
+							Type = type,
+							Value = value
+						});
+					}
+				}
+				// ReSharper restore InvertIf
+			}
+			else if(this.SelectionRequired)
+			{
+				throw new InvalidOperationException($"There is no selectable with key {this.Key.ToStringRepresentation()}.");
+			}
+
+			return await Task.FromResult(claimsDictionary).ConfigureAwait(false);
+		}
 
 		#endregion
 	}
