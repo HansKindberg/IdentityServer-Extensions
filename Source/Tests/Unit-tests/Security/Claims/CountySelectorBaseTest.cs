@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.Extensions.Logging;
@@ -62,6 +63,112 @@ namespace UnitTests.Security.Claims
 			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
 
 			Assert.AreEqual("hsa_identity", countySelectorBase.EmployeeHsaIdClaimType);
+		}
+
+		[TestMethod]
+		public async Task GetClaimsAsync_IfNotSelectionRequiredAndNoSelections_ShouldWorkProperly()
+		{
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-Empty", loggerFactory);
+				countySelectorBase.SelectionRequired = false;
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
+
+				var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+				var claims = await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
+
+				Assert.IsNotNull(claims);
+				Assert.IsFalse(claims.Any());
+			}
+		}
+
+		[TestMethod]
+		public async Task GetClaimsAsync_IfNotSelectionRequiredAndOnlyOneSelectionAndNotSelected_ShouldWorkProperly()
+		{
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-Only-One", loggerFactory);
+				countySelectorBase.SelectionRequired = false;
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
+
+				var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+				var claims = await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
+
+				Assert.IsNotNull(claims);
+				Assert.IsFalse(claims.Any());
+			}
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public async Task GetClaimsAsync_IfSelectionRequiredAndNoSelections_ShouldThrowAnInvalidOperationException()
+		{
+			const string group = "Test";
+
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-Empty", loggerFactory);
+				countySelectorBase.Group = group;
+				countySelectorBase.SelectionRequired = true;
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
+
+				try
+				{
+					var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+					await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
+				}
+				catch(InvalidOperationException invalidOperationException)
+				{
+					if(invalidOperationException.Message == $"There is no selectable with key {group.ToStringRepresentation()}.")
+						throw;
+				}
+			}
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public async Task GetClaimsAsync_IfSelectionRequiredAndNotSelected_ShouldThrowAnInvalidOperationException()
+		{
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-1", loggerFactory);
+				countySelectorBase.SelectionRequired = true;
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
+
+				try
+				{
+					var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+					await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
+				}
+				catch(InvalidOperationException invalidOperationException)
+				{
+					if(invalidOperationException.Message == $"Selection required but there is no selected selectable of type \"{typeof(CountySelectableClaim)}\".")
+						throw;
+				}
+			}
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public async Task GetClaimsAsync_IfSelectionRequiredAndOnlyOneSelectionAndNotSelected_ShouldThrowAnInvalidOperationException()
+		{
+			using(var loggerFactory = LoggerFactoryMock.Create())
+			{
+				var countySelectorBase = await this.CreateCountySelectorBaseAsync("Commissions-Only-One", loggerFactory);
+				countySelectorBase.SelectionRequired = true;
+				var claimsPrincipal = await this.CreateClaimsPrincipalAsync("Claims-1");
+
+				try
+				{
+					var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+					await countySelectorBase.GetClaimsAsync(claimsPrincipal, result);
+				}
+				catch(InvalidOperationException invalidOperationException)
+				{
+					if(invalidOperationException.Message == $"Selection required but there is no selected selectable of type \"{typeof(CountySelectableClaim)}\".")
+						throw;
+				}
+			}
 		}
 
 		[TestMethod]
