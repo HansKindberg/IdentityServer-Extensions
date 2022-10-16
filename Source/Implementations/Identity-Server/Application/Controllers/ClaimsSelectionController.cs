@@ -11,6 +11,7 @@ using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Security.Claims;
+using HansKindberg.IdentityServer.Security.Claims.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -339,7 +340,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			foreach(var result in model.Results)
 			{
-				if(!result.Complete && result.Selector.SelectionRequired)
+				if(result.Selector.SelectionRequired && !result.Selected())
 					model.Errors.Add(this.Localizer.GetString($"errors/{model.Form.AuthenticationScheme}/{await this.GetFullTypeNameWithUnderscoresInsteadOfDotsAsync(result.Selector)}/selection-is-not-complete"));
 			}
 

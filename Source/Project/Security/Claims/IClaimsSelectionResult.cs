@@ -6,7 +6,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	{
 		#region Properties
 
-		bool Complete { get; }
 		IDictionary<string, IList<ISelectableClaim>> Selectables { get; }
 		IClaimsSelector Selector { get; }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Localization.Extensions;
@@ -95,43 +96,44 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(!ReferenceEquals(this, selectionResult.Selector))
 				throw new ArgumentException("The selector-property of the selection-result is not this instance.", nameof(selectionResult));
 
-			if(this.SelectionRequired && !selectionResult.Complete)
-				throw new InvalidOperationException("Selection required but the selection is not complete.");
-
-			if(!selectionResult.Selectables.TryGetValue(this.Group, out var selectables))
-				throw new InvalidOperationException($"There is no selectable with key \"{this.Group}\".");
-
-			var selectedSelectable = selectables.FirstOrDefault(selectable => selectable.Selected);
-
-			if(this.SelectionRequired && selectedSelectable == null)
-				throw new InvalidOperationException("Selection required but there is no selected selectable.");
-
-			if(this.SelectionRequired && selectedSelectable is not CountySelectableClaim)
-				throw new InvalidOperationException($"The selected selectable must be of type \"{typeof(CountySelectableClaim)}\".");
-
-			var claims = selectedSelectable?.Build() ?? new ClaimBuilderCollection();
-
 			var claimsDictionary = new Dictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
 
-			foreach(var claim in claims)
+			if(selectionResult.Selectables.TryGetValue(this.Group, out var selectables))
 			{
-				var type = claim.Type;
+				var countySelectableClaim = selectables.FirstOrDefault(selectable => selectable.Selected) as CountySelectableClaim;
 
-				if(!claimsDictionary.ContainsKey(type))
-					claimsDictionary.Add(type, new ClaimBuilderCollection());
+				if(countySelectableClaim == null && this.SelectionRequired)
+					throw new InvalidOperationException($"Selection required but there is no selected selectable of type {typeof(CountySelectableClaim).ToStringRepresentation()}.");
 
-				var value = claim.Value;
-
-				if(value == null)
-					continue;
-
-				var collection = claimsDictionary[type];
-
-				collection.Add(new ClaimBuilder
+				// ReSharper disable InvertIf
+				if(countySelectableClaim != null)
 				{
-					Type = type,
-					Value = value
-				});
+					foreach(var claim in countySelectableClaim.Build())
+					{
+						var type = claim.Type;
+
+						if(!claimsDictionary.ContainsKey(type))
+							claimsDictionary.Add(type, new ClaimBuilderCollection());
+
+						var value = claim.Value;
+
+						if(value == null)
+							continue;
+
+						var collection = claimsDictionary[type];
+
+						collection.Add(new ClaimBuilder
+						{
+							Type = type,
+							Value = value
+						});
+					}
+				}
+				// ReSharper restore InvertIf
+			}
+			else if(this.SelectionRequired)
+			{
+				throw new InvalidOperationException($"There is no selectable with key \"{this.Group}\".");
 			}
 
 			return await Task.FromResult(claimsDictionary).ConfigureAwait(false);

@@ -245,7 +245,6 @@ namespace UnitTests.Security.Claims
 				var result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
 				Assert.IsNotNull(result);
-				Assert.IsFalse(result.Complete);
 				Assert.AreEqual(1, result.Selectables.Count);
 				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
 
@@ -259,7 +258,6 @@ namespace UnitTests.Security.Claims
 				result = await countySelectorBase.SelectAsync(claimsPrincipal, selections);
 
 				Assert.IsNotNull(result);
-				Assert.IsTrue(result.Complete);
 				Assert.AreEqual(1, result.Selectables.Count);
 				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
 				Assert.IsTrue(result.Selectables[countySelectorBase.Group].First().Selected);
@@ -270,7 +268,6 @@ namespace UnitTests.Security.Claims
 				result = await countySelectorBase.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
 				Assert.IsNotNull(result);
-				Assert.IsTrue(result.Complete);
 				Assert.AreEqual(1, result.Selectables.Count);
 				Assert.AreEqual(4, result.Selectables[countySelectorBase.Group].Count);
 				Assert.IsTrue(result.Selectables[countySelectorBase.Group].Last().Selected);

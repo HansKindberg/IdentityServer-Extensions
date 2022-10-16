@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HansKindberg.IdentityServer.Security.Claims
 {
@@ -18,7 +17,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Properties
 
-		public virtual bool Complete => this.Selectables.All(item => item.Value.Any(selectable => selectable.Selected));
 		public virtual IDictionary<string, IList<ISelectableClaim>> Selectables { get; } = new Dictionary<string, IList<ISelectableClaim>>(StringComparer.OrdinalIgnoreCase);
 		public virtual IClaimsSelector Selector { get; }
 

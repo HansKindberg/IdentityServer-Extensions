@@ -140,7 +140,6 @@ namespace UnitTests.Security.Claims
 				var result = await fakeClaimBasedCountySelector.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
 
 				Assert.IsNotNull(result);
-				Assert.IsTrue(result.Complete);
 				Assert.AreEqual(1, result.Selectables.Count);
 				Assert.AreEqual(4, result.Selectables[fakeClaimBasedCountySelector.Group].Count);
 				Assert.IsTrue(result.Selectables[fakeClaimBasedCountySelector.Group].ElementAt(1).Selected);
