@@ -24,10 +24,10 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Constructors
 
-		public CountySelectableClaim(string claimTypePrefix, string group, bool presentEmployeeHsaId, Selection selection)
+		public CountySelectableClaim(string claimTypePrefix, string key, bool presentEmployeeHsaId, Selection selection)
 		{
 			this.ClaimTypePrefix = claimTypePrefix;
-			this.Group = group ?? throw new ArgumentNullException(nameof(group));
+			this.Key = key ?? throw new ArgumentNullException(nameof(key));
 			this.PresentEmployeeHsaId = presentEmployeeHsaId;
 			this.Selection = selection ?? throw new ArgumentNullException(nameof(selection));
 		}
@@ -67,19 +67,18 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			}
 		}
 
-		public virtual string Group { get; }
-
 		[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 		public virtual string Id
 		{
 			get
 			{
-				this._id ??= new Lazy<string>(() => $"{this.Group}-{this.Value.Replace(this.Delimiter, '-')}".ToLowerInvariant());
+				this._id ??= new Lazy<string>(() => $"{this.Key}-{this.Value.Replace(this.Delimiter, '-')}".ToLowerInvariant());
 
 				return this._id.Value;
 			}
 		}
 
+		protected internal virtual string Key { get; }
 		protected internal virtual bool PresentEmployeeHsaId { get; }
 		public virtual bool Selected { get; set; }
 		public virtual Selection Selection { get; }
