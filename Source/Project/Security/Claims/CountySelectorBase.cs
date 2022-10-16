@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Security.Claims.County;
 using Microsoft.Extensions.Logging;
 using RegionOrebroLan.Localization.Extensions;
@@ -103,7 +102,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				var countySelectableClaim = selectables.FirstOrDefault(selectable => selectable.Selected) as CountySelectableClaim;
 
 				if(countySelectableClaim == null && this.SelectionRequired)
-					throw new InvalidOperationException($"Selection required but there is no selected selectable of type {typeof(CountySelectableClaim).ToStringRepresentation()}.");
+					throw new InvalidOperationException($"Selection required but there is no selected selectable of type \"{typeof(CountySelectableClaim)}\".");
 
 				// ReSharper disable InvertIf
 				if(countySelectableClaim != null)
