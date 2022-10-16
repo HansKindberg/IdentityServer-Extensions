@@ -93,7 +93,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				throw new ArgumentNullException(nameof(selectionResult));
 
 			if(!ReferenceEquals(this, selectionResult.Selector))
-				throw new ArgumentNullException(nameof(selectionResult), "The selector-property is invalid.");
+				throw new ArgumentException("The selector-property of the selection-result is not this instance.", nameof(selectionResult));
 
 			if(this.SelectionRequired && !selectionResult.Complete)
 				throw new InvalidOperationException("Selection required but the selection is not complete.");

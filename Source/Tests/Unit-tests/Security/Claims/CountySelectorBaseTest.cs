@@ -65,6 +65,23 @@ namespace UnitTests.Security.Claims
 		}
 
 		[TestMethod]
+		[ExpectedException(typeof(ArgumentException))]
+		public async Task GetClaimsAsync_IfTheSelectorPropertyOfTheSelectionResultParameterIsNotTheCountySelectorItSelf_ShouldThrowAnArgumentException()
+		{
+			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
+
+			try
+			{
+				await countySelectorBase.GetClaimsAsync(Mock.Of<ClaimsPrincipal>(), new ClaimsSelectionResult(Mock.Of<IClaimsSelector>()));
+			}
+			catch(ArgumentException argumentException)
+			{
+				if(argumentException.Message.StartsWith("The selector-property of the selection-result is not this instance.", StringComparison.Ordinal) && argumentException.ParamName == "selectionResult")
+					throw;
+			}
+		}
+
+		[TestMethod]
 		public async Task GetClaimsAsync_ShouldWorkProperly()
 		{
 			using(var loggerFactory = LoggerFactoryMock.Create())
