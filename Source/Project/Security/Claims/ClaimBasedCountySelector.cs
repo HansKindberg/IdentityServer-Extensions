@@ -16,7 +16,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	/// Select county-claims. Commissions comes from a claim. Other claims like PaTitleCode or SystemRole are not selectable with this selector. We need a service-based selector for that.
 	/// </summary>
 	/// <inheritdoc />
-	public class ClaimBasedCountySelector : CountySelectorBase
+	public class ClaimBasedCountySelector : ClaimBasedCountySelectorBase
 	{
 		#region Fields
 

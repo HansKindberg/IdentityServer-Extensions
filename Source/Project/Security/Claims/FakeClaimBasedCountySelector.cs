@@ -14,7 +14,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	/// </summary>
 	/// <inheritdoc />
 	[Obsolete("Only for testing.")]
-	public class FakeClaimBasedCountySelector : CountySelectorBase
+	public class FakeClaimBasedCountySelector : ClaimBasedCountySelectorBase
 	{
 		#region Constructors
 
