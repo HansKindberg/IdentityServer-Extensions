@@ -102,11 +102,50 @@ namespace UnitTests.Security.Claims
 		}
 
 		[TestMethod]
+		public async Task GetSelectedEmployeeHsaIdAsync_ShouldWorkProperly()
+		{
+			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
+
+			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new List<Claim>());
+
+			var selectedEmployeeHsaId = await countySelectorBase.GetSelectedEmployeeHsaIdAsync(claimsPrincipal);
+
+			Assert.IsNull(selectedEmployeeHsaId);
+
+			var claims = new List<Claim>
+			{
+				new(countySelectorBase.SelectedEmployeeHsaIdClaimType, "1")
+			};
+
+			claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
+
+			selectedEmployeeHsaId = await countySelectorBase.GetSelectedEmployeeHsaIdAsync(claimsPrincipal);
+
+			Assert.AreEqual("1", selectedEmployeeHsaId);
+
+			claims.Add(new Claim(countySelectorBase.SelectedEmployeeHsaIdClaimType, "2"));
+
+			claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
+
+			selectedEmployeeHsaId = await countySelectorBase.GetSelectedEmployeeHsaIdAsync(claimsPrincipal);
+
+			Assert.AreEqual("1", selectedEmployeeHsaId);
+		}
+
+		[TestMethod]
 		public async Task SelectedClaimTypePrefix_ShouldReturnADefaultValue()
 		{
 			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
 
 			Assert.AreEqual("selected_", countySelectorBase.SelectedClaimTypePrefix);
+		}
+
+		[TestMethod]
+		public async Task SelectedEmployeeHsaIdClaimType_ShouldWorkProperly()
+		{
+			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
+
+			Assert.AreEqual("selected_employeeHsaId", countySelectorBase.SelectedEmployeeHsaIdClaimType);
 		}
 
 		#endregion
