@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Duende.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.FeatureManagement;
 using HansKindberg.IdentityServer.FeatureManagement.Extensions;
+using HansKindberg.IdentityServer.Security.Claims.Configuration;
 using HansKindberg.IdentityServer.Web;
 using HansKindberg.IdentityServer.Web.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Web.Authentication.Security.Claims.Extensions;
@@ -21,16 +23,16 @@ namespace HansKindberg.IdentityServer.Security.Claims
 	{
 		#region Fields
 
-		private const string _claimsSelectionPath = $"/{nameof(Feature.ClaimsSelection)}";
 		private static readonly string _httpContextItemKey = typeof(ClaimsSelectionContext).FullName;
 
 		#endregion
 
 		#region Constructors
 
-		public ClaimsSelectionContextAccessor(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IClaimsSelectorLoader claimsSelectorLoader, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory)
+		public ClaimsSelectionContextAccessor(IAuthenticationSchemeRetriever authenticationSchemeRetriever, IOptionsMonitor<ClaimsSelectionOptions> claimsSelectionOptionsMonitor, IClaimsSelectorLoader claimsSelectorLoader, IFeatureManager featureManager, IHttpContextAccessor httpContextAccessor, ILoggerFactory loggerFactory)
 		{
 			this.AuthenticationSchemeRetriever = authenticationSchemeRetriever ?? throw new ArgumentNullException(nameof(authenticationSchemeRetriever));
+			this.ClaimsSelectionOptionsMonitor = claimsSelectionOptionsMonitor ?? throw new ArgumentNullException(nameof(claimsSelectionOptionsMonitor));
 			this.ClaimsSelectorLoader = claimsSelectorLoader ?? throw new ArgumentNullException(nameof(claimsSelectorLoader));
 			this.FeatureManager = featureManager ?? throw new ArgumentNullException(nameof(featureManager));
 			this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -43,7 +45,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		protected internal virtual IAuthenticationSchemeRetriever AuthenticationSchemeRetriever { get; }
 		public virtual IClaimsSelectionContext ClaimsSelectionContext => this.GetAsync(this.HttpContextAccessor.HttpContext).Result;
-		protected internal virtual string ClaimsSelectionPath => _claimsSelectionPath;
+		protected internal virtual IOptionsMonitor<ClaimsSelectionOptions> ClaimsSelectionOptionsMonitor { get; }
 		protected internal virtual IClaimsSelectorLoader ClaimsSelectorLoader { get; }
 		protected internal virtual IFeatureManager FeatureManager { get; }
 		protected internal virtual IHttpContextAccessor HttpContextAccessor { get; }
@@ -60,12 +62,15 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(httpContext == null)
 				throw new ArgumentNullException(nameof(httpContext));
 
+			if(string.IsNullOrEmpty(returnUrl))
+				returnUrl = this.ClaimsSelectionOptionsMonitor.CurrentValue.DefaultReturnUrl;
+
 			var queryBuilder = new QueryBuilder
 			{
 				{ QueryStringKeys.ReturnUrl, returnUrl }
 			};
 
-			return await Task.FromResult(new Uri($"{this.ClaimsSelectionPath}{queryBuilder}", UriKind.Relative));
+			return await Task.FromResult(new Uri($"{this.ClaimsSelectionOptionsMonitor.CurrentValue.Path}{queryBuilder}", UriKind.Relative));
 		}
 
 		protected internal virtual async Task<IClaimsSelectionContext> GetAsync(HttpContext httpContext)
@@ -142,7 +147,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				return null;
 			}
 
-			var claimsSelectionContext = new ClaimsSelectionContext
+			var claimsSelectionContext = new ClaimsSelectionContext(this.ClaimsSelectionOptionsMonitor)
 			{
 				AuthenticationScheme = authenticationScheme,
 				Url = await this.CreateClaimsSelectionUrlAsync(httpContext, returnUrlFunction())
@@ -203,7 +208,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(httpContext == null)
 				throw new ArgumentNullException(nameof(httpContext));
 
-			var returnUrl = httpContext.Request.Path.StartsWithSegments(this.ClaimsSelectionPath, StringComparison.OrdinalIgnoreCase)
+			var returnUrl = httpContext.Request.Path.StartsWithSegments(this.ClaimsSelectionOptionsMonitor.CurrentValue.Path, StringComparison.OrdinalIgnoreCase)
 				? (string)httpContext.Request.Query[QueryStringKeys.ReturnUrl]
 				: $"{httpContext.Request.Path}{httpContext.Request.QueryString}";
 
