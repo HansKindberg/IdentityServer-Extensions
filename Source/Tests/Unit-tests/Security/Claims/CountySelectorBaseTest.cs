@@ -133,6 +133,26 @@ namespace UnitTests.Security.Claims
 		}
 
 		[TestMethod]
+		public async Task SelectedClaimTypePrefix_ShouldAffectSelectedEmployeeHsaIdClaimType()
+		{
+			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
+			Assert.AreEqual("selected_", countySelectorBase.SelectedClaimTypePrefix);
+			Assert.AreEqual("selected_employeeHsaId", countySelectorBase.SelectedEmployeeHsaIdClaimType);
+
+			countySelectorBase.SelectedClaimTypePrefix = "test_";
+			Assert.AreEqual("test_", countySelectorBase.SelectedClaimTypePrefix);
+			Assert.AreEqual("test_employeeHsaId", countySelectorBase.SelectedEmployeeHsaIdClaimType);
+
+			countySelectorBase.SelectedClaimTypePrefix = string.Empty;
+			Assert.AreEqual(string.Empty, countySelectorBase.SelectedClaimTypePrefix);
+			Assert.AreEqual("employeeHsaId", countySelectorBase.SelectedEmployeeHsaIdClaimType);
+
+			countySelectorBase.SelectedClaimTypePrefix = null;
+			Assert.IsNull(countySelectorBase.SelectedClaimTypePrefix);
+			Assert.AreEqual("employeeHsaId", countySelectorBase.SelectedEmployeeHsaIdClaimType);
+		}
+
+		[TestMethod]
 		public async Task SelectedClaimTypePrefix_ShouldReturnADefaultValue()
 		{
 			var countySelectorBase = await this.CreateCountySelectorBaseAsync();
