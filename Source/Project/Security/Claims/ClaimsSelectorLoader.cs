@@ -21,7 +21,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Constructors
 
-		public ClaimsSelectorLoader(IOptionsMonitor<ClaimsSelectorLoaderOptions> optionsMonitor, IServiceProvider serviceProvider)
+		public ClaimsSelectorLoader(IOptionsMonitor<ClaimsSelectionOptions> optionsMonitor, IServiceProvider serviceProvider)
 		{
 			this.OptionsMonitor = optionsMonitor ?? throw new ArgumentNullException(nameof(optionsMonitor));
 			this.ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -64,7 +64,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		protected internal virtual object ClaimsSelectorDictionaryLock { get; } = new object();
 		protected internal virtual IDisposable OptionsChangeListener { get; }
-		protected internal virtual IOptionsMonitor<ClaimsSelectorLoaderOptions> OptionsMonitor { get; }
+		protected internal virtual IOptionsMonitor<ClaimsSelectionOptions> OptionsMonitor { get; }
 		protected internal virtual IServiceProvider ServiceProvider { get; }
 
 		#endregion
@@ -75,7 +75,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		{
 			var intermediateDictionary = new Dictionary<string, List<KeyValuePair<IClaimsSelector, int>>>();
 
-			var options = this.OptionsMonitor.CurrentValue.ClaimsSelectors.Values;
+			var options = this.OptionsMonitor.CurrentValue.Selectors.Values;
 
 			foreach(var option in options)
 			{
@@ -128,7 +128,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			return await Task.FromResult(claimsSelectors.Select(keyValuePair => keyValuePair.Key).ToArray());
 		}
 
-		protected internal virtual void OnOptionsChanged(ClaimsSelectorLoaderOptions options, string name)
+		protected internal virtual void OnOptionsChanged(ClaimsSelectionOptions options, string name)
 		{
 			this.ClaimsSelectorDictionary = null;
 		}

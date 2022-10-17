@@ -138,7 +138,7 @@ namespace HansKindberg.IdentityServer.DependencyInjection.Extensions
 			if(configuration == null)
 				throw new ArgumentNullException(nameof(configuration));
 
-			services.Configure<ClaimsSelectorLoaderOptions>(configuration.GetSection($"{ConfigurationKeys.ClaimsSelectionPath}:{nameof(ClaimsSelectorLoader)}"));
+			services.Configure<ClaimsSelectionOptions>(configuration.GetSection($"{ConfigurationKeys.ClaimsSelectionPath}"));
 
 			services.TryAddScoped<IClaimsSelectionContextAccessor, ClaimsSelectionContextAccessor>();
 			services.TryAddSingleton<IClaimsSelectorLoader, ClaimsSelectorLoader>();
