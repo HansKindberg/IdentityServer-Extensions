@@ -16,7 +16,6 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		private const string _employeeHsaIdClaimType = "hsa_identity";
 		private const string _selectedClaimTypePrefix = "selected_";
-		private string _selectedEmployeeHsaIdClaimType;
 
 		#endregion
 
@@ -30,16 +29,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		public virtual string EmployeeHsaIdClaimType { get; set; } = _employeeHsaIdClaimType;
 		public virtual string SelectedClaimTypePrefix { get; set; } = _selectedClaimTypePrefix;
-
-		protected internal virtual string SelectedEmployeeHsaIdClaimType
-		{
-			get
-			{
-				this._selectedEmployeeHsaIdClaimType ??= $"{this.SelectedClaimTypePrefix}{nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant()}";
-
-				return this._selectedEmployeeHsaIdClaimType;
-			}
-		}
+		protected internal virtual string SelectedEmployeeHsaIdClaimType => $"{this.SelectedClaimTypePrefix}{nameof(Commission.EmployeeHsaId).FirstCharacterToLowerInvariant()}";
 
 		#endregion
 
