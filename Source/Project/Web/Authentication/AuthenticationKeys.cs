@@ -4,6 +4,7 @@ namespace HansKindberg.IdentityServer.Web.Authentication
 	{
 		#region Fields
 
+		public const string ClaimsSelectionClaimTypes = "claims-selection-claim-types";
 		public const string ClaimsSelectionHandled = "claims-selection-handled";
 		public const string ReturnUrl = "returnUrl";
 		public const string Scheme = "scheme";
