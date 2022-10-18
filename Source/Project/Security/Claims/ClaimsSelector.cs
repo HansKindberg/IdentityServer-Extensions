@@ -68,7 +68,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			if(!ReferenceEquals(this, selectionResult.Selector))
 				throw new ArgumentException("The selector-property of the selection-result is not this instance.", nameof(selectionResult));
 
-			var claimsDictionary = new Dictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
+			IDictionary<string, IClaimBuilderCollection> claimsDictionary = null;
 
 			if(selectionResult.Selectables.TryGetValue(this.Key, out var selectables))
 			{
@@ -77,38 +77,15 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				if(selectableClaim == null && this.SelectionRequired)
 					throw new InvalidOperationException($"Selection required but there is no selected selectable of type \"{typeof(T)}\".");
 
-				// ReSharper disable InvertIf
 				if(selectableClaim != null)
-				{
-					foreach(var claim in selectableClaim.Build())
-					{
-						var type = claim.Type;
-
-						if(!claimsDictionary.ContainsKey(type))
-							claimsDictionary.Add(type, new ClaimBuilderCollection());
-
-						var value = claim.Value;
-
-						if(value == null)
-							continue;
-
-						var collection = claimsDictionary[type];
-
-						collection.Add(new ClaimBuilder
-						{
-							Type = type,
-							Value = value
-						});
-					}
-				}
-				// ReSharper restore InvertIf
+					claimsDictionary = selectableClaim.Build();
 			}
 			else if(this.SelectionRequired)
 			{
 				throw new InvalidOperationException($"There is no selectable with key {this.Key.ToStringRepresentation()}.");
 			}
 
-			return await Task.FromResult(claimsDictionary).ConfigureAwait(false);
+			return await Task.FromResult(claimsDictionary ?? new SortedDictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase)).ConfigureAwait(false);
 		}
 
 		#endregion

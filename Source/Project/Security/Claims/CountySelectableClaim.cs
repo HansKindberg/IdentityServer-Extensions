@@ -129,56 +129,95 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Methods
 
-		public virtual IClaimBuilderCollection Build()
+		public virtual IDictionary<string, IClaimBuilderCollection> Build()
 		{
-			var claims = new ClaimBuilderCollection();
+			var claimsDictionary = new SortedDictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase);
 
-			this.PopulateClaims(claims, nameof(Commission.CommissionHsaId), this.Selection.Commission?.CommissionHsaId);
-			this.PopulateClaims(claims, nameof(Commission.CommissionName), this.Selection.Commission?.CommissionName);
-			this.PopulateClaims(claims, nameof(Commission.CommissionPurpose), this.Selection.Commission?.CommissionPurpose);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.CommissionHsaId), this.Selection.Commission?.CommissionHsaId);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.CommissionName), this.Selection.Commission?.CommissionName);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.CommissionPurpose), this.Selection.Commission?.CommissionPurpose);
+
+			var commissionRightClaims = new ClaimBuilderCollection();
+			var commissionRightType = this.GetClaimType(nameof(CommissionRight));
 
 			if(this.Selection.Commission != null)
 			{
 				foreach(var commissionRigth in this.Selection.Commission.CommissionRights)
 				{
-					this.PopulateClaims(claims, nameof(CommissionRight), JsonConvert.SerializeObject(commissionRigth));
+					this.PopulateClaims(commissionRightClaims, commissionRightType, JsonConvert.SerializeObject(commissionRigth));
 				}
 			}
 
-			this.PopulateClaims(claims, nameof(Commission.EmployeeHsaId), this.Selection.EmployeeHsaId);
-			this.PopulateClaims(claims, nameof(Selection.GivenName), this.Selection.GivenName);
+			claimsDictionary.Add(commissionRightType, commissionRightClaims);
 
-			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderHsaId), this.Selection.Commission?.HealthCareProviderHsaId);
-			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderName), this.Selection.Commission?.HealthCareProviderName);
-			this.PopulateClaims(claims, nameof(Commission.HealthCareProviderOrgNo), this.Selection.Commission?.HealthCareProviderOrgNo);
-			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitHsaId), this.Selection.Commission?.HealthCareUnitHsaId);
-			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitName), this.Selection.Commission?.HealthCareUnitName);
-			this.PopulateClaims(claims, nameof(Commission.HealthCareUnitStartDate), JsonConvert.SerializeObject(this.Selection.Commission?.HealthCareUnitStartDate));
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.EmployeeHsaId), this.Selection.EmployeeHsaId);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.GivenName), this.Selection.GivenName);
 
-			this.PopulateClaims(claims, nameof(Selection.Mail), this.Selection.Mail);
-			this.PopulateClaims(claims, nameof(Selection.PaTitleCode), this.Selection.PaTitleCode);
-			this.PopulateClaims(claims, nameof(Selection.PersonalIdentityNumber), this.Selection.PersonalIdentityNumber);
-			this.PopulateClaims(claims, nameof(Selection.PersonalPrescriptionCode), this.Selection.PersonalPrescriptionCode);
-			this.PopulateClaims(claims, nameof(Selection.Surname), this.Selection.Surname);
-			this.PopulateClaims(claims, nameof(Selection.SystemRole), this.Selection.SystemRole);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareProviderHsaId), this.Selection.Commission?.HealthCareProviderHsaId);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareProviderName), this.Selection.Commission?.HealthCareProviderName);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareProviderOrgNo), this.Selection.Commission?.HealthCareProviderOrgNo);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareUnitHsaId), this.Selection.Commission?.HealthCareUnitHsaId);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareUnitName), this.Selection.Commission?.HealthCareUnitName);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Commission.HealthCareUnitStartDate), JsonConvert.SerializeObject(this.Selection.Commission?.HealthCareUnitStartDate));
 
-			return claims;
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.Mail), this.Selection.Mail);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.PaTitleCode), this.Selection.PaTitleCode);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.PersonalIdentityNumber), this.Selection.PersonalIdentityNumber);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.PersonalPrescriptionCode), this.Selection.PersonalPrescriptionCode);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.Surname), this.Selection.Surname);
+			this.PopulateClaimsDictionaryByPropertyName(claimsDictionary, nameof(Selection.SystemRole), this.Selection.SystemRole);
+
+			return claimsDictionary;
 		}
 
-		protected internal virtual void PopulateClaims(IClaimBuilderCollection claims, string propertyName, string value)
+		protected internal virtual string GetClaimType(string propertyName)
+		{
+			if(propertyName == null)
+				throw new ArgumentNullException(nameof(propertyName));
+
+			return $"{this.ClaimTypePrefix}{propertyName.FirstCharacterToLowerInvariant()}";
+		}
+
+		protected internal virtual void PopulateClaims(IClaimBuilderCollection claims, string type, string value)
 		{
 			if(claims == null)
 				throw new ArgumentNullException(nameof(claims));
 
-			if(propertyName == null)
-				throw new ArgumentNullException(nameof(propertyName));
+			if(type == null)
+				throw new ArgumentNullException(nameof(type));
 
 			if(string.IsNullOrEmpty(value))
 				return;
 
-			var claim = new ClaimBuilder { Type = $"{this.ClaimTypePrefix}{propertyName.FirstCharacterToLowerInvariant()}", Value = value };
+			var claim = new ClaimBuilder { Type = type, Value = value };
 
 			claims.Add(claim);
+		}
+
+		protected internal virtual void PopulateClaimsDictionaryByClaimType(IDictionary<string, IClaimBuilderCollection> claimsDictionary, string type, string value)
+		{
+			if(claimsDictionary == null)
+				throw new ArgumentNullException(nameof(claimsDictionary));
+
+			if(type == null)
+				throw new ArgumentNullException(nameof(type));
+
+			var claims = new ClaimBuilderCollection();
+
+			this.PopulateClaims(claims, type, value);
+
+			claimsDictionary.Add(type, claims);
+		}
+
+		protected internal virtual void PopulateClaimsDictionaryByPropertyName(IDictionary<string, IClaimBuilderCollection> claimsDictionary, string propertyName, string value)
+		{
+			if(claimsDictionary == null)
+				throw new ArgumentNullException(nameof(claimsDictionary));
+
+			if(propertyName == null)
+				throw new ArgumentNullException(nameof(propertyName));
+
+			this.PopulateClaimsDictionaryByClaimType(claimsDictionary, this.GetClaimType(propertyName), value);
 		}
 
 		#endregion

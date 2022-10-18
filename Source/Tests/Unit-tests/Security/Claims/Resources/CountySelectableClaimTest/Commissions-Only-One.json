@@ -1,0 +1,65 @@
+[
+	{
+		"employeeHsaId": "TEST123456-e001",
+		"commissionName": "Commission 3",
+		"commissionHsaId": "TEST123456-c003",
+		"commissionPurpose": "Purpose 3",
+		"healthCareUnitHsaId": "TEST123456-hu03",
+		"healthCareUnitName": "Healthcare unit 3",
+		"healthCareUnitStartDate": {
+			"year": 2000,
+			"month": 1,
+			"day": 1
+		},
+		"healthCareProviderHsaId": "TEST123456-hp03",
+		"healthCareProviderName": "Healthcare provider 3",
+		"healthCareProviderOrgNo": "TEST123456",
+		"commissionRights": [
+			{
+				"activity": "AB",
+				"informationClass": "a1",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a2",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a3",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a4",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a5",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a6",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a7",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a8",
+				"scope": "AB"
+			},
+			{
+				"activity": "AB",
+				"informationClass": "a9",
+				"scope": "AB"
+			}
+		]
+	}
+]

@@ -52,14 +52,21 @@ namespace HansKindberg.IdentityServer.Security.Claims
 
 		#region Methods
 
-		public virtual IClaimBuilderCollection Build()
+		public virtual IDictionary<string, IClaimBuilderCollection> Build()
 		{
-			var claims = new ClaimBuilderCollection();
-
 			var claim = new ClaimBuilder { Type = this.SelectedEmployeeHsaIdClaimType, Value = this.Identity };
-			claims.Add(claim);
 
-			return claims;
+			var claims = new ClaimBuilderCollection
+			{
+				claim
+			};
+
+			var claimsDictionary = new SortedDictionary<string, IClaimBuilderCollection>(StringComparer.OrdinalIgnoreCase)
+			{
+				{ claim.Type, claims }
+			};
+
+			return claimsDictionary;
 		}
 
 		#endregion
