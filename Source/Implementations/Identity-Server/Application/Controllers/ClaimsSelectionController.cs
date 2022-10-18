@@ -13,6 +13,7 @@ using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Security.Claims.Extensions;
 using HansKindberg.IdentityServer.Web.Authentication;
+using HansKindberg.IdentityServer.Web.Authentication.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		private Lazy<IClaimsSelectionContext> _claimsSelectionContext;
 		private const string _clientAuthenticationKey = "client";
 		private const string _iframeUrlAuthenticationKey = "iframeUrl";
+		private const string _noSelectionsAuthenticationKey = "noSelections";
 		private const string _samlIframeUrlAuthenticationKey = "samlIframeUrl";
 
 		#endregion
@@ -97,6 +99,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 		protected internal virtual string ClientAuthenticationKey => _clientAuthenticationKey;
 		protected internal virtual string IframeUrlAuthenticationKey => _iframeUrlAuthenticationKey;
 		protected internal virtual string IntermediateAuthenticationScheme => this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name;
+		protected internal virtual string NoSelectionsAuthenticationKey => _noSelectionsAuthenticationKey;
 		protected internal virtual string SamlIframeUrlAuthenticationKey => _samlIframeUrlAuthenticationKey;
 
 		#endregion
@@ -121,23 +124,27 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return this.View("Confirmation", model);
 		}
 
-		protected internal virtual async Task<AuthenticationProperties> CreateAuthenticationPropertiesAsync(string returnUrl)
+		protected internal virtual async Task<AuthenticationProperties> CreateAuthenticationPropertiesAsync(ClaimsPrincipal claimsPrincipal, bool noSelections, string returnUrl)
 		{
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
 			var model = await this.CreateClaimsSelectionConfirmationViewModelAsync(returnUrl);
 
 			var authenticationProperties = this.AuthenticateResult.Properties?.Clone() ?? new AuthenticationProperties();
 
-			authenticationProperties.ExpiresUtc = null;
-			authenticationProperties.IssuedUtc = null;
-
 			authenticationProperties.RedirectUri = this.Url.Action(nameof(this.Confirmation));
 
+			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, string.Join(',', await this.GetClaimTypesAsync(claimsPrincipal)));
 			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionHandled, true.ToString());
 			authenticationProperties.SetString(this.ClientAuthenticationKey, model.Client);
 			authenticationProperties.SetString(this.IframeUrlAuthenticationKey, model.IframeUrl);
 			authenticationProperties.SetString(AuthenticationKeys.ReturnUrl, model.RedirectUrl);
 			authenticationProperties.SetString(this.SamlIframeUrlAuthenticationKey, model.SamlIframeUrl);
 			authenticationProperties.SetString(AuthenticationKeys.Scheme, this.AuthenticationScheme);
+
+			if(noSelections)
+				authenticationProperties.SetString(this.NoSelectionsAuthenticationKey, true.ToString());
 
 			return authenticationProperties;
 		}
@@ -155,7 +162,23 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					throw new InvalidOperationException("The claims-principal from the current authentication is null.");
 
 				var claims = new ClaimBuilderCollection();
-				claims.AddRange(claimsPrincipal.Claims.Select(claim => new ClaimBuilder(claim)));
+				var claimTypes = await this.AuthenticateResult.GetClaimsSelectionClaimTypesAsync();
+				var claimTypesValue = this.AuthenticateResult.Properties?.GetString(AuthenticationKeys.ClaimsSelectionClaimTypes);
+
+				if(claimTypesValue != null)
+				{
+					// ReSharper disable LoopCanBeConvertedToQuery
+					foreach(var claim in claimsPrincipal.Claims)
+					{
+						if(claimTypes.Contains(claim.Type))
+							claims.Add(new ClaimBuilder(claim));
+					}
+					// ReSharper restore LoopCanBeConvertedToQuery
+				}
+				else
+				{
+					claims.AddRange(claimsPrincipal.Claims.Select(claim => new ClaimBuilder(claim)));
+				}
 
 				foreach(var result in claimsSelectionResults)
 				{
@@ -209,6 +232,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				AutomaticRedirect = signOutOptions.AutomaticRedirectAfterSignOut,
 				Client = authenticationProperties.GetString(this.ClientAuthenticationKey),
 				IframeUrl = authenticationProperties.GetString(this.IframeUrlAuthenticationKey),
+				NoSelections = bool.TryParse(authenticationProperties.GetString(this.NoSelectionsAuthenticationKey), out var noSelections) && noSelections,
 				RedirectUrl = authenticationProperties.GetString(AuthenticationKeys.ReturnUrl),
 				SamlIframeUrl = authenticationProperties.GetString(this.SamlIframeUrlAuthenticationKey),
 				SecondsBeforeRedirect = signOutOptions.SecondsBeforeRedirectAfterSignOut
@@ -251,6 +275,12 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 				var result = await claimsSelector.SelectAsync(this.AuthenticateResult.Principal, selections);
 
+				if(!await result.AnySelectableClaimsAsync())
+				{
+					this.Logger.LogDebugIfEnabled($"There are no selectable claims for claims-selector with key {claimsSelector.Key.ToStringRepresentation()} and user {this.AuthenticateResult.Principal?.Identity?.Name.ToStringRepresentation()}.");
+					continue;
+				}
+
 				model.Results.Add(result);
 
 				foreach(var (key, value) in result.Selectables)
@@ -265,6 +295,21 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			model.Form.RequiredSelectionsSelected = !model.Form.Groups.Values.Any(group => group.SelectionRequired && !group.SelectableClaims.Any(selectableClaim => selectableClaim.Selected));
 
 			return await Task.FromResult(model);
+		}
+
+		protected internal virtual async Task<ISet<string>> GetClaimTypesAsync(ClaimsPrincipal claimsPrincipal)
+		{
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
+			var claimTypes = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+
+			foreach(var claim in claimsPrincipal.Claims)
+			{
+				claimTypes.Add(claim.Type);
+			}
+
+			return await Task.FromResult(claimTypes);
 		}
 
 		protected internal virtual async Task<string> GetFullTypeNameWithUnderscoresInsteadOfDotsAsync(object instance)
@@ -308,12 +353,14 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var model = await this.CreateClaimsSelectionViewModelAsync(returnUrl);
 
+			if(!model.Results.Any() && !model.Errors.Any())
+				return await this.Index(model, returnUrl);
+
 			return this.View(model);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[SuppressMessage("Design", "CA1031:Do not catch general exception types")]
 		public virtual async Task<IActionResult> Index(ClaimsSelectionForm form, string returnUrl)
 		{
 			if(!this.ClaimsSelectionFeaterEnabled)
@@ -332,16 +379,22 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var model = await this.CreateClaimsSelectionViewModelAsync(returnUrl);
 
-			if(form.Cancel)
-			{
-				if(model.Form.RequiredSelectionsSelected)
-					return await this.RedirectAsync(returnUrl);
-			}
+			if(form.Cancel && model.Form.RequiredSelectionsSelected)
+				return await this.RedirectAsync(returnUrl);
+
+			return await this.Index(model, returnUrl);
+		}
+
+		[SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+		protected internal virtual async Task<IActionResult> Index(ClaimsSelectionViewModel model, string returnUrl)
+		{
+			if(model == null)
+				throw new ArgumentNullException(nameof(model));
 
 			foreach(var result in model.Results)
 			{
 				if(result.Selector.SelectionRequired && !result.Selected())
-					model.Errors.Add(this.Localizer.GetString($"errors/{model.Form.AuthenticationScheme}/{await this.GetFullTypeNameWithUnderscoresInsteadOfDotsAsync(result.Selector)}/selection-is-not-complete"));
+					model.Errors.Add(this.Localizer.GetString($"errors/{model.Form.AuthenticationScheme}/{await this.GetFullTypeNameWithUnderscoresInsteadOfDotsAsync(result.Selector)}/selection-required"));
 			}
 
 			// ReSharper disable InvertIf
@@ -349,8 +402,8 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			{
 				try
 				{
-					var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(returnUrl);
 					var claimsPrincipal = await this.CreateClaimsPrincipalAsync(model.Results);
+					var authenticationProperties = await this.CreateAuthenticationPropertiesAsync(claimsPrincipal, !model.Results.Any(), returnUrl);
 
 					if(this.User.IsAuthenticated())
 						await this.Facade.Identity.SignOutAsync();

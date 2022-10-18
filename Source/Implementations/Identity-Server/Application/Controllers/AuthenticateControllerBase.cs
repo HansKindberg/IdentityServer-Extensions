@@ -8,7 +8,9 @@ using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Models.Extensions;
+using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Web.Authentication;
+using HansKindberg.IdentityServer.Web.Authentication.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -82,45 +84,74 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			this.Logger.LogDebugIfEnabled($"Authentication-sheme = {authenticationScheme.ToStringRepresentation()}, claims received = {string.Join(", ", authenticateResult.Principal.Claims.Select(claim => claim.Type)).ToStringRepresentation()}.");
 
-			var decorators = (await this.Facade.DecorationLoader.GetCallbackDecoratorsAsync(authenticationScheme)).ToArray();
-
 			var authenticationProperties = new AuthenticationProperties();
 			var claims = new ClaimBuilderCollection();
 
-			if(decorators.Any())
-			{
-				foreach(var decorator in decorators)
-				{
-					await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+			var claimsSelectionInformation = await this.GetClaimsSelectionInformationAsync(authenticateResult, authenticationScheme, returnUrl);
 
-					this.Logger.LogDebugIfEnabled($"{decorator.GetType().FullName}.DecorateAsync claims = {string.Join(", ", claims.Select(claim => claim.Type)).ToStringRepresentation()}.");
+			if(claimsSelectionInformation.Handled)
+			{
+				this.Logger.LogDebugIfEnabled("Claims-selection handled.");
+
+				// ReSharper disable LoopCanBeConvertedToQuery
+				foreach(var claim in authenticateResult.Principal.Claims)
+				{
+					if(claimsSelectionInformation.ClaimTypes.Contains(claim.Type))
+						claims.Add(new ClaimBuilder(claim));
 				}
+				// ReSharper restore LoopCanBeConvertedToQuery
 			}
 			else
 			{
-				this.Logger.LogDebugIfEnabled($"There are no callback-decorators for authentication-scheme {authenticationScheme.ToStringRepresentation()}.");
-			}
+				this.Logger.LogDebugIfEnabled("Claims-selection NOT handled.");
 
-			await this.ResolveRequiredClaims(authenticateResult, authenticationScheme, claims);
+				var decorators = (await this.Facade.DecorationLoader.GetCallbackDecoratorsAsync(authenticationScheme)).ToArray();
 
-			await this.ConvertToJwtClaimsAsync(claims);
-
-			this.Logger.LogDebugIfEnabled($"Converted to jwt-claims = {string.Join(", ", claims.Select(claim => claim.Type)).ToStringRepresentation()}.");
-
-			var claimsSelectionContext = await this.Facade.ClaimsSelectionContextAccessor.GetAsync(authenticationScheme, returnUrl);
-			if(claimsSelectionContext != null)
-			{
-				if(!bool.TryParse(authenticateResult.Properties?.GetString(AuthenticationKeys.ClaimsSelectionHandled), out var claimsSelectionHandled))
-					claimsSelectionHandled = false;
-
-				if(!claimsSelectionHandled)
+				if(decorators.Any())
 				{
-					await this.HttpContext.SignInAsync(this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name, await this.CreateClaimsPrincipalAsync(authenticateResult.Principal.Identity?.AuthenticationType, claims), authenticateResult.Properties);
+					this.Logger.LogDebugIfEnabled($"{decorators.Length} decorators will be used for authentication-scheme {authenticationScheme.ToStringRepresentation()}.");
+
+					foreach(var decorator in decorators)
+					{
+						await decorator.DecorateAsync(authenticateResult, authenticationScheme, claims, authenticationProperties);
+
+						this.Logger.LogDebugIfEnabled($"{decorator.GetType().FullName}.DecorateAsync claims = {string.Join(", ", claims.Select(claim => claim.Type)).ToStringRepresentation()}.");
+					}
+				}
+				else
+				{
+					this.Logger.LogDebugIfEnabled($"There are no callback-decorators for authentication-scheme {authenticationScheme.ToStringRepresentation()}.");
+				}
+
+				await this.ResolveRequiredClaims(authenticateResult, authenticationScheme, claims);
+
+				await this.ConvertToJwtClaimsAsync(claims);
+
+				this.Logger.LogDebugIfEnabled($"Converted to jwt-claims = {string.Join(", ", claims.Select(claim => claim.Type)).ToStringRepresentation()}.");
+
+				if(claimsSelectionInformation.Context != null)
+				{
+					var claimsPrincipal = await this.CreateClaimsPrincipalAsync(authenticateResult.Principal.Identity?.AuthenticationType, claims);
+					var automaticSelectionIsPossible = await claimsSelectionInformation.Context.AutomaticSelectionIsPossibleAsync(claimsPrincipal);
+
+					if(automaticSelectionIsPossible)
+					{
+						// todo: Fix automatic claims-selection.
+					}
+
+					await this.HttpContext.SignInAsync(this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name, claimsPrincipal, authenticateResult.Properties);
 
 					await this.HttpContext.SignOutAsync(intermediateCookieAuthenticationScheme);
 
-					return this.Redirect(claimsSelectionContext.Url.ToString());
+					return this.Redirect(claimsSelectionInformation.Context.Url.ToString());
 				}
+			}
+
+			if(claimsSelectionInformation.Handled)
+			{
+				authenticationProperties.ExpiresUtc = authenticateResult.Properties?.ExpiresUtc;
+				authenticationProperties.IssuedUtc = authenticateResult.Properties?.IssuedUtc;
+				authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, authenticateResult.Properties?.GetString(AuthenticationKeys.ClaimsSelectionClaimTypes));
 			}
 
 			var user = await this.ResolveUserAsync(authenticationScheme, claims);
@@ -164,6 +195,25 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				throw new ArgumentNullException(nameof(claims));
 
 			return await Task.FromResult(new ClaimsPrincipal(new ClaimsIdentity(claims.Build(), authenticationType, claims.FindFirstNameClaim()?.Type, claims.FindFirst(ClaimTypes.Role, JwtClaimTypes.Role)?.Type)));
+		}
+
+		protected internal virtual async Task<ClaimsSelectionInformation> GetClaimsSelectionInformationAsync(AuthenticateResult authenticateResult, string authenticationScheme, string returnUrl)
+		{
+			if(authenticateResult == null)
+				throw new ArgumentNullException(nameof(authenticateResult));
+
+			var claimsSelectionInformation = new ClaimsSelectionInformation
+			{
+				Context = await this.Facade.ClaimsSelectionContextAccessor.GetAsync(authenticationScheme, returnUrl),
+				Handled = await authenticateResult.GetClaimsSelectionHandledAsync()
+			};
+
+			foreach(var claimType in await authenticateResult.GetClaimsSelectionClaimTypesAsync())
+			{
+				claimsSelectionInformation.ClaimTypes.Add(claimType);
+			}
+
+			return claimsSelectionInformation;
 		}
 
 		protected internal virtual async Task ResolveAuthenticationLocally(AuthenticateResult authenticateResult, AuthenticationProperties authenticationProperties, ExtendedIdentityServerUser user)

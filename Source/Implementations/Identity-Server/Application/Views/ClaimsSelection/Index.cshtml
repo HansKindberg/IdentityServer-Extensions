@@ -21,16 +21,6 @@
 				</ul>
 			</div>
 		}
-		@if(Model.Form.Groups.Any())
-		{
-			<partial model="@Model.Form" name="Form" />
-		}
-		else
-		{
-			<p class="alert alert-info">@Localizer.GetString($"{Model.Form.AuthenticationScheme}.no-selections-available")</p>
-			<div class="text-end">
-				<a autofocus="autofocus" class="btn btn-primary" href="@Model.ReturnUrl">@Localizer.GetString("Continue")</a>
-			</div>
-		}
+		<partial model="@Model.Form" name="Form" />
 	</div>
 </div>

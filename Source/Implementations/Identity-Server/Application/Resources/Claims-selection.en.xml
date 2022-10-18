@@ -5,10 +5,10 @@
 				<errors>
 					<inera>
 						<HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
-							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
+							<selection-required>You must select a commission.</selection-required>
 						</HansKindberg_IdentityServer_Security_Claims_ClaimBasedCountySelector>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
+							<selection-required>You must select a commission.</selection-required>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
 					</inera>
 					<unexpected-error>An unexpected error has occurred.</unexpected-error>
@@ -18,12 +18,16 @@
 		<views>
 			<claimsSelection>
 				<confirmation>
-					<inera>
-						<confirmation>Your commission is changed.</confirmation>
-						<heading>Commission changed</heading>
-						<redirect-text>Continue</redirect-text>
-						<redirect-text-with-client>Continue to the application "{0}".</redirect-text-with-client>
-					</inera>
+					<changed>
+						<heading>Selection changed</heading>
+						<message>Your selection is changed.</message>
+					</changed>
+					<no-selections>
+						<heading>No selections</heading>
+						<message>You have no selections to make.</message>
+					</no-selections>
+					<redirect-text>Continue</redirect-text>
+					<redirect-text-with-client>Continue to the application "{0}".</redirect-text-with-client>
 				</confirmation>
 				<form>
 					<cancel>Cancel</cancel>
@@ -52,11 +56,9 @@
 					<submit>Save</submit>
 				</form>
 				<index>
-					<continue>Continue</continue>
 					<error>Error</error>
 					<inera>
-						<heading>Commission</heading>
-						<no-selections-available>You do not have any commissions.</no-selections-available>
+						<heading>Select</heading>
 					</inera>
 				</index>
 			</claimsSelection>
@@ -64,7 +66,7 @@
 				<parts>
 					<header>
 						<inera>
-							<claims-selection>Change commission</claims-selection>
+							<claims-selection>Change selections</claims-selection>
 						</inera>
 					</header>
 				</parts>

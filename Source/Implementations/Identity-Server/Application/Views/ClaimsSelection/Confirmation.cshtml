@@ -8,20 +8,22 @@
 	}
 }
 
+@{ var localizationNamePrefix = Model.NoSelections ? "no-selections" : "changed"; }
+
 <div class="card">
 	<div class="card-header">
 		<h1 class="h4 m-0 p-0">
 			<svg class="size-1-point-4-rem m-0 p-0" role="presentation">
 				<use xlink:href="/Style/Icons/sprite.svg#check" />
 			</svg>
-			@Localizer.GetString($"{Model.AuthenticationScheme}.Heading")
+			@Localizer.GetString($"{localizationNamePrefix}.Heading")
 		</h1>
 	</div>
 	<div class="card-body">
-		<p class="alert alert-success">@Localizer.GetString($"{Model.AuthenticationScheme}.Confirmation")</p>
+		<p class="alert alert-success">@Localizer.GetString($"{localizationNamePrefix}.Message")</p>
 		@if(Model.RedirectUrl != null)
 		{
-			var text = Model.Client != null ? Localizer.GetString($"{Model.AuthenticationScheme}.redirect-text-with-client", Model.Client) : Localizer.GetString($"{Model.AuthenticationScheme}.redirect-text");
+			var text = Model.Client != null ? Localizer.GetString("redirect-text-with-client", Model.Client) : Localizer.GetString("redirect-text");
 			<div class="text-end">
 				<a autofocus="autofocus" class="btn btn-primary" href="@Model.RedirectUrl">@text</a>
 			</div>

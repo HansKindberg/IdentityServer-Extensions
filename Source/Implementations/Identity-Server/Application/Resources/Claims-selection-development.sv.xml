@@ -5,22 +5,19 @@
 				<errors>
 					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<selection-is-not-complete>Du måste välja ett medarbetaruppdrag.</selection-is-not-complete>
+							<selection-required>Du måste välja ett medarbetaruppdrag.</selection-required>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+					</Negotiate>
+					<Negotiate>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
+							<selection-required>Du måste välja ett tjänste-id.</selection-required>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
 					</Negotiate>
 				</errors>
 			</claimsSelectionController>
 		</controllers>
 		<views>
 			<claimsSelection>
-				<confirmation>
-					<Negotiate>
-						<confirmation>Ditt medarbetaruppdrag är ändrat.</confirmation>
-						<heading>Medarbetaruppdrag ändrat</heading>
-						<redirect-text>Fortsätt</redirect-text>
-						<redirect-text-with-client>Fortsätt till applikationen "{0}".</redirect-text-with-client>
-					</Negotiate>
-				</confirmation>
 				<form>
 					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
@@ -41,12 +38,22 @@
 								<healthCareUnitName>Vårdenhet</healthCareUnitName>
 							</county-fake-2>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
+							<county-identity-fake-1>
+								<heading>Välj ett tjänste-id</heading>
+							</county-identity-fake-1>
+							<county-identity-fake-2>
+								<heading>Välj ett tjänste-id</heading>
+							</county-identity-fake-2>
+							<county-identity-fake-3>
+								<heading>Välj ett tjänste-id</heading>
+							</county-identity-fake-3>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
 					</Negotiate>
 				</form>
 				<index>
 					<Negotiate>
-						<heading>Medarbetaruppdrag</heading>
-						<no-selections-available>Du har inga medarbetaruppdrag.</no-selections-available>
+						<heading>Välj</heading>
 					</Negotiate>
 				</index>
 			</claimsSelection>
@@ -54,7 +61,7 @@
 				<parts>
 					<header>
 						<Negotiate>
-							<claims-selection>Byt medarbetaruppdrag</claims-selection>
+							<claims-selection>Byt val</claims-selection>
 						</Negotiate>
 					</header>
 				</parts>

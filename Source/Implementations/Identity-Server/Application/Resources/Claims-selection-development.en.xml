@@ -5,22 +5,19 @@
 				<errors>
 					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
-							<selection-is-not-complete>You must select a commission.</selection-is-not-complete>
+							<selection-required>You must select a commission.</selection-required>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+					</Negotiate>
+					<Negotiate>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
+							<selection-required>You must select a service-id.</selection-required>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
 					</Negotiate>
 				</errors>
 			</claimsSelectionController>
 		</controllers>
 		<views>
 			<claimsSelection>
-				<confirmation>
-					<Negotiate>
-						<confirmation>Your commission is changed.</confirmation>
-						<heading>Commission changed</heading>
-						<redirect-text>Continue</redirect-text>
-						<redirect-text-with-client>Continue to the application "{0}".</redirect-text-with-client>
-					</Negotiate>
-				</confirmation>
 				<form>
 					<Negotiate>
 						<HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
@@ -41,12 +38,22 @@
 								<healthCareUnitName>Healthcare unit</healthCareUnitName>
 							</county-fake-2>
 						</HansKindberg_IdentityServer_Security_Claims_FakeClaimBasedCountySelector>
+						<HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
+							<county-identity-fake-1>
+								<heading>Select a service-id</heading>
+							</county-identity-fake-1>
+							<county-identity-fake-2>
+								<heading>Select a service-id</heading>
+							</county-identity-fake-2>
+							<county-identity-fake-3>
+								<heading>Select a service-id</heading>
+							</county-identity-fake-3>
+						</HansKindberg_IdentityServer_Security_Claims_FakeCountyIdentitySelector>
 					</Negotiate>
 				</form>
 				<index>
 					<Negotiate>
-						<heading>Commission</heading>
-						<no-selections-available>You do not have any commissions.</no-selections-available>
+						<heading>Select</heading>
 					</Negotiate>
 				</index>
 			</claimsSelection>
@@ -54,7 +61,7 @@
 				<parts>
 					<header>
 						<Negotiate>
-							<claims-selection>Change commission</claims-selection>
+							<claims-selection>Change selections</claims-selection>
 						</Negotiate>
 					</header>
 				</parts>
