@@ -28,7 +28,7 @@ namespace UnitTests.Security.Claims
 
 			Assert.IsTrue(claimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionEnabled);
 
-			var claimsSelector = await this.CreateClaimsSelectorMock(1);
+			var claimsSelector = await this.CreateClaimsSelectorMockAsync(1);
 			claimsSelector.SelectionRequired = false;
 			claimsSelectionContext.Selectors.Add(claimsSelector);
 
@@ -47,7 +47,7 @@ namespace UnitTests.Security.Claims
 
 			Assert.IsTrue(claimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionEnabled);
 
-			var claimsSelector = await this.CreateClaimsSelectorMock(1);
+			var claimsSelector = await this.CreateClaimsSelectorMockAsync(1);
 			claimsSelector.SelectionRequired = true;
 			claimsSelectionContext.Selectors.Add(claimsSelector);
 
@@ -66,7 +66,7 @@ namespace UnitTests.Security.Claims
 
 			Assert.IsTrue(claimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionEnabled);
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(2));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(2));
 
 			var claims = new ClaimBuilderCollection();
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
@@ -107,7 +107,7 @@ namespace UnitTests.Security.Claims
 			return await Task.FromResult(claimsSelectionOptionsMonitorMock.Object);
 		}
 
-		protected internal virtual async Task<ClaimsSelectorMock> CreateClaimsSelectorMock(byte numberOfSelectableClaims, byte numberOfSelectables = 1)
+		protected internal virtual async Task<ClaimsSelectorMock> CreateClaimsSelectorMockAsync(byte numberOfSelectableClaims, byte numberOfSelectables = 1)
 		{
 			var claimsSelectionResult = new ClaimsSelectionResultMock();
 

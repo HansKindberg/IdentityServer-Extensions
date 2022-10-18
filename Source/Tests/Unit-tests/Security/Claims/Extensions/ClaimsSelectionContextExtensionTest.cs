@@ -24,9 +24,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
@@ -39,9 +39,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(1));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(1));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
@@ -54,9 +54,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(5));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(1));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(4));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(5));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(1));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(4));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
@@ -79,7 +79,7 @@ namespace UnitTests.Security.Claims.Extensions
 			return await Task.FromResult(claimsSelectionOptionsMonitorMock.Object);
 		}
 
-		protected internal virtual async Task<ClaimsSelectorMock> CreateClaimsSelectorMock(byte numberOfSelectableClaims, byte numberOfSelectables = 1)
+		protected internal virtual async Task<ClaimsSelectorMock> CreateClaimsSelectorMockAsync(byte numberOfSelectableClaims, byte numberOfSelectables = 1)
 		{
 			var claimsSelectionResult = new ClaimsSelectionResultMock();
 
@@ -109,9 +109,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
@@ -124,9 +124,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(1));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(1));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(0));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
@@ -139,9 +139,9 @@ namespace UnitTests.Security.Claims.Extensions
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(new ClaimBuilderCollection());
 			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync();
 
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(5));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(1));
-			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMock(4));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(5));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(1));
+			claimsSelectionContext.Selectors.Add(await this.CreateClaimsSelectorMockAsync(4));
 
 			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
 
