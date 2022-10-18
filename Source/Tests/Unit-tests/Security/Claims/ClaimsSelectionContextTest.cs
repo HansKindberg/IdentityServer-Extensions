@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Security.Claims.Configuration;
+using HansKindberg.IdentityServer.Security.Claims.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -34,6 +36,66 @@ namespace UnitTests.Security.Claims
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
 			Assert.IsTrue(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
 			Assert.IsFalse(await claimsSelectionContext.IsAutomaticallySelectedAsync(claimsPrincipal));
+		}
+
+		[TestMethod]
+		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereAreSelectorsWithSelectablesWithZeroOrOneSelectableClaim_And_SelectionIsNotRequired_ShouldReturnFalse()
+		{
+			var claimsSelectionOptions = new ClaimsSelectionOptions();
+			var claimsSelectionOptionsMonitor = await this.CreateClaimsSelectionOptionsMonitorAsync(claimsSelectionOptions);
+
+			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync(claimsSelectionOptionsMonitor);
+
+			Assert.IsTrue(claimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionEnabled);
+
+			var claimsSelector = await this.CreateClaimsSelectorMockAsync(1, 4);
+			claimsSelector.SelectionRequired = false;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			claimsSelector = await this.CreateClaimsSelectorMockAsync(1, 4);
+			claimsSelector.SelectionRequired = true;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			claimsSelector = await this.CreateClaimsSelectorMockAsync(0, 4);
+			claimsSelector.SelectionRequired = true;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
+			Assert.AreEqual(8, await claimsSelectionContext.NumberOfSelectableClaimsAsync(Mock.Of<ClaimsPrincipal>()));
+
+			var claims = new ClaimBuilderCollection();
+			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
+			Assert.IsFalse(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
+		}
+
+		[TestMethod]
+		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereAreSelectorsWithSelectablesWithZeroOrOneSelectableClaim_And_SelectionIsRequired_ShouldReturnTrue()
+		{
+			var claimsSelectionOptions = new ClaimsSelectionOptions();
+			var claimsSelectionOptionsMonitor = await this.CreateClaimsSelectionOptionsMonitorAsync(claimsSelectionOptions);
+
+			var claimsSelectionContext = await this.CreateClaimsSelectionContextAsync(claimsSelectionOptionsMonitor);
+
+			Assert.IsTrue(claimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionEnabled);
+
+			var claimsSelector = await this.CreateClaimsSelectorMockAsync(1, 4);
+			claimsSelector.SelectionRequired = true;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			claimsSelector = await this.CreateClaimsSelectorMockAsync(1, 4);
+			claimsSelector.SelectionRequired = true;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			claimsSelector = await this.CreateClaimsSelectorMockAsync(0, 4);
+			claimsSelector.SelectionRequired = true;
+			claimsSelectionContext.Selectors.Add(claimsSelector);
+
+			Assert.AreEqual(3, claimsSelectionContext.Selectors.Count);
+			Assert.AreEqual(8, await claimsSelectionContext.NumberOfSelectableClaimsAsync(Mock.Of<ClaimsPrincipal>()));
+
+			var claims = new ClaimBuilderCollection();
+			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
+			Assert.IsTrue(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
 		}
 
 		[TestMethod]

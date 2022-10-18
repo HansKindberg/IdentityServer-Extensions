@@ -44,21 +44,20 @@ namespace HansKindberg.IdentityServer.Security.Claims
 			{
 				var claimsSelectionResult = await claimsSelector.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)).ConfigureAwait(false);
 
-				var maximumNumberOfSelectableClaims = 0;
-
-				foreach(var (_, selectableClaims) in claimsSelectionResult.Selectables)
+				// ReSharper disable All
+				foreach(var selectable in claimsSelectionResult.Selectables)
 				{
-					if(selectableClaims.Count > maximumNumberOfSelectableClaims)
-						maximumNumberOfSelectableClaims = selectableClaims.Count;
+					var numberOfSelectableClaims = selectable.Value.Count;
+
+					if(numberOfSelectableClaims == 0)
+						continue;
+
+					if(numberOfSelectableClaims == 1 && claimsSelector.SelectionRequired)
+						continue;
+
+					return false;
 				}
-
-				if(maximumNumberOfSelectableClaims < 1)
-					continue;
-
-				if(maximumNumberOfSelectableClaims == 1 && claimsSelector.SelectionRequired)
-					continue;
-
-				return false;
+				// ReSharper restore All
 			}
 
 			return true;
