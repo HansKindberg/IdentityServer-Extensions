@@ -19,7 +19,7 @@ namespace UnitTests.Security.Claims
 		#region Methods
 
 		[TestMethod]
-		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereIsASelectorWithASelectableWithOnlyOneSelectableClaimAndSelectionIsNotRequired_ShouldReturnTrue()
+		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereIsASelectorWithASelectableWithOnlyOneSelectableClaim_And_SelectionIsNotRequired_ShouldReturnFalse()
 		{
 			var claimsSelectionOptions = new ClaimsSelectionOptions();
 			var claimsSelectionOptionsMonitor = await this.CreateClaimsSelectionOptionsMonitorAsync(claimsSelectionOptions);
@@ -34,11 +34,11 @@ namespace UnitTests.Security.Claims
 
 			var claims = new ClaimBuilderCollection();
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
-			Assert.IsTrue(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
+			Assert.IsFalse(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
 		}
 
 		[TestMethod]
-		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereIsASelectorWithASelectableWithOnlyOneSelectableClaimButSelectionIsRequired_ShouldReturnFalse()
+		public async Task AutomaticSelectionIsPossibleAsync_IfAutomaticSelectionIsEnabled_And_IfThereIsASelectorWithASelectableWithOnlyOneSelectableClaim_And_SelectionIsRequired_ShouldReturnTrue()
 		{
 			var claimsSelectionOptions = new ClaimsSelectionOptions();
 			var claimsSelectionOptionsMonitor = await this.CreateClaimsSelectionOptionsMonitorAsync(claimsSelectionOptions);
@@ -53,7 +53,7 @@ namespace UnitTests.Security.Claims
 
 			var claims = new ClaimBuilderCollection();
 			var claimsPrincipal = await ClaimsPrincipalFactory.CreateAsync(claims);
-			Assert.IsFalse(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
+			Assert.IsTrue(await claimsSelectionContext.AutomaticSelectionIsPossibleAsync(claimsPrincipal));
 		}
 
 		[TestMethod]

@@ -55,8 +55,10 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				if(maximumNumberOfSelectableClaims < 1)
 					continue;
 
-				if(claimsSelector.SelectionRequired || maximumNumberOfSelectableClaims > 1)
-					return false;
+				if(maximumNumberOfSelectableClaims == 1 && claimsSelector.SelectionRequired)
+					continue;
+
+				return false;
 			}
 
 			return true;

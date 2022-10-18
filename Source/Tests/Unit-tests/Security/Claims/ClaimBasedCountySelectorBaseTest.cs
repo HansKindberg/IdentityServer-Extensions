@@ -192,7 +192,7 @@ namespace UnitTests.Security.Claims
 
 				var claims = await claimBasedCountySelectorBase.GetClaimsAsync(claimsPrincipal, result);
 
-				Assert.AreEqual(11, claims.Count);
+				Assert.AreEqual(18, claims.Count);
 
 				var (key, value) = claims.ElementAt(0);
 				Assert.AreEqual("selected_commissionHsaId", key);
@@ -222,34 +222,62 @@ namespace UnitTests.Security.Claims
 				Assert.AreEqual("selected_employeeHsaId", value.First().Type);
 
 				(key, value) = claims.ElementAt(5);
+				Assert.AreEqual("selected_givenName", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(6);
 				Assert.AreEqual("selected_healthCareProviderHsaId", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareProviderHsaId", value.First().Type);
 
-				(key, value) = claims.ElementAt(6);
+				(key, value) = claims.ElementAt(7);
 				Assert.AreEqual("selected_healthCareProviderName", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareProviderName", value.First().Type);
 
-				(key, value) = claims.ElementAt(7);
+				(key, value) = claims.ElementAt(8);
 				Assert.AreEqual("selected_healthCareProviderOrgNo", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareProviderOrgNo", value.First().Type);
 
-				(key, value) = claims.ElementAt(8);
+				(key, value) = claims.ElementAt(9);
 				Assert.AreEqual("selected_healthCareUnitHsaId", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareUnitHsaId", value.First().Type);
 
-				(key, value) = claims.ElementAt(9);
+				(key, value) = claims.ElementAt(10);
 				Assert.AreEqual("selected_healthCareUnitName", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareUnitName", value.First().Type);
 
-				(key, value) = claims.ElementAt(10);
+				(key, value) = claims.ElementAt(11);
 				Assert.AreEqual("selected_healthCareUnitStartDate", key);
 				Assert.AreEqual(1, value.Count);
 				Assert.AreEqual("selected_healthCareUnitStartDate", value.First().Type);
+
+				(key, value) = claims.ElementAt(12);
+				Assert.AreEqual("selected_mail", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(13);
+				Assert.AreEqual("selected_paTitleCode", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(14);
+				Assert.AreEqual("selected_personalIdentityNumber", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(15);
+				Assert.AreEqual("selected_personalPrescriptionCode", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(16);
+				Assert.AreEqual("selected_surname", key);
+				Assert.AreEqual(0, value.Count);
+
+				(key, value) = claims.ElementAt(17);
+				Assert.AreEqual("selected_systemRole", key);
+				Assert.AreEqual(0, value.Count);
 			}
 		}
 
