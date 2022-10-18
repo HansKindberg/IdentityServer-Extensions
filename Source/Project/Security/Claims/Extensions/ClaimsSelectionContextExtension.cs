@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -28,7 +27,7 @@ namespace HansKindberg.IdentityServer.Security.Claims.Extensions
 			{
 				var claimsSelectionResult = await selector.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)).ConfigureAwait(false);
 
-				numberOfSelectableClaims += claimsSelectionResult.Selectables.SelectMany(selectable => selectable.Value).Count();
+				numberOfSelectableClaims += await claimsSelectionResult.NumberOfSelectableClaimsAsync().ConfigureAwait(false);
 			}
 
 			return numberOfSelectableClaims;
