@@ -23,6 +23,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		public virtual string AuthenticationScheme { get; set; }
+		public virtual string AutomaticSelectionClaimType => this.ClaimsSelectionOptionsMonitor.CurrentValue.AutomaticSelectionClaimType;
 		protected internal virtual IOptionsMonitor<ClaimsSelectionOptions> ClaimsSelectionOptionsMonitor { get; }
 		IEnumerable<IClaimsSelector> IClaimsSelectionContext.Selectors => this.Selectors;
 		public virtual IList<IClaimsSelector> Selectors { get; } = new List<IClaimsSelector>();

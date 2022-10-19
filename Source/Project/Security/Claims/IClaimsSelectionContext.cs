@@ -10,6 +10,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 		#region Properties
 
 		string AuthenticationScheme { get; }
+		string AutomaticSelectionClaimType { get; }
 		IEnumerable<IClaimsSelector> Selectors { get; }
 		Uri Url { get; }
 
