@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 
@@ -28,13 +27,14 @@ namespace HansKindberg.IdentityServer.Web.Authentication.Extensions
 			if(authenticationProperties == null)
 				throw new ArgumentNullException(nameof(authenticationProperties));
 
-			var claimTypes = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-
+			ISet<string> claimTypes = null;
 			var claimTypesValue = authenticationProperties.GetString(AuthenticationKeys.ClaimsSelectionClaimTypes);
 
 			// ReSharper disable InvertIf
 			if(claimTypesValue != null)
 			{
+				claimTypes = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+
 				foreach(var claimType in claimTypesValue.Split(','))
 				{
 					if(string.IsNullOrWhiteSpace(claimType))
@@ -58,17 +58,18 @@ namespace HansKindberg.IdentityServer.Web.Authentication.Extensions
 			if(authenticationProperties == null)
 				throw new ArgumentNullException(nameof(authenticationProperties));
 
-			if(claimTypes == null)
-				throw new ArgumentNullException(nameof(claimTypes));
-
 			await Task.CompletedTask.ConfigureAwait(false);
 
-			var sortedClaimTypes = new SortedSet<string>(claimTypes, StringComparer.OrdinalIgnoreCase);
+			if(claimTypes == null)
+			{
+				authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, null);
+			}
+			else
+			{
+				var sortedClaimTypes = new SortedSet<string>(claimTypes, StringComparer.OrdinalIgnoreCase);
 
-			if(!sortedClaimTypes.Any())
-				sortedClaimTypes.Add(Guid.NewGuid().ToString());
-
-			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, string.Join(',', sortedClaimTypes));
+				authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, string.Join(',', sortedClaimTypes));
+			}
 		}
 
 		public static async Task SetClaimsSelectionInProgressAsync(this AuthenticationProperties authenticationProperties, bool value)
