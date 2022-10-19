@@ -74,7 +74,7 @@
 						</a>
 						<div aria-labelledby="identity-dropdown" class="dropdown-menu">
 							<a class="dropdown-item@(Model.IsActive("Account") ? " active" : null)" href="@Model.GetUrl("Account")">@Localizer.GetString("your-identity")</a>
-							@if(Model.ClaimsSelectionContext != null)
+							@if(Model.ClaimsSelectionContext != null && !await Model.ClaimsSelectionContext.IsAutomaticallySelectedAsync(User))
 							{
 								<a class="dropdown-item@(Model.IsActive(nameof(Feature.ClaimsSelection)) ? " active" : null)" href="@Model.ClaimsSelectionContext.Url">@Localizer.GetString($"{Model.ClaimsSelectionContext.AuthenticationScheme}.claims-selection")</a>
 							}

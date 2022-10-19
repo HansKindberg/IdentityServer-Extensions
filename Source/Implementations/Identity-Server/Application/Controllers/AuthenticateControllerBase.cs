@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
@@ -89,9 +90,9 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var claimsSelectionInformation = await this.GetClaimsSelectionInformationAsync(authenticateResult, authenticationScheme, returnUrl);
 
-			if(claimsSelectionInformation.Handled)
+			if(claimsSelectionInformation.InProgress)
 			{
-				this.Logger.LogDebugIfEnabled("Claims-selection handled.");
+				this.Logger.LogDebugIfEnabled("Claims-selection in progress.");
 
 				// ReSharper disable LoopCanBeConvertedToQuery
 				foreach(var claim in authenticateResult.Principal.Claims)
@@ -103,7 +104,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			}
 			else
 			{
-				this.Logger.LogDebugIfEnabled("Claims-selection NOT handled.");
+				this.Logger.LogDebugIfEnabled("Claims-selection NOT in progress.");
 
 				var decorators = (await this.Facade.DecorationLoader.GetCallbackDecoratorsAsync(authenticationScheme)).ToArray();
 
@@ -132,26 +133,33 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				if(claimsSelectionInformation.Context != null)
 				{
 					var claimsPrincipal = await this.CreateClaimsPrincipalAsync(authenticateResult.Principal.Identity?.AuthenticationType, claims);
-					var automaticSelectionIsPossible = await claimsSelectionInformation.Context.AutomaticSelectionIsPossibleAsync(claimsPrincipal);
+					var automaticClaimsSelectionIsPossible = await claimsSelectionInformation.Context.AutomaticSelectionIsPossibleAsync(claimsPrincipal);
 
-					if(automaticSelectionIsPossible)
+					if(automaticClaimsSelectionIsPossible)
 					{
-						// todo: Fix automatic claims-selection.
+						this.Logger.LogDebugIfEnabled("Automatic claims-selection starting...");
+
+						await this.SelectClaimsAutomaticallyAsync(claims, claimsPrincipal, claimsSelectionInformation.Context);
+
+						await authenticationProperties.SetClaimsSelectionClaimTypesAsync(claims.Select(claim => claim.Type).ToHashSet(StringComparer.OrdinalIgnoreCase));
 					}
+					else
+					{
+						await this.HttpContext.SignInAsync(this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name, claimsPrincipal, authenticateResult.Properties);
 
-					await this.HttpContext.SignInAsync(this.IdentityServer.IntermediateCookieAuthenticationHandlers.ClaimsSelection.Name, claimsPrincipal, authenticateResult.Properties);
+						await this.HttpContext.SignOutAsync(intermediateCookieAuthenticationScheme);
 
-					await this.HttpContext.SignOutAsync(intermediateCookieAuthenticationScheme);
-
-					return this.Redirect(claimsSelectionInformation.Context.Url.ToString());
+						return this.Redirect(claimsSelectionInformation.Context.Url.ToString());
+					}
 				}
 			}
 
-			if(claimsSelectionInformation.Handled)
+			if(claimsSelectionInformation.InProgress)
 			{
+				// If we are doing claims-selection we don't want to change the dates. We can do claims-selection during the sign-in-session and if we could change the lifetime by changing claims-selections it would not be correct.
 				authenticationProperties.ExpiresUtc = authenticateResult.Properties?.ExpiresUtc;
 				authenticationProperties.IssuedUtc = authenticateResult.Properties?.IssuedUtc;
-				authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, authenticateResult.Properties?.GetString(AuthenticationKeys.ClaimsSelectionClaimTypes));
+				await authenticationProperties.SetClaimsSelectionClaimTypesAsync(claimsSelectionInformation.ClaimTypes);
 			}
 
 			var user = await this.ResolveUserAsync(authenticationScheme, claims);
@@ -205,13 +213,20 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			var claimsSelectionInformation = new ClaimsSelectionInformation
 			{
 				Context = await this.Facade.ClaimsSelectionContextAccessor.GetAsync(authenticationScheme, returnUrl),
-				Handled = await authenticateResult.GetClaimsSelectionHandledAsync()
+				InProgress = await authenticateResult.Properties.GetClaimsSelectionInProgressAsync()
 			};
 
-			foreach(var claimType in await authenticateResult.GetClaimsSelectionClaimTypesAsync())
+			var claimTypes = await authenticateResult.Properties.GetClaimsSelectionClaimTypesAsync();
+
+			// ReSharper disable InvertIf
+			if(claimTypes != null)
 			{
-				claimsSelectionInformation.ClaimTypes.Add(claimType);
+				foreach(var claimType in claimTypes)
+				{
+					claimsSelectionInformation.ClaimTypes.Add(claimType);
+				}
 			}
+			// ReSharper restore InvertIf
 
 			return claimsSelectionInformation;
 		}
@@ -329,6 +344,49 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				IdentityProvider = authenticationScheme,
 				ProviderUserId = uniqueIdentifier
 			};
+		}
+
+		protected internal virtual async Task SelectClaimsAutomaticallyAsync(IClaimBuilderCollection claims, ClaimsPrincipal claimsPrincipal, IClaimsSelectionContext claimsSelectionContext)
+		{
+			if(claims == null)
+				throw new ArgumentNullException(nameof(claims));
+
+			if(claimsPrincipal == null)
+				throw new ArgumentNullException(nameof(claimsPrincipal));
+
+			if(claimsSelectionContext == null)
+				throw new ArgumentNullException(nameof(claimsSelectionContext));
+
+			var claimsSelectors = claimsSelectionContext.Selectors.ToArray();
+
+			foreach(var claimsSelector in claimsSelectors)
+			{
+				var claimsSelectionResult = await claimsSelector.SelectAsync(claimsPrincipal, new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+
+				foreach(var selectable in claimsSelectionResult.Selectables)
+				{
+					if(selectable.Value.Count > 1)
+						throw new InvalidOperationException("Automatic claims-selection is not possible when there are more than one selectable claim.");
+
+					if(selectable.Value.Count == 1 && !claimsSelector.SelectionRequired)
+						throw new InvalidOperationException("Automatic claims-selection is not possible when there is one selectable claim but selection is not required.");
+
+					var selectableClaim = selectable.Value.FirstOrDefault();
+
+					if(selectableClaim == null)
+						continue;
+
+					foreach(var item in selectableClaim.Build())
+					{
+						foreach(var claim in item.Value)
+						{
+							claims.Add(claim);
+						}
+					}
+				}
+			}
+
+			claims.Add(new ClaimBuilder { Type = claimsSelectionContext.AutomaticSelectionClaimType, Value = true.ToString() });
 		}
 
 		protected internal virtual async Task ValidateAuthenticationSchemeForClientAsync(string authenticationScheme, string returnUrl)

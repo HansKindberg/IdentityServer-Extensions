@@ -135,8 +135,8 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			authenticationProperties.RedirectUri = this.Url.Action(nameof(this.Confirmation));
 
-			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionClaimTypes, string.Join(',', await this.GetClaimTypesAsync(claimsPrincipal)));
-			authenticationProperties.SetString(AuthenticationKeys.ClaimsSelectionHandled, true.ToString());
+			await authenticationProperties.SetClaimsSelectionClaimTypesAsync(await this.GetClaimTypesAsync(claimsPrincipal));
+			await authenticationProperties.SetClaimsSelectionInProgressAsync(true);
 			authenticationProperties.SetString(this.ClientAuthenticationKey, model.Client);
 			authenticationProperties.SetString(this.IframeUrlAuthenticationKey, model.IframeUrl);
 			authenticationProperties.SetString(AuthenticationKeys.ReturnUrl, model.RedirectUrl);
@@ -162,10 +162,13 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 					throw new InvalidOperationException("The claims-principal from the current authentication is null.");
 
 				var claims = new ClaimBuilderCollection();
-				var claimTypes = await this.AuthenticateResult.GetClaimsSelectionClaimTypesAsync();
-				var claimTypesValue = this.AuthenticateResult.Properties?.GetString(AuthenticationKeys.ClaimsSelectionClaimTypes);
+				var claimTypes = await this.AuthenticateResult.Properties.GetClaimsSelectionClaimTypesAsync();
 
-				if(claimTypesValue != null)
+				if(claimTypes == null)
+				{
+					claims.AddRange(claimsPrincipal.Claims.Select(claim => new ClaimBuilder(claim)));
+				}
+				else
 				{
 					// ReSharper disable LoopCanBeConvertedToQuery
 					foreach(var claim in claimsPrincipal.Claims)
@@ -173,11 +176,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 						if(claimTypes.Contains(claim.Type))
 							claims.Add(new ClaimBuilder(claim));
 					}
-					// ReSharper restore LoopCanBeConvertedToQuery
-				}
-				else
-				{
-					claims.AddRange(claimsPrincipal.Claims.Select(claim => new ClaimBuilder(claim)));
+					// ReSharper restore LoopCanBeConvertedToQuery					
 				}
 
 				foreach(var result in claimsSelectionResults)
@@ -191,6 +190,12 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 							if(string.Equals(claims[i].Type, selectedClaimType, StringComparison.OrdinalIgnoreCase))
 								claims.RemoveAt(i);
 						}
+					}
+
+					for(var i = claims.Count - 1; i >= 0; i--)
+					{
+						if(string.Equals(claims[i].Type, this.ClaimsSelectionContext.AutomaticSelectionClaimType, StringComparison.OrdinalIgnoreCase))
+							claims.RemoveAt(i);
 					}
 
 					foreach(var claimBuilderCollection in selectedClaims.Values)
