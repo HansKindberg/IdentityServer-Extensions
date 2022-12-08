@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Extensions;
 using HansKindberg.IdentityServer.Identity.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -366,6 +367,11 @@ namespace HansKindberg.IdentityServer.Identity
 			{
 				throw new InvalidOperationException($"Could not save user-login with id {userLogin.Id.ToStringRepresentation()}, provider {userLogin.Provider.ToStringRepresentation()} and user-identifier {userLogin.UserIdentifier.ToStringRepresentation()}.", exception);
 			}
+		}
+
+		public virtual async Task SignInAsync(AuthenticationProperties authenticationProperties, IClaimBuilderCollection claims, UserEntity user)
+		{
+			await this.SignInManager.SignInWithClaimsAsync(user, authenticationProperties, (claims ?? new ClaimBuilderCollection()).Build());
 		}
 
 		public virtual async Task<SignInResult> SignInAsync(string password, bool persistent, string userName)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HansKindberg.IdentityServer.Identity.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using RegionOrebroLan.Security.Claims;
 using UserEntity = HansKindberg.IdentityServer.Identity.User;
@@ -35,6 +36,7 @@ namespace HansKindberg.IdentityServer.Identity
 		/// <param name="allowMultipleLoginsForUser">If multiple user-logins are allowed for the same user-id or not.</param>
 		Task<IdentityResult> SaveUserLoginAsync(UserLoginModel userLogin, bool allowMultipleLoginsForUser = false);
 
+		Task SignInAsync(AuthenticationProperties authenticationProperties, IClaimBuilderCollection claims, UserEntity user);
 		Task<SignInResult> SignInAsync(string password, bool persistent, string userName);
 		Task SignOutAsync();
 		Task<IdentityResult> ValidateUserAsync(UserModel user);
