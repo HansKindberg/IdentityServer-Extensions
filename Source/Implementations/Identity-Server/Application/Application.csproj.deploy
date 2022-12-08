@@ -6,7 +6,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- Before Docker deployment we need to update the version below to the latest one. -->
-		<PackageReference Include="HansKindberg.IdentityServer" Version="5.2.4-alpha.14" />
+		<PackageReference Include="HansKindberg.IdentityServer" Version="5.2.4-alpha.15" />
 	</ItemGroup>
 	<ItemGroup>
 		<None_ Include="wwwroot\**\.gitkeep;package.json;package-lock.json;tsconfig.json" />
