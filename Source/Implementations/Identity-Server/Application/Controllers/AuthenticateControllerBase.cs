@@ -8,13 +8,13 @@ using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Stores;
 using HansKindberg.IdentityServer.Configuration;
 using HansKindberg.IdentityServer.Extensions;
+using HansKindberg.IdentityServer.Identity;
 using HansKindberg.IdentityServer.Models.Extensions;
 using HansKindberg.IdentityServer.Security.Claims;
 using HansKindberg.IdentityServer.Web.Authentication;
 using HansKindberg.IdentityServer.Web.Authentication.Extensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RegionOrebroLan.Logging.Extensions;
 using RegionOrebroLan.Security.Claims;
@@ -162,17 +162,19 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 				await authenticationProperties.SetClaimsSelectionClaimTypesAsync(claimsSelectionInformation.ClaimTypes);
 			}
 
-			var user = await this.ResolveUserAsync(authenticationScheme, claims);
+			var authenticationClaims = new ClaimBuilderCollection();
 
-			await this.ResolveAuthenticationLocally(authenticateResult, authenticationProperties, user);
+			await this.ResolveAuthenticationLocally(authenticateResult, authenticationProperties, authenticationScheme, authenticationClaims);
 
-			await this.HttpContext.SignInAsync(user, authenticationProperties);
+			var userInformation = await this.ResolveUserAsync(authenticationScheme, claims);
+
+			await this.Facade.Identity.SignInAsync(authenticationProperties, authenticationClaims, userInformation.User);
 
 			await this.HttpContext.SignOutAsync(intermediateCookieAuthenticationScheme);
 
 			var authorizationRequest = await this.Facade.Interaction.GetAuthorizationContextAsync(returnUrl);
 
-			await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(user.IdentityProvider, user.ProviderUserId, user.SubjectId, user.DisplayName, true, authorizationRequest?.Client.ClientId));
+			await this.Facade.Events.RaiseAsync(new UserLoginSuccessEvent(authenticationScheme, userInformation.UniqueIdentifier, userInformation.User.Id, userInformation.User.UserName, true, authorizationRequest?.Client.ClientId));
 
 			if(authorizationRequest != null && authorizationRequest.IsNativeClient())
 				return await this.Redirect(returnUrl, this.Facade.IdentityServer.CurrentValue.SignOut.SecondsBeforeRedirectAfterSignOut);
@@ -231,7 +233,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			return claimsSelectionInformation;
 		}
 
-		protected internal virtual async Task ResolveAuthenticationLocally(AuthenticateResult authenticateResult, AuthenticationProperties authenticationProperties, ExtendedIdentityServerUser user)
+		protected internal virtual async Task ResolveAuthenticationLocally(AuthenticateResult authenticateResult, AuthenticationProperties authenticationProperties, string authenticationScheme, IClaimBuilderCollection claims)
 		{
 			if(authenticateResult == null)
 				throw new ArgumentNullException(nameof(authenticateResult));
@@ -239,10 +241,16 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			if(authenticationProperties == null)
 				throw new ArgumentNullException(nameof(authenticationProperties));
 
-			if(user == null)
-				throw new ArgumentNullException(nameof(user));
+			if(authenticationScheme == null)
+				throw new ArgumentNullException(nameof(authenticationScheme));
+
+			if(claims == null)
+				throw new ArgumentNullException(nameof(claims));
 
 			await Task.CompletedTask;
+
+			// Capture the IdP used to sign in, so the session knows where the user came from.
+			claims.Add(new ClaimBuilder { Type = JwtClaimTypes.IdentityProvider, Value = authenticationScheme });
 
 			// If the external provider issued an id_token, we'll keep it for sign-out.
 			var identityToken = authenticateResult.Properties?.GetTokenValue(OidcConstants.TokenTypes.IdentityToken);
@@ -262,7 +270,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			if(sessionIdClaim != null)
 			{
-				user.AdditionalClaims.Add(new Claim(JwtClaimTypes.SessionId, sessionIdClaim.Value));
+				claims.Add(new ClaimBuilder { Type = JwtClaimTypes.SessionId, Value = sessionIdClaim.Value });
 				this.Logger.LogDebugIfEnabled("A session-id-claim was added.");
 			}
 			else
@@ -311,7 +319,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 			}
 		}
 
-		protected internal virtual async Task<ExtendedIdentityServerUser> ResolveUserAsync(string authenticationScheme, IClaimBuilderCollection claims)
+		protected internal virtual async Task<UserInformation> ResolveUserAsync(string authenticationScheme, IClaimBuilderCollection claims)
 		{
 			if(authenticationScheme == null)
 				throw new ArgumentNullException(nameof(authenticationScheme));
@@ -331,19 +339,7 @@ namespace HansKindberg.IdentityServer.Application.Controllers
 
 			var user = await this.Facade.Identity.ResolveUserAsync(claims, authenticationScheme, uniqueIdentifier);
 
-			var nameClaim = claims.FindFirstNameClaim();
-			var name = nameClaim?.Value;
-
-			if(nameClaim != null)
-				claims.Remove(nameClaim);
-
-			return new ExtendedIdentityServerUser(user.Id)
-			{
-				AdditionalClaims = claims.Build(),
-				DisplayName = name,
-				IdentityProvider = authenticationScheme,
-				ProviderUserId = uniqueIdentifier
-			};
+			return new UserInformation { UniqueIdentifier = uniqueIdentifier, User = user };
 		}
 
 		protected internal virtual async Task SelectClaimsAutomaticallyAsync(IClaimBuilderCollection claims, ClaimsPrincipal claimsPrincipal, IClaimsSelectionContext claimsSelectionContext)
