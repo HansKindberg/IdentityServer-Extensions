@@ -43,10 +43,7 @@ namespace HansKindberg.IdentityServer.Security.Claims
 				{
 					lock(this.ClaimsSelectorDictionaryLock)
 					{
-						if(this._claimsSelectorDictionary == null)
-						{
-							this._claimsSelectorDictionary = this.CreateClaimsSelectorDictionary();
-						}
+						this._claimsSelectorDictionary ??= this.CreateClaimsSelectorDictionary();
 					}
 				}
 				// ReSharper restore All
