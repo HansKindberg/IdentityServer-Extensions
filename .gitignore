@@ -414,8 +414,8 @@ Source/Implementations/Identity-Server/Application/Scripts/**/*.js
 Source/Implementations/Identity-Server/Application/Style/**/*.css
 Source/Implementations/Identity-Server/Application/wwwroot/Scripts/*
 !Source/Implementations/Identity-Server/Application/wwwroot/Scripts/.gitkeep
-Source/Implementations/Identity-Server/Application/wwwroot/Style/*
-!Source/Implementations/Identity-Server/Application/wwwroot/Style/.gitkeep
+Source/Implementations/Identity-Server/Application/wwwroot/Style/site.css
+Source/Implementations/Identity-Server/Application/wwwroot/Style/Icons/*
 !Source/Implementations/Identity-Server/Application/wwwroot/favicon.ico
 Source/Implementations/Identity-Server/Application/package-lock.json
 Source/Implementations/Identity-Server/Application/yarn.lock

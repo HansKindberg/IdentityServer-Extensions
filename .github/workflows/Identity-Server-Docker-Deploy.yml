@@ -23,8 +23,8 @@ jobs:
       - name: "Install npm"
         run: npm install
         working-directory: "Source/Implementations/Identity-Server/Application"
-      - name: "Bundle client-assets (css, images & scripts)"
-        run: gulp
+      - name: "Bundle client-assets (css, sprite & scripts)"
+        run: npm run Build-Release
         working-directory: "Source/Implementations/Identity-Server/Application"
       - name: "Sign in to DockerHub"
         uses: docker/login-action@v1

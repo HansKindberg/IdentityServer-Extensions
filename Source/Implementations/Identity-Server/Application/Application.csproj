@@ -25,5 +25,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-	<Import Project="Build\Build.targets" />
+	<Import Project="Development.targets" />
+	<Import Project="Npm.targets" />
 </Project>
