@@ -283,6 +283,7 @@ dotnet_diagnostic.IDE0046.severity = none
 dotnet_diagnostic.IDE0055.severity = none
 dotnet_diagnostic.IDE0058.severity = none
 dotnet_diagnostic.IDE0063.severity = none
+dotnet_diagnostic.IDE0270.severity = none
 
 # Package Microsoft.CodeAnalysis.FxCopAnalyzers
 dotnet_diagnostic.ASP0000.severity = error
